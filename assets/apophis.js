@@ -18,6 +18,7 @@ async function loadObs(){
         i++
     }
     select2.value = 1
+    $(".alert").alert('close')
 }
 loadObs()
 async function obsInfo(){
