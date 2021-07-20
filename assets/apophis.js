@@ -1,4 +1,4 @@
-let url = "http://pacific-fjord-61332.herokuapp.com/"
+let url = "http://pacific-fjord-61332.herokuapp.com"
 async function loadObs(){
     let response = await fetch(url+"/observatories");
     let elements = await response.json();
