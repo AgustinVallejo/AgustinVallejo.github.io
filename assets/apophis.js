@@ -17,6 +17,7 @@ async function loadObs(){
         }   
         i++
     }
+    select2.value = 1
 }
 loadObs()
 async function obsInfo(){
