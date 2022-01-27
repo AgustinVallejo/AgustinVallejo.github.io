@@ -11,23 +11,36 @@
 <body>
   <div id="navbar"></div>
   <div class="container">
+      <div class="row mt-5">
+      <div class="col">
         <h1>Astronomy Games</h1>
         <!-- <div id="godot">
-            <h2>Godot</h2>
+            <h5>Godot</h5>
             <iframe frameborder="0" src="https://itch.io/embed/1153176" width="552" height="167"><a href="https://gutiastro.itch.io/simulador-de-sombras">Simulador de Sombras by Agustín Vallejo</a></iframe>
             <iframe frameborder="0" src="https://itch.io/embed/1019964" width="552" height="167"><a href="https://gutiastro.itch.io/boveda-celeste">Bóveda Celeste by Agustín Vallejo</a></iframe>
         </div> -->
-        <h2>Positional Astronomy</h2>
-        <ul>
-            <li><a href="games/astroposition/heliocentric.html">Heliocentrism vs Geocentrism</a></li>
-            <li><a href="games/astroposition/twinkle.html">Star twinkle</a></li>
-        </ul>
-        <h2>Solar System</h2>
-        <li><a href="games/planets/sandbox/sandbox.html">Planetary Sandbox</a></li>
+        <h5>Positional Astronomy</h5>
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action" href="games/astroposition/heliocentric.html">Heliocentrism vs Geocentrism</a>
+            <a class="list-group-item list-group-item-action" href="games/astroposition/twinkle.html">Star twinkle</a>
+        </div>
+        <p></p>
+        <h5>Solar System</h5>
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action" href="games/planets/sandbox/sandbox.html">Planetary Sandbox</a>
+        </div>
+    </div>
+    <div class="col">
+        <h1>Physics Games</h1>
+    </div>
+    <div class="col">
         <h1>Math Games</h1>
-        <ul>
-            <li><a href="games/math/trigonometry.html">Interactive Trigonometry</a></li>
-        </ul>
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action" href="games/math/trigonometry.html">Interactive Trigonometry</a>
+        </div>
+
+    </div>
+</div>
   </div>
   <script>
       $("#navbar").load("components/navbar.html");
