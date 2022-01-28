@@ -2,6 +2,7 @@ let files = [
     '2021-08-10.jpeg',
     '2021-09-01.jpeg',
     '2021-09-06.jpeg',
+    '2021-09-07.jpeg',
     '2021-09-23.jpeg',
     '2021-10-02.jpeg',
     '2021-10-18.jpeg',
@@ -13,9 +14,15 @@ let files = [
     '2022-01-03.jpeg',
     '2022-01-14.jpeg',
     '2022-01-15.jpeg',
+    '2022-01-17.png',
     '2022-01-21.jpeg',
     '2022-01-24.jpeg',
+    '2022-01-27.jpeg',
 ]
+
+// import os
+// for n in os.listdir():
+//   print(f"'{n}',")
 
 shuffleArray(files)
 
