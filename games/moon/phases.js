@@ -29,11 +29,17 @@ function phases(a) {
     let light_color = color(255,255,255,255);
 
     noStroke();
-    let phasex = width/2 + radioT;
-    let phasey = height/2 - radioT;
+    let phasex = width/2;
+    let phasey = height/2 + radioT;
     let d2 = radioT;
 
     translate(phasex,phasey);
+    rectMode(CENTER);
+    stroke(150);
+    strokeWeight(3);
+    fill(0);
+    rect(0,0,1.5*d2,1.5*d2,10);
+    noStroke();
 
     if (a > 0) {
         a = map(a,0,Math.PI,-Math.PI,0);
