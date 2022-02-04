@@ -1,5 +1,5 @@
-
-var radioT, radioL, t, frame;
+let t, play
+let radioT, radioL, Wearth, Wmoon;
 
 // El conjunto de las estrellas de fondo
 let stars = [];
@@ -11,12 +11,27 @@ var IMG;
 function initializeFields() {
     radioT = 200;
     radioL = 50;
+    Wearth = PI / 50;
+    Wmoon = Wearth / 28;
     t = 0;
-    frame = 0;
     IMG = null;
     loc = null;
     size = 0;
     col = 0;
+    play = false;
+}
+
+function set_angle(){
+    if (play) {
+        angle = -t*Wmoon - 3.2*PI/4
+        if (t > 2*PI/Wmoon) {
+            t -= 2*PI/Wmoon
+        }
+      }
+    else {
+        angle = createVector(mouseX - width/2,mouseY - height/2).heading()
+    }
+    return angle
 }
 
 function createStars() {
@@ -25,11 +40,11 @@ function createStars() {
 	}
 }
 
-function tierra(t) {
+function earth(t) {
     push();
     translate(width / 2, height / 2);
     // La tierra también rota según t
-    rotate(-t * PI / 500 + 1.2 * PI / 2);
+    rotate(-t * Wearth + 1.2 * PI / 2);
     imageMode(CENTER);
 
     noStroke();
@@ -43,6 +58,53 @@ function tierra(t) {
     pop();
 }
 
+function moon(angle) {
+    // Pone la Luna en la dirección del Mouse
+    // Tamaño de la órbita
+    var moonOrbit = 300;
+    var moonLoc = createVector(1,0);
+    moonLoc.setHeading(angle)
+    moonLoc.mult(moonOrbit);
+    push();
+    translate(width / 2, height / 2);
+    // El resto de la función es dibujando cositas
+    // Órbita
+    noFill();
+    stroke(100);
+    strokeWeight(1);
+    circle(0, 0, 2 * moonOrbit);
+    // Luna y Lado Iluminado
+    noStroke();
+    let bg_color = color(20,50,50,255);
+    let light_color = color(255,255,255,255);
+    fill(bg_color)
+    circle(moonLoc.x, moonLoc.y, radioL);
+    fill(light_color);
+    arc(moonLoc.x, moonLoc.y, radioL, radioL, -PI / 2, PI / 2, CHORD);
+    pop();
+    var moonAngle = moonLoc.heading();
+    return moonAngle;
+}
+
+function sun() {
+    // Pone las flechas y pone el texto
+    textSize(32);
+    fill(255, 255, 0);
+    // text("Al Sol", 0.9 * width, 0.15 * height);
+    // Cantidad de flechas
+    fill(255,255,0);
+    circle(1.7*width, height/2, 1.5*width)
+    fill(255);
+    circle(1.7*width, height/2, 1.45*width)
+    var n = 8;
+    for (var i = 0; i < n; i++) {
+        var ypos = map(i, 0, n, 0.2 * height, 0.8 * height);
+        stroke(255, 255, 0, 100);
+        strokeWeight(10);
+        arrow(0.99 * width, ypos, 0.9 * width, ypos);
+    }
+}
+
 function arrow(x1, y1, x2, y2) {
     // Dibuja una Flecha
     line(x1, y1, x2, y2);
@@ -53,52 +115,6 @@ function arrow(x1, y1, x2, y2) {
     line(0, 0, -10, -10);
     line(0, 0, 10, -10);
     pop();
-}
-
-
-function followMouse() {
-    // Pone la Luna en la dirección del Mouse
-    // Tamaño de la órbita
-    var moonOrbit = 300;
-    var loc = new createVector(width / 2, height / 2);
-    var mouse = new createVector(mouseX, mouseY);
-    var moonLoc = p5.Vector.sub(mouse, loc);
-    moonLoc.normalize();
-    moonLoc.mult(moonOrbit);
-    push();
-    translate(width / 2, height / 2);
-    // El resto de la función es dibujando cositas
-    // Órbita
-    noFill();
-    stroke(100);
-    strokeWeight(1);
-    ellipse(0, 0, 2 * moonOrbit, 2 * moonOrbit);
-    // Luna y Lado Iluminado
-    noStroke();
-    let bg_color = color(20,50,50,255);
-    let light_color = color(255,255,255,255);
-    fill(bg_color)
-    ellipse(moonLoc.x, moonLoc.y, radioL, radioL);
-    fill(light_color);
-    arc(moonLoc.x, moonLoc.y, radioL, radioL, -PI / 2, PI / 2, CHORD);
-    pop();
-    var moonAngle = moonLoc.heading();
-    return moonAngle;
-}
-
-function alSol() {
-    // Pone las flechas y pone el texto
-    textSize(32);
-    fill(255, 255, 0);
-    text("Al Sol", 0.9 * width, 0.15 * height);
-    // Cantidad de flechas
-    var n = 8;
-    for (var i = 0; i < n; i++) {
-        var ypos = map(i, 0, n, 0.2 * height, 0.8 * height);
-        stroke(255, 255, 0);
-        strokeWeight(10);
-        arrow(0.9 * width, ypos, 0.99 * width, ypos);
-    }
 }
 
 
@@ -128,9 +144,8 @@ function star(x, y, radius1, radius2, npoints) {
   endShape(CLOSE);
 }
 
-
-
 function stickman(t, eyes = 0) {
+    eyes += t*Wmoon;
     // El muñequito y su rotación
     var s = 0.3;
     var y = -0.65 * radioT / s;
@@ -138,7 +153,7 @@ function stickman(t, eyes = 0) {
     push();
     translate(width / 2, height / 2);
     scale(s);
-    rotate(-t * PI / 500);
+    rotate(-t * Wearth);
     ellipseMode(CENTER);
     stroke(128);
     strokeWeight(10);

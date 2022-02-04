@@ -9,20 +9,27 @@ function setup() {
     // Cargo la Imagen de la Tierra desde Arriba
     IMG = loadImage("polar.png");
     smooth();
+
+    Wearth = PI / 500;
+    Wmoon = Wearth / 10;
 }
 
 function draw() {
+    let angle = set_angle();
     background(0);
     twinklingStars();
-    alSol();
-    stickman(t);
-    var objAngle = followMouse();
-    mareas(500, objAngle);
-    tierra(t);
-    t++;
+    sun();
+    stickman(t, angle);
+    moon(angle);
+    tides(500, angle);
+    earth(t);
+    buttons()
+    if (play) {
+        t++;
+      }
 }
 
-function mareas(N, objAngle) {
+function tides(N, objAngle) {
     // Función que crea las mareas
     push();
     translate(width / 2, height / 2);

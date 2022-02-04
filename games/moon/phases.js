@@ -13,14 +13,18 @@ function setup() {
 }
 
 function draw() {
+    let angle = set_angle();
     background(0);
     twinklingStars();
-    alSol();
-    let angle = followMouse();
-    tierra(t);
+    sun();
+    earth(t);
     stickman(t, angle);
+    moon(angle);
     phases(angle);
-    // t++;
+    buttons()
+    if (play) {
+      t++;
+    }
 }
 
 function phases(a) {
@@ -32,21 +36,28 @@ function phases(a) {
     let phasex = width/2;
     let phasey = height/2 + radioT;
     let d2 = radioT;
-
+    
+    push();
     translate(phasex,phasey);
     rectMode(CENTER);
     stroke(150);
     strokeWeight(3);
     fill(0);
-    rect(0,0,1.5*d2,1.5*d2,10);
+    rect(0,0.25*d2,1.5*d2,2*d2,10);
     noStroke();
 
+    phaseText(a, d2);
+
+    if (a < -PI) {
+      a += 2*PI
+    }
+
     if (a > 0) {
-        a = map(a,0,Math.PI,-Math.PI,0);
+        a = map(a,0,PI,-PI,0);
     }
     else {
-        a = map(a,0,-Math.PI,-Math.PI,0);
-        rotate(Math.PI)        
+        a = map(a,0,-PI,-PI,0);
+        rotate(PI)        
     }
   
     //stroke(255,0,255);
@@ -57,22 +68,22 @@ function phases(a) {
     let color3 = color(0,25,25,0); //blue
     let color4 = color(0,25,25,0); //green
   
-    if (-Math.PI/2 < a && a < 0) {
+    if (-PI/2 < a && a < 0) {
       color3 = light_color;
       color4 = light_color;
       color1 = light_color;
       color2 = bg_color;
-    } else if (-Math.PI < a && a < -Math.PI/2) {
+    } else if (-PI < a && a < -PI/2) {
       color1 = light_color;
       color3 = bg_color;
       color4 = bg_color;
       color2 = bg_color;
-    } else if (-3*Math.PI/2 < a && a < -Math.PI) {
+    } else if (-3*PI/2 < a && a < -PI) {
       color4 = bg_color;
       color2 = light_color;
       color1 = bg_color;
       color3 = bg_color;
-    } else if (-2*Math.PI < a && a < -3*Math.PI/2) {
+    } else if (-2*PI < a && a < -3*PI/2) {
       color4 = color(0,255,0,0);
       color3 = light_color;
       color1 = bg_color;
@@ -93,4 +104,31 @@ function phases(a) {
     arc(0, 0, widthPhase - 2, heightPhase + 1, PI/2, 3 * PI/2);
     fill(color4);
     arc(0, 0, widthPhase - 2, heightPhase + 1, 3 * PI/2, PI/2);
+
+    pop();
+}
+
+function phaseText(a, d2) {
+  let phase = ""
+  let threshold = 0.75
+  if (cos(a) > threshold) {
+    phase = "Nueva"  
+  }
+  else if (cos(a) < -threshold) {
+    phase = "Llena"  
+  }
+  if (sin(a) > threshold) {
+    phase = "Menguante"  
+  }
+  else if (sin(a) < -threshold) {
+    phase = "Creciente"  
+  }
+  a = 4*a - 3.2*PI/4
+
+  textFont('Roboto Slab');
+  stroke(255*pow(1-cos(a),3));
+  textAlign(CENTER);
+  textSize(25)
+  text("Luna\n"+phase,0,0.8*d2);
+  noStroke();
 }
