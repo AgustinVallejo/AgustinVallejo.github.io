@@ -92,17 +92,18 @@ function sun() {
     fill(255, 255, 0);
     // text("Al Sol", 0.9 * width, 0.15 * height);
     // Cantidad de flechas
-    fill(255,255,0);
-    circle(1.7*width, height/2, 1.5*width)
-    fill(255);
-    circle(1.7*width, height/2, 1.45*width)
     var n = 8;
     for (var i = 0; i < n; i++) {
         var ypos = map(i, 0, n, 0.2 * height, 0.8 * height);
-        stroke(255, 255, 0, 100);
+        stroke(100, 100, 0);
         strokeWeight(10);
         arrow(0.99 * width, ypos, 0.9 * width, ypos);
     }
+    noStroke();
+    fill(255,255,0);
+    circle(1.7*width, height/2, 1.5*width)
+    fill(255,255,200);
+    circle(1.7*width, height/2, 1.45*width)
 }
 
 function arrow(x1, y1, x2, y2) {
