@@ -19,71 +19,27 @@ function initializeFields() {
     col = 0;
 }
 
-function setup() {
-    var canvas = createCanvas(1000, 700);
-    canvas.parent("game")
-    initializeFields();
-    background(0);
+function createStars() {
 	for (i = 0; i < NStars; i++) {
 		stars.push([random(width),random(height)]);
 	}
-
-    // Cargo la Imagen de la Tierra desde Arriba
-    IMG = loadImage("polar.png");
-    // La pongo del tamaño radioT
-    smooth();
-}
-
-function draw() {
-    background(0);
-    twinklingStars();
-    // Dibuja las flechas que señalan el Sol
-    alSol();
-    // Dibujo el muñequito. El parámetro t es para que gire.
-    stickman(t);
-    // Ejecuto la función para que la Luna siga el mouse y saco el ángulo
-    var objAngle = followMouse();
-    // Creo las mareas
-    mareas(500, objAngle);
-    tierra(t);
-    t++;
 }
 
 function tierra(t) {
-    // Dibujo la Tierra
-    IMG.resize(radioT,radioT);
-
     push();
     translate(width / 2, height / 2);
     // La tierra también rota según t
     rotate(-t * PI / 500 + 1.2 * PI / 2);
     imageMode(CENTER);
+
+    noStroke();
+    fill(50,20,0);
+    circle(0,0,radioT)
+
+    // Dibujo la Tierra
+    IMG.resize(radioT,radioT);
     tint(200);
     image(IMG, 0, 0);
-    pop();
-}
-
-function mareas(N, objAngle) {
-    // Función que crea las mareas
-    push();
-    translate(width / 2, height / 2);
-    noStroke();
-    fill(89, 183, 255, 128);
-    beginShape();
-    for (var i = 0; i < N; i++) {
-        var th = map(i, 0, N, 0, 2 * PI);
-        // Efecto del Sol en las mareas
-        var drSOL = tidalForceObj(th, 'S', 0);
-        // Efecto de la Luna en las mareas
-        var drLUNA = tidalForceObj(th, 'L', objAngle);
-        // La altura R de la marea en un ángulo th
-        var R = 1.1 * 0.5 * radioT + drSOL + drLUNA;
-        var x = R * cos(th);
-        var y = R * sin(th);
-        // Crea el vector de la figura
-        vertex(x, y);
-    }
-    endShape(CLOSE);
     pop();
 }
 
@@ -99,25 +55,6 @@ function arrow(x1, y1, x2, y2) {
     pop();
 }
 
-function tidalForceObj(angle, obj, objAngle) {
-    // Ejerce la fuerza según el objeto que se esté usando. S para SOL y L para LUNA
-    var MOONTIDE = 1;
-    var SUNTIDE = 0.7;
-    switch(obj) {
-        case 'S':
-            return tidalForce(angle, 10 * SUNTIDE, 0);
-        case 'L':
-            return tidalForce(angle, 10 * MOONTIDE, objAngle);
-        default:
-            return 0;
-    }
-}
-
-function tidalForce(angle, G, objAngle) {
-    // El desplazamiento vertical según la posición del lugar y el objeto que perturba
-    var dr = G * (1 + cos(2 * (angle - objAngle)));
-    return dr;
-}
 
 function followMouse() {
     // Pone la Luna en la dirección del Mouse
@@ -138,13 +75,14 @@ function followMouse() {
     ellipse(0, 0, 2 * moonOrbit, 2 * moonOrbit);
     // Luna y Lado Iluminado
     noStroke();
-    var moonCol = 120;
-    fill(moonCol);
+    let bg_color = color(20,50,50,255);
+    let light_color = color(255,255,255,255);
+    fill(bg_color)
     ellipse(moonLoc.x, moonLoc.y, radioL, radioL);
-    fill(moonCol * 2);
+    fill(light_color);
     arc(moonLoc.x, moonLoc.y, radioL, radioL, -PI / 2, PI / 2, CHORD);
     pop();
-    var moonAngle = atan(moonLoc.y / moonLoc.x);
+    var moonAngle = moonLoc.heading();
     return moonAngle;
 }
 
@@ -192,10 +130,11 @@ function star(x, y, radius1, radius2, npoints) {
 
 
 
-function stickman(t) {
+function stickman(t, eyes = 0) {
     // El muñequito y su rotación
     var s = 0.3;
     var y = -0.65 * radioT / s;
+    var dEyes = 5;
     push();
     translate(width / 2, height / 2);
     scale(s);
@@ -205,8 +144,11 @@ function stickman(t) {
     strokeWeight(10);
     fill(255);
     ellipse(0, -90 + y, 50, 50);
+    push();
+    translate(dEyes*cos(eyes),dEyes*sin(eyes))
     point(-10, -90 + y);
     point(10, -90 + y);
+    pop();
     rectMode(CENTER);
     rect(0, -15 + y, 50, 100);
     line(-25, -65 + y, -50, 10 + y);
@@ -219,11 +161,3 @@ function stickman(t) {
     ellipse(0, -95 + y, 80, 80);
     pop();
 }
-
-function preload() {
-// TODO: put method calls that load from files into this method
-// I found the following calls that you should move here:
-// - on line 15: IMG = loadImage("polar.png")
-// (note that line numbers are from your Processing code)
-}
-
