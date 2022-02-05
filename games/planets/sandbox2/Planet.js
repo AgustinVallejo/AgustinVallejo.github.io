@@ -1,33 +1,57 @@
 // Planet class
 class Planet {
-	constructor() {
-		this.pos = pos0;
-		this.r = pos0.sub(middle)
-		this.speed = mouse.sub(pos0);
-		this.speed.mult(0.01);
+	constructor(pos0,r,v) {
+		// State Vectors
+		this.pos = pos0; // Position in canvas
+		this.r = r; // Position WRT center
+		this.v = v; // Velocity
+
+		// Properties
 		this.color = plColor;
 		this.size = plSize;
 		this.alive = true;
 
-		let {a,e,nu} = find_ellipse(this.speed.mult(kV),this.r.mult(kR));
+		// Ellipse properties
+		let {a, e, w, M0, W} = find_ellipse(r.mult(kR),v.mult(kV));
 		this.a = a
 		this.e = e
-		this.t = this.r.heading()
-		this.w = this.t - nu
+		this.w = w
+		this.M0 = M0
+		this.W = W
+		this.th = r.heading()
+		this.t = 0
 
-		console.log(a,e,nu)
+		if (a < 0) {
+			this.alive = false
+		}
 	}
 
-  move() {
+	move() {
 		if (this.alive){
-			let nu = this.t - this.w
+			let nu = this.move_angles()
+			this.th = nu + this.w
 			let r = ellipse_polar(this.a,this.e,nu)
-			this.pos = createVector(r*cos(this.t),r*sin(this.t))
-			this.t += 0.05
+			this.pos = createVector(r*cos(this.th),r*sin(this.th))
+			this.t += 5
+			}
+
+			console.log(middle, this.pos.dist(middle))
+
+			if (this.pos.mag() < 0.7*Rsun) {
+				this.alive = false
 			}
 		}
 
-  display() {
+	move_angles() {
+		let M = this.M0 + this.W*this.t
+		let E1 = M + this.e*sin(M)
+		let E2 = M + this.e*sin(E1)
+		let E = M + this.e*sin(E2)
+		let nu = atan2( pow(1-this.e*this.e,0.5)*sin(E), cos(E) - this.e)
+		return nu
+	}
+
+	display() {
 		if (this.alive){
 			push();
 			translate(width/2,height/2);
