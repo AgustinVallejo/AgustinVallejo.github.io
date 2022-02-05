@@ -1,7 +1,13 @@
 let stars = [];
 let NStars = 200;
 let twinkling = true;
-let t = 0;
+let t_stars = 0;
+
+function createStars() {
+	for (i = 0; i < NStars; i++) {
+		stars.push([random(width),random(height)]);
+	}
+}
 
 function twinklingStars(){
 	fill(60);
@@ -9,8 +15,10 @@ function twinklingStars(){
 	for (i = 0; i < NStars; i++) {
 		x = stars[i][0];
 		y = stars[i][1];
-		star(x,y,8+noise(0.01*t+10*i)*8,1+noise(0.01*t+10*i)*4,4);
+		star(x,y,8+noise(0.01*t_stars+10*i)*8,1+noise(0.01*t_stars+10*i)*4,4);
 	}
+
+  t_stars += 1;
 }
 
 function star(x, y, radius1, radius2, npoints) {

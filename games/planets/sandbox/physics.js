@@ -41,7 +41,7 @@ function find_angles(r,v,a,e){
 	let alpha = r.heading();
 	let beta = v.heading();
 	
-	let W = -5*pow(a,-3/2)
+	let W = -500*pow(a,-3/2)
 	if (cos(alpha - beta) > 0){
 		nu *= -1
 	}
@@ -83,6 +83,9 @@ function ellipse_all(a,e,w){
 	fill(255);
 	let N = 200;
 	stroke(255);
+	if (a<0) {
+		stroke(255,0,0)
+	}
 	strokeWeight(1);
 	noFill();
 	beginShape()

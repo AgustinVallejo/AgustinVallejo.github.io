@@ -11,7 +11,7 @@ let kV = 0.5;
 let kR = 1;
 
 function setup(){
-	let canvas = createCanvas(1000, 500);
+	let canvas = createCanvas(1200, 700);
 	canvas.parent("game")
 	middle = createVector(width/2, height/2);
 	random_planet();

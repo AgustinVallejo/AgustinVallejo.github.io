@@ -32,12 +32,12 @@ class Planet {
 			this.th = nu + this.w
 			let r = ellipse_polar(this.a,this.e,nu)
 			this.pos = createVector(r*cos(this.th),r*sin(this.th))
-			this.t += 5
+			this.t += 0.1
 			}
 
 			console.log(middle, this.pos.dist(middle))
 
-			if (this.pos.mag() < 0.7*Rsun) {
+			if (this.pos.mag() < 0.5*Rsun) {
 				this.alive = false
 			}
 		}
