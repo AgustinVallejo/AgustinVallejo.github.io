@@ -43,7 +43,7 @@ function tides(N, objAngle) {
         // Efecto de la Luna en las mareas
         var drLUNA = tidalForceObj(th, 'L', objAngle);
         // La altura R de la marea en un ángulo th
-        var R = 1.1 * 0.5 * radioT + drSOL + drLUNA;
+        var R = 1.1 * 0.5 * Rearth + drSOL + drLUNA;
         var x = R * cos(th);
         var y = R * sin(th);
         // Crea el vector de la figura

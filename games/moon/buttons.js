@@ -65,7 +65,7 @@ function mouse_button(x0,y0,w){
         cursor(HAND);
         if (mouseIsPressed) {
             play = false;
-            t = 0;
+            // t = 0;
         }
     }
 }

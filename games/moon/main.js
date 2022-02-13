@@ -1,16 +1,23 @@
 let t, play
-let radioT, radioL, Wearth, Wmoon;
+let Rearth, Rmoon, Wearth, Wmoon;
+var moonOrbit, earthOrbit;
+let Rsun,Xsun;
 
 // El conjunto de las estrellas de fondo
 let stars = [];
+let stars2 = [];
 let NStars = 100;
 let twinkling = true;
 
 var IMG;
 
 function initializeFields() {
-    radioT = 200;
-    radioL = 50;
+    Rearth = 200;
+    Rmoon = 50;
+    Rsun = 1.5*width;
+    Xsun = 1.2;
+    moonOrbit = 300;
+    earthOrbit = Xsun*width;
     Wearth = PI / 50;
     Wmoon = Wearth / 28;
     t = 0;
@@ -37,6 +44,7 @@ function set_angle(){
 function createStars() {
 	for (i = 0; i < NStars; i++) {
 		stars.push([random(width),random(height)]);
+		stars2.push([random(width),random(height)]);
 	}
 }
 
@@ -48,11 +56,12 @@ function earth(t) {
     imageMode(CENTER);
 
     noStroke();
-    fill(50,20,0);
-    circle(0,0,radioT)
+    fill(0,200,200);
+    circle(0,0,Rearth)
 
     // Dibujo la Tierra
-    IMG.resize(radioT,radioT);
+    IMG.resize(width,width);
+    scale(Rearth/width);
     tint(200);
     image(IMG, 0, 0);
     pop();
@@ -61,7 +70,6 @@ function earth(t) {
 function moon(angle) {
     // Pone la Luna en la dirección del Mouse
     // Tamaño de la órbita
-    var moonOrbit = 300;
     var moonLoc = createVector(1,0);
     moonLoc.setHeading(angle)
     moonLoc.mult(moonOrbit);
@@ -78,9 +86,9 @@ function moon(angle) {
     let bg_color = color(20,50,50,255);
     let light_color = color(255,255,255,255);
     fill(bg_color)
-    circle(moonLoc.x, moonLoc.y, radioL);
+    circle(moonLoc.x, moonLoc.y, Rmoon);
     fill(light_color);
-    arc(moonLoc.x, moonLoc.y, radioL, radioL, -PI / 2, PI / 2, CHORD);
+    arc(moonLoc.x, moonLoc.y, Rmoon, Rmoon, -PI / 2, PI / 2, CHORD);
     pop();
     var moonAngle = moonLoc.heading();
     return moonAngle;
@@ -101,9 +109,9 @@ function sun() {
     }
     noStroke();
     fill(255,255,0);
-    circle(1.7*width, height/2, 1.5*width)
+    circle((0.5+Xsun)*width, height/2, Rsun)
     fill(255,255,200);
-    circle(1.7*width, height/2, 1.45*width)
+    circle((0.5+Xsun)*width, height/2, 0.97*Rsun)
 }
 
 function arrow(x1, y1, x2, y2) {
@@ -125,7 +133,11 @@ function twinklingStars(){
 	for (i = 0; i < NStars; i++) {
 		x = stars[i][0];
 		y = stars[i][1];
-		star(x,y,10+noise(0.01*t+10*i)*10,2+noise(0.01*t+10*i)*5,4);
+		star(x,y,10+noise(0.1*t+10*i)*10,2+noise(0.01*t+10*i)*5,4);
+
+        x = stars2[i][0];
+		y = stars2[i][1];
+		star(x,y,4+noise(1*t+10*i)*5,1+noise(0.01*t+10*i)*2,4);
 	}
 }
 
@@ -148,8 +160,8 @@ function star(x, y, radius1, radius2, npoints) {
 function stickman(t, eyes = 0) {
     eyes += t*Wmoon;
     // El muñequito y su rotación
-    var s = 0.3;
-    var y = -0.65 * radioT / s;
+    var s = 0.3 * Rearth/100;
+    var y = -0.65 * Rearth / s;
     var dEyes = 5;
     push();
     translate(width / 2, height / 2);

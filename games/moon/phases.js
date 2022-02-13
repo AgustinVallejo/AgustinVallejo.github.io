@@ -9,7 +9,7 @@ function setup() {
     IMG = loadImage("polar.png");
     smooth();
 
-    radioT = 100;
+    Rearth = 100;
 }
 
 function draw() {
@@ -34,8 +34,8 @@ function phases(a) {
 
     noStroke();
     let phasex = width/2;
-    let phasey = height/2 + radioT;
-    let d2 = radioT;
+    let phasey = height/2 + Rearth;
+    let d2 = Rearth;
     
     push();
     translate(phasex,phasey);
