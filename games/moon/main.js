@@ -1,14 +1,8 @@
-let t, play
+let t0, t, play
 let Rearth, Rmoon, Wearth, Wmoon;
 let moonLoc, angle;
 let moonOrbit, earthOrbit;
 let Rsun,Xsun;
-
-// El conjunto de las estrellas de fondo
-let stars = [];
-let stars2 = [];
-let NStars = 100;
-let twinkling = true;
 
 // All simulations variables
 let phasesON = false;
@@ -17,10 +11,17 @@ let tidesON = false;
 let changing = false;
 
 let eclipse = false;
+let clicked = false;
 
 var IMG;
 
 function initializeFields() {
+    // Time variables
+    t = 0;
+    t0 = 0;
+    play = false;
+
+    // Physical Properties
     Rearth = 200;
     Rmoon = 50;
     Rsun = 1.5*width;
@@ -31,12 +32,12 @@ function initializeFields() {
     Wmoon = Wearth / 28;
     moonLoc = createVector(1,0);
     angle = 0;
-    t = 0;
-    IMG = null;
+
     loc = null;
     size = 0;
     col = 0;
-    play = false;
+
+    IMG = null;
 }
 
 function set_angle(){
@@ -50,13 +51,6 @@ function set_angle(){
         angle = createVector(mouseX - width/2,mouseY - height/2).heading()
     }
     return angle
-}
-
-function createStars() {
-	for (i = 0; i < NStars; i++) {
-		stars.push([random(width),random(height)]);
-		stars2.push([random(width),random(height)]);
-	}
 }
 
 function earth(t) {
@@ -142,37 +136,6 @@ function arrow(x1, y1, x2, y2) {
     line(0, 0, -10, -10);
     line(0, 0, 10, -10);
     pop();
-}
-
-
-function twinklingStars(){
-	fill(70);
-	noStroke();
-	for (i = 0; i < NStars; i++) {
-		x = stars[i][0];
-		y = stars[i][1];
-		star(x,y,10+noise(0.1*t+10*i)*10,2+noise(0.01*t+10*i)*5,4);
-
-        x = stars2[i][0];
-		y = stars2[i][1];
-		star(x,y,4+noise(1*t+10*i)*5,1+noise(0.01*t+10*i)*2,4);
-	}
-}
-
-function star(x, y, radius1, radius2, npoints) {
-  angle = TWO_PI / npoints;
-  halfAngle = angle/2.0;
-	da = PI/4 //0.001*mouseX
-  beginShape();
-  for (a = 0; a < TWO_PI; a += angle) {
-    sx = x + cos(a + da) * radius2;
-    sy = y + sin(a + da) * radius2;
-    vertex(sx, sy);
-    sx = x + cos(a+halfAngle + da) * radius1;
-    sy = y + sin(a+halfAngle + da) * radius1;
-    vertex(sx, sy);
-  }
-  endShape(CLOSE);
 }
 
 function stickman(t, eyes = 0) {

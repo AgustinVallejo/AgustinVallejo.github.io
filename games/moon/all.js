@@ -61,6 +61,7 @@ function draw() {
 
     control_buttons();
     sims_buttons();
+    clicked = false;
     if (play) {
         t++;
     }

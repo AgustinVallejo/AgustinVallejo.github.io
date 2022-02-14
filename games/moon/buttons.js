@@ -1,3 +1,7 @@
+function mouseClicked(){
+    clicked = true
+}
+
 function buttons() {
     fill(50);
     stroke(200);
@@ -66,7 +70,7 @@ function play_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             play = true;
             Wearth = PI / 50;
             Wmoon = Wearth / 28;
@@ -101,7 +105,7 @@ function mouse_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             play = false;
             // t = 0;
         }
@@ -125,7 +129,7 @@ function slower(x0,y0,w) {
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             Wearth /= 1.1;
             Wmoon /= 1.1;
         }
@@ -156,7 +160,7 @@ function faster(x0,y0,w) {
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             Wearth *= 1.1;
             Wmoon *= 1.1;
         }
@@ -183,7 +187,7 @@ function phases_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             phasesON = !phasesON;
         }
     }
@@ -213,7 +217,7 @@ function tides_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             tidesON = !tidesON;
         }
     }
@@ -243,7 +247,7 @@ function shadows_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             
             shadowsON = !shadowsON;
         }
@@ -273,7 +277,7 @@ function scales_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        if (mouseIsPressed) {
+        if (clicked) {
             if (!changing) {
                 changing = true
               }
