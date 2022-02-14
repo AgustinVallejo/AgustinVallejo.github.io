@@ -21,7 +21,7 @@ function setup() {
 
 function draw() {
     let angle = set_angle();
-    background(0);
+    background(20);
     twinklingStars();
     sun();
     earth(t);
@@ -33,12 +33,6 @@ function draw() {
     if (play) {
       t++;
     }
-}
-
-function keyPressed() {
-  if (!changing) {
-    changing = true
-  }
 }
 
 function change() {

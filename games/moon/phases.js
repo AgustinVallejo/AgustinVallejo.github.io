@@ -34,8 +34,8 @@ function phases(a) {
 
     noStroke();
     let phasex = width/2;
-    let phasey = height/2 + Rearth;
-    let d2 = Rearth;
+    let phasey = height/2 + 100;
+    let d2 = 100;
     
     push();
     translate(phasex,phasey);

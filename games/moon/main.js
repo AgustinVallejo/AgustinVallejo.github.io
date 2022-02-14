@@ -1,6 +1,7 @@
 let t, play
 let Rearth, Rmoon, Wearth, Wmoon;
-var moonOrbit, earthOrbit;
+let moonLoc, angle;
+let moonOrbit, earthOrbit;
 let Rsun,Xsun;
 
 // El conjunto de las estrellas de fondo
@@ -8,6 +9,14 @@ let stars = [];
 let stars2 = [];
 let NStars = 100;
 let twinkling = true;
+
+// All simulations variables
+let phasesON = false;
+let shadowsON = false;
+let tidesON = false;
+let changing = false;
+
+let eclipse = false;
 
 var IMG;
 
@@ -20,6 +29,8 @@ function initializeFields() {
     earthOrbit = Xsun*width;
     Wearth = PI / 50;
     Wmoon = Wearth / 28;
+    moonLoc = createVector(1,0);
+    angle = 0;
     t = 0;
     IMG = null;
     loc = null;
@@ -30,7 +41,7 @@ function initializeFields() {
 
 function set_angle(){
     if (play) {
-        angle = -t*Wmoon - 3.2*PI/4
+        angle -= t*Wmoon;
         if (t > 2*PI/Wmoon) {
             t -= 2*PI/Wmoon
         }
@@ -70,7 +81,7 @@ function earth(t) {
 function moon(angle) {
     // Pone la Luna en la dirección del Mouse
     // Tamaño de la órbita
-    var moonLoc = createVector(1,0);
+    moonLoc = createVector(1,0);
     moonLoc.setHeading(angle)
     moonLoc.mult(moonOrbit);
     push();
@@ -83,13 +94,20 @@ function moon(angle) {
     circle(0, 0, 2 * moonOrbit);
     // Luna y Lado Iluminado
     noStroke();
-    let bg_color = color(20,50,50,255);
-    let light_color = color(255,255,255,255);
-    fill(bg_color)
+    fill(255);
+    if (shadowsON && eclipse && moonLoc.x<0 && abs(moonLoc.y) < Rearth/2){
+        let r = map(abs(moonLoc.y),0,Rearth/2,100,255)
+        fill(255,r,r)
+      }
     circle(moonLoc.x, moonLoc.y, Rmoon);
-    fill(light_color);
-    arc(moonLoc.x, moonLoc.y, Rmoon, Rmoon, -PI / 2, PI / 2, CHORD);
+
+    // Lado oscuro
+    fill(0,50,50)
+    arc(moonLoc.x, moonLoc.y, Rmoon, Rmoon, PI / 2, -PI / 2, CHORD);
     pop();
+
+    // Manchitas
+
     var moonAngle = moonLoc.heading();
     return moonAngle;
 }
