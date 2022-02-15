@@ -7,6 +7,26 @@ $(document).ready(function() {
      });
 });
 
+$('#eng').on('click', function(event) {
+    $("#accordion").empty()
+    $.ajax({
+        type: "GET",
+        url: "data/CV_eng.csv",
+        dataType: "text",
+        success: function(data) {processData(data);}
+     });
+  });
+
+$('#esp').on('click', function(event) {
+    $("#accordion").empty()
+    $.ajax({
+        type: "GET",
+        url: "data/CV.csv",
+        dataType: "text",
+        success: function(data) {processData(data);}
+     });
+});
+
 function processData(allText) {
     var allTextLines = allText.split(/\r\n|\n/);
     var headers = allTextLines[0].split(',');
