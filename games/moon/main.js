@@ -1,29 +1,48 @@
-let t, play
-let radioT, radioL, Wearth, Wmoon;
+let t0, t, play
+let Rearth, Rmoon, Wearth, Wmoon;
+let moonLoc, angle;
+let moonOrbit, earthOrbit;
+let Rsun,Xsun;
 
-// El conjunto de las estrellas de fondo
-let stars = [];
-let NStars = 100;
-let twinkling = true;
+// All simulations variables
+let phasesON = false;
+let shadowsON = false;
+let tidesON = false;
+let changing = false;
+
+let eclipse = false;
+let clicked = false;
 
 var IMG;
 
 function initializeFields() {
-    radioT = 200;
-    radioL = 50;
+    // Time variables
+    t = 0;
+    t0 = 0;
+    play = false;
+
+    // Physical Properties
+    Rearth = 200;
+    Rmoon = 50;
+    Rsun = 1.5*width;
+    Xsun = 1.2;
+    moonOrbit = 300;
+    earthOrbit = Xsun*width;
     Wearth = PI / 50;
     Wmoon = Wearth / 28;
-    t = 0;
-    IMG = null;
+    moonLoc = createVector(1,0);
+    angle = 0;
+
     loc = null;
     size = 0;
     col = 0;
-    play = false;
+
+    IMG = null;
 }
 
 function set_angle(){
     if (play) {
-        angle = -t*Wmoon - 3.2*PI/4
+        angle -= t*Wmoon;
         if (t > 2*PI/Wmoon) {
             t -= 2*PI/Wmoon
         }
@@ -34,12 +53,6 @@ function set_angle(){
     return angle
 }
 
-function createStars() {
-	for (i = 0; i < NStars; i++) {
-		stars.push([random(width),random(height)]);
-	}
-}
-
 function earth(t) {
     push();
     translate(width / 2, height / 2);
@@ -48,11 +61,12 @@ function earth(t) {
     imageMode(CENTER);
 
     noStroke();
-    fill(50,20,0);
-    circle(0,0,radioT)
+    fill(0,200,200);
+    circle(0,0,Rearth)
 
     // Dibujo la Tierra
-    IMG.resize(radioT,radioT);
+    IMG.resize(width,width);
+    scale(Rearth/width);
     tint(200);
     image(IMG, 0, 0);
     pop();
@@ -61,8 +75,7 @@ function earth(t) {
 function moon(angle) {
     // Pone la Luna en la dirección del Mouse
     // Tamaño de la órbita
-    var moonOrbit = 300;
-    var moonLoc = createVector(1,0);
+    moonLoc = createVector(1,0);
     moonLoc.setHeading(angle)
     moonLoc.mult(moonOrbit);
     push();
@@ -75,13 +88,20 @@ function moon(angle) {
     circle(0, 0, 2 * moonOrbit);
     // Luna y Lado Iluminado
     noStroke();
-    let bg_color = color(20,50,50,255);
-    let light_color = color(255,255,255,255);
-    fill(bg_color)
-    circle(moonLoc.x, moonLoc.y, radioL);
-    fill(light_color);
-    arc(moonLoc.x, moonLoc.y, radioL, radioL, -PI / 2, PI / 2, CHORD);
+    fill(255);
+    if (shadowsON && eclipse && moonLoc.x<0 && abs(moonLoc.y) < Rearth/2){
+        let r = map(abs(moonLoc.y),0,Rearth/2,100,255)
+        fill(255,r,r)
+      }
+    circle(moonLoc.x, moonLoc.y, Rmoon);
+
+    // Lado oscuro
+    fill(0,50,50)
+    arc(moonLoc.x, moonLoc.y, Rmoon, Rmoon, PI / 2, -PI / 2, CHORD);
     pop();
+
+    // Manchitas
+
     var moonAngle = moonLoc.heading();
     return moonAngle;
 }
@@ -101,9 +121,9 @@ function sun() {
     }
     noStroke();
     fill(255,255,0);
-    circle(1.7*width, height/2, 1.5*width)
+    circle((0.5+Xsun)*width, height/2, Rsun)
     fill(255,255,200);
-    circle(1.7*width, height/2, 1.45*width)
+    circle((0.5+Xsun)*width, height/2, 0.97*Rsun)
 }
 
 function arrow(x1, y1, x2, y2) {
@@ -118,38 +138,11 @@ function arrow(x1, y1, x2, y2) {
     pop();
 }
 
-
-function twinklingStars(){
-	fill(70);
-	noStroke();
-	for (i = 0; i < NStars; i++) {
-		x = stars[i][0];
-		y = stars[i][1];
-		star(x,y,10+noise(0.01*t+10*i)*10,2+noise(0.01*t+10*i)*5,4);
-	}
-}
-
-function star(x, y, radius1, radius2, npoints) {
-  angle = TWO_PI / npoints;
-  halfAngle = angle/2.0;
-	da = PI/4 //0.001*mouseX
-  beginShape();
-  for (a = 0; a < TWO_PI; a += angle) {
-    sx = x + cos(a + da) * radius2;
-    sy = y + sin(a + da) * radius2;
-    vertex(sx, sy);
-    sx = x + cos(a+halfAngle + da) * radius1;
-    sy = y + sin(a+halfAngle + da) * radius1;
-    vertex(sx, sy);
-  }
-  endShape(CLOSE);
-}
-
 function stickman(t, eyes = 0) {
     eyes += t*Wmoon;
     // El muñequito y su rotación
-    var s = 0.3;
-    var y = -0.65 * radioT / s;
+    var s = 0.3 * Rearth/100;
+    var y = -0.65 * Rearth / s;
     var dEyes = 5;
     push();
     translate(width / 2, height / 2);

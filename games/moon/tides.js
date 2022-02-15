@@ -35,6 +35,7 @@ function tides(N, objAngle) {
     translate(width / 2, height / 2);
     noStroke();
     fill(89, 183, 255, 128);
+    scale(Rearth)
     beginShape();
     for (var i = 0; i < N; i++) {
         var th = map(i, 0, N, 0, 2 * PI);
@@ -43,7 +44,7 @@ function tides(N, objAngle) {
         // Efecto de la Luna en las mareas
         var drLUNA = tidalForceObj(th, 'L', objAngle);
         // La altura R de la marea en un ángulo th
-        var R = 1.1 * 0.5 * radioT + drSOL + drLUNA;
+        var R = 0.6  + drSOL + drLUNA;
         var x = R * cos(th);
         var y = R * sin(th);
         // Crea el vector de la figura
@@ -55,13 +56,13 @@ function tides(N, objAngle) {
 
 function tidalForceObj(angle, obj, objAngle) {
     // Ejerce la fuerza según el objeto que se esté usando. S para SOL y L para LUNA
-    var MOONTIDE = 1;
-    var SUNTIDE = 0.7;
+    var MOONTIDE = 0.1;
+    var SUNTIDE = 0.06;
     switch(obj) {
         case 'S':
-            return tidalForce(angle, 10 * SUNTIDE, 0);
+            return tidalForce(angle, SUNTIDE, 0);
         case 'L':
-            return tidalForce(angle, 10 * MOONTIDE, objAngle);
+            return tidalForce(angle, MOONTIDE, objAngle);
         default:
             return 0;
     }
@@ -69,6 +70,6 @@ function tidalForceObj(angle, obj, objAngle) {
 
 function tidalForce(angle, G, objAngle) {
     // El desplazamiento vertical según la posición del lugar y el objeto que perturba
-    var dr = G * (1 + cos(2 * (angle - objAngle)));
+    var dr = G * (1 + cos(2 * (angle - objAngle))) ;
     return dr;
 }

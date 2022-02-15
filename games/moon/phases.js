@@ -9,7 +9,7 @@ function setup() {
     IMG = loadImage("polar.png");
     smooth();
 
-    radioT = 100;
+    Rearth = 100;
 }
 
 function draw() {
@@ -31,11 +31,15 @@ function phases(a) {
     // Based on the code of https://github.com/Pole11/moon-phases
     let bg_color = color(0,25,25,255);
     let light_color = color(255,255,255,255);
+    if (shadowsON && eclipse && moonLoc.x<0 && abs(moonLoc.y) < Rearth/2){
+      let r = map(abs(moonLoc.y),0,Rearth/2,100,255)
+      light_color = color(255,r,r)
+    }
 
     noStroke();
     let phasex = width/2;
-    let phasey = height/2 + radioT;
-    let d2 = radioT;
+    let phasey = height/2 + 100;
+    let d2 = 100;
     
     push();
     translate(phasex,phasey);
@@ -112,23 +116,33 @@ function phaseText(a, d2) {
   let phase = ""
   let threshold = 0.75
   if (cos(a) > threshold) {
-    phase = "Nueva"  
+    phase = "Luna\nNueva"  
   }
   else if (cos(a) < -threshold) {
-    phase = "Llena"  
+    phase = "Luna\nLlena"  
   }
   if (sin(a) > threshold) {
-    phase = "Menguante"  
+    phase = "Luna\nMenguante"  
   }
   else if (sin(a) < -threshold) {
-    phase = "Creciente"  
+    phase = "Luna\nCreciente"  
   }
   a = 4*a - 3.2*PI/4
-
+  
   textFont('Roboto Slab');
   stroke(255*pow(1-cos(a),3));
+  if (shadowsON && eclipse && abs(moonLoc.y) < Rearth/2){
+    if (moonLoc.x < 0) {
+      stroke(255*pow(1-cos(a),3),0,0);
+      phase = "Eclipse\nLunar"  
+    }
+    else if (moonLoc.x > 0) {
+      stroke(255*pow(1-cos(a),3),255*pow(1-cos(a),3),0);
+      phase = "Eclipse\nSolar"  
+    }
+  }
   textAlign(CENTER);
   textSize(25)
-  text("Luna\n"+phase,0,0.8*d2);
+  text(phase,0,0.8*d2);
   noStroke();
 }

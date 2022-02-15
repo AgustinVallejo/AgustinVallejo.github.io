@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $.ajax({
         type: "GET",
-        url: "data/CV.csv",
+        url: "data/CV_eng.csv",
         dataType: "text",
         success: function(data) {processData(data);}
      });
@@ -36,7 +36,6 @@ function processData(allText) {
     let lastHeader = ""
     let lastTitle = ""
     let content = "<p>"
-    console.log(lastTitle)
     lines.forEach(function(row, indice, array) {
         if (row[2] != lastTitle){ // Si hay nuevo item
             lastTitle = row[2]
