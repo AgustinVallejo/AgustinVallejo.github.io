@@ -13,7 +13,11 @@ function setup() {
 }
 
 function draw() {
-    let angle = set_angle();
+    let angle = 0
+    if (!play) {
+      Amoon = atan2(mouseY - height/2, mouseX - width/2)
+    }
+    angle = Amoon
     background(20);
     twinklingStars();
     sun();
@@ -22,35 +26,34 @@ function draw() {
       tides(500, angle);
     }
 
-    if (shadowsON){
-      if (scenario == 0) {
-          earth(t);
-          stickman(t, angle);
+    if (shadowsON) {
+      switch (scenario*cos(Amoon)/abs(cos(Amoon))){
+        case 0:
+          earth();
           earth_shadow();
           moon(angle);
           moon_shadow();
-      }
-      
-      else if (scenario == 1) {
+          eclipse = true
+          break;
+        case -1: // Under
           moon(angle);
           moon_shadow();
-          earth(t);
-          stickman(t, angle);
+          earth();
           earth_shadow();
-      }
-
-      else if (scenario == 2) {
-          earth(t);
+          eclipse = false
+          break;
+        case 1: // Over
+          earth();
+          earth_shadow();
           moon(angle);
-          stickman(t, angle);
           moon_shadow();
-          earth_shadow();
+          eclipse = false
+          break;
       }
     }
-    else{
-      earth(t);
+    else {
+      earth();
       moon(angle);
-      stickman(t, angle);
     }
 
     if (phasesON){
@@ -62,7 +65,5 @@ function draw() {
     control_buttons();
     sims_buttons();
     clicked = false;
-    if (play) {
-        t++;
-    }
+    t0++
 }

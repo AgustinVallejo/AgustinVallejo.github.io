@@ -1,6 +1,6 @@
 let t0, t, play
-let Rearth, Rmoon, Wearth, Wmoon;
-let moonLoc, angle;
+let Rearth, Rmoon,Aearth,Amoon, Wearth, Wmoon;
+let moonLoc;
 let moonOrbit, earthOrbit;
 let Rsun,Xsun;
 
@@ -12,8 +12,9 @@ let changing = false;
 
 let eclipse = false;
 let clicked = false;
+let scenario = 0;
 
-var IMG;
+var IMG, font;
 
 function initializeFields() {
     // Time variables
@@ -28,40 +29,35 @@ function initializeFields() {
     Xsun = 1.2;
     moonOrbit = 300;
     earthOrbit = Xsun*width;
+
+    Aearth = 0
+    Amoon = PI/2
     Wearth = PI / 50;
     Wmoon = Wearth / 28;
     moonLoc = createVector(1,0);
-    angle = 0;
 
     loc = null;
     size = 0;
     col = 0;
 
     IMG = null;
+    font = textFont('Roboto Slab');
 }
 
-function set_angle(){
+
+function earth() {
     if (play) {
-        angle -= t*Wmoon;
-        if (t > 2*PI/Wmoon) {
-            t -= 2*PI/Wmoon
-        }
-      }
-    else {
-        angle = createVector(mouseX - width/2,mouseY - height/2).heading()
+        Aearth -= Wearth
     }
-    return angle
-}
-
-function earth(t) {
     push();
     translate(width / 2, height / 2);
+    push();
     // La tierra también rota según t
-    rotate(-t * Wearth + 1.2 * PI / 2);
+    rotate(Aearth + 1.2 * PI / 2);
     imageMode(CENTER);
 
     noStroke();
-    fill(0,200,200);
+    fill(100,150,150)
     circle(0,0,Rearth)
 
     // Dibujo la Tierra
@@ -70,22 +66,29 @@ function earth(t) {
     tint(200);
     image(IMG, 0, 0);
     pop();
+    
+    // Órbita Lunar
+    noFill();
+    stroke(100);
+    strokeWeight(1);
+    circle(0, 0, 2 * moonOrbit);
+    
+    pop();
+    stickman(t, eyes = 0)
 }
 
 function moon(angle) {
     // Pone la Luna en la dirección del Mouse
     // Tamaño de la órbita
+    if (play){
+        Amoon -= Wmoon
+        angle = Amoon
+    }
     moonLoc = createVector(1,0);
     moonLoc.setHeading(angle)
     moonLoc.mult(moonOrbit);
     push();
     translate(width / 2, height / 2);
-    // El resto de la función es dibujando cositas
-    // Órbita
-    noFill();
-    stroke(100);
-    strokeWeight(1);
-    circle(0, 0, 2 * moonOrbit);
     // Luna y Lado Iluminado
     noStroke();
     fill(255);
@@ -147,7 +150,7 @@ function stickman(t, eyes = 0) {
     push();
     translate(width / 2, height / 2);
     scale(s);
-    rotate(-t * Wearth);
+    rotate(Aearth);
     ellipseMode(CENTER);
     stroke(128);
     strokeWeight(10);

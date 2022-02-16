@@ -2,6 +2,27 @@ function mouseClicked(){
     clicked = true
 }
 
+function message(msg) {
+    let middle = createVector(width/2,height/2)
+    let mouse = createVector(mouseX,mouseY)
+    
+    let head = p5.Vector.sub(mouse, middle)
+    head.mult(0.9)
+    head.add(middle)
+    
+    fill(255)
+    stroke(0)
+    textSize(15);
+    let w = textWidth(msg)
+    rect(head.x-10,head.y-20,head.x+w+10,head.y+10)
+    noStroke()
+    fill(0);
+    text(msg,head.x,head.y)
+    fill(50);
+    stroke(200);
+
+}
+
 function buttons() {
     fill(50);
     stroke(200);
@@ -53,6 +74,7 @@ function sims_buttons() {
     tides_button(x0, y0 + w + dx, w);
     shadows_button(x0, y0 + 2*(w + dx), w);
     scales_button(x0, y0 + 3*(w + dx), w);
+    inclination(x0, height - 100 - dx, 240, 100)
 }
 
 function play_button(x0,y0,w){
@@ -70,6 +92,7 @@ function play_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Play")
         if (clicked) {
             play = true;
             Wearth = PI / 50;
@@ -105,6 +128,7 @@ function mouse_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Mouse control")
         if (clicked) {
             play = false;
             // t = 0;
@@ -129,9 +153,10 @@ function slower(x0,y0,w) {
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Slower")
         if (clicked) {
-            Wearth /= 1.1;
-            Wmoon /= 1.1;
+            Wearth /= 1.5;
+            Wmoon /= 1.5;
         }
     }
 }
@@ -160,9 +185,10 @@ function faster(x0,y0,w) {
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Faster")
         if (clicked) {
-            Wearth *= 1.1;
-            Wmoon *= 1.1;
+            Wearth *= 1.5;
+            Wmoon *= 1.5;
         }
     }
 }
@@ -187,6 +213,7 @@ function phases_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Phases Card")
         if (clicked) {
             phasesON = !phasesON;
         }
@@ -217,6 +244,7 @@ function tides_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Toggle Tides")
         if (clicked) {
             tidesON = !tidesON;
         }
@@ -247,6 +275,7 @@ function shadows_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Toggle Shadows")
         if (clicked) {
             
             shadowsON = !shadowsON;
@@ -277,10 +306,80 @@ function scales_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
+        message("Change scale")
         if (clicked) {
             if (!changing) {
                 changing = true
               }
+        }
+    }
+
+}
+
+function inclination(x0,y0,w, h){
+    stroke(200);
+    strokeWeight(2);
+    push();
+    translate(x0,y0);
+    rect(0,0,w,h,5)
+    strokeWeight(0.01)
+    scale(w);
+
+    noStroke()
+    fill(0)
+    textSize(20/w)
+    textAlign(CENTER)
+    text("Lateral View", 0.5,0.1)
+
+    let dth = 0
+
+    switch (scenario){
+        case 0:
+            dth = PI/2
+            break;
+        case 1:
+            dth = PI
+            break;
+        case 2:
+            dth = 0
+            break;
+    }
+
+    if (sin(Amoon) > 0){
+        noStroke()
+        fill(100,150,150)
+        circle(0.5,(h/w)*0.5,30/w)
+        fill(200)
+        circle(0.5 + 0.4*cos(Amoon),(h/w)*(0.5 +  0.4*cos(-Amoon + dth)*sin(PI/5)),15/w)
+        noFill();
+    }
+    else {
+        noStroke()
+        fill(200)
+        circle(0.5 + 0.4*cos(Amoon),(h/w)*(0.5 +  0.4*cos(-Amoon + dth)*sin(PI/5)),15/w)
+        fill(100,150,150)
+        circle(0.5,(h/w)*0.5,30/w)
+        noFill();
+    }
+    
+    stroke(255)
+    strokeWeight(1/w)
+    beginShape();
+    for (let n = 0; n < 50; n++){
+        th = n*2*PI/50
+        vertex(0.5 + 0.4*cos(th),(h/w)*(0.5 +  0.4*cos(th+dth)*sin(PI/5)))
+    }
+    endShape(CLOSE);
+    pop();
+
+    if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + h))) {
+        cursor(HAND);
+        message("Change Inclination")
+        if (clicked) {
+            scenario += 1
+            if (scenario == 2) {
+                scenario = -1
+            }
         }
     }
 

@@ -70,6 +70,11 @@ function phases(a) {
       light_color = color(255,r,r) // Lunar eclipse color
     }
     
+    let color1 = light_color;
+    let color2 = light_color;
+    let color3 = light_color;
+    let color4 = light_color;
+
     if (-PI/2 < a && a < 0) {
       color1 = light_color;
       color2 = bg_color;

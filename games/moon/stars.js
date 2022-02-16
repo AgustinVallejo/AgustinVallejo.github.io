@@ -17,11 +17,11 @@ function twinklingStars(){
 	for (i = 0; i < NStars; i++) {
 		x = stars[i][0];
 		y = stars[i][1];
-		star(x,y,10+noise(0.1*t+10*i)*10,2+noise(0.01*t+10*i)*5,4);
+		star(x,y,10+noise(0.1*t0+10*i)*10,2+noise(0.01*t0+10*i)*5,4);
 
         x = stars2[i][0];
 		y = stars2[i][1];
-		star(x,y,4+noise(1*t+10*i)*5,1+noise(0.01*t+10*i)*2,4);
+		star(x,y,4+noise(1*t0+10*i)*5,1+noise(0.01*t0+10*i)*2,4);
 	}
 }
 
