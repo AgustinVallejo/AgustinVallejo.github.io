@@ -128,7 +128,7 @@ function mouse_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Mouse control")
+        message("Mouse")
         if (clicked) {
             play = false;
             // t = 0;
@@ -153,7 +153,7 @@ function slower(x0,y0,w) {
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Slower")
+        message("Lento")
         if (clicked) {
             Wearth /= 1.5;
             Wmoon /= 1.5;
@@ -185,7 +185,7 @@ function faster(x0,y0,w) {
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Faster")
+        message("Rápido")
         if (clicked) {
             Wearth *= 1.5;
             Wmoon *= 1.5;
@@ -213,7 +213,7 @@ function phases_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Phases Card")
+        message("Fases")
         if (clicked) {
             phasesON = !phasesON;
         }
@@ -244,7 +244,7 @@ function tides_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Toggle Tides")
+        message("Mareas")
         if (clicked) {
             tidesON = !tidesON;
         }
@@ -275,7 +275,7 @@ function shadows_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Toggle Shadows")
+        message("Sombras")
         if (clicked) {
             
             shadowsON = !shadowsON;
@@ -306,7 +306,7 @@ function scales_button(x0,y0,w){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Change scale")
+        message("Cambiar escala")
         if (clicked) {
             if (!changing) {
                 changing = true
@@ -324,12 +324,6 @@ function inclination(x0,y0,w, h){
     rect(0,0,w,h,5)
     strokeWeight(0.01)
     scale(w);
-
-    noStroke()
-    fill(0)
-    textSize(20/w)
-    textAlign(CENTER)
-    text("Lateral View", 0.5,0.1)
 
     let dth = 0
 
@@ -374,7 +368,7 @@ function inclination(x0,y0,w, h){
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + h))) {
         cursor(HAND);
-        message("Change Inclination")
+        message("Cambiar inclinación")
         if (clicked) {
             scenario += 1
             if (scenario == 2) {
