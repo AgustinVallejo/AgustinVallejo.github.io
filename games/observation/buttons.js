@@ -24,6 +24,30 @@ function message(msg) {
 
 }
 
+function coordinates(){
+    fill(50);
+    stroke(200);
+    strokeWeight(2);
+    strokeJoin(ROUND);
+    rectMode(CORNERS)
+    rect(0.01*width, 0.02*height, 250, 120,10)
+
+
+    fill(255)
+    noStroke()
+    textSize(30);
+    textAlign(LEFT);
+    text("Coordenadas",0.015*width,0.07*height)
+    textSize(20);
+    if (!equatorialON){
+        text("Acimut: "+az+"°\nAltura: "+h+"°",0.02*width,0.07*height + 30)
+    }
+    else{
+        let raa = floor(map(ra*kra - H,0,PI,180,360))
+        text("Ascención Recta: "+raa+"°\nDeclinación: "+dec+"°",0.02*width,0.07*height + 30)
+    }
+}
+
 function control_buttons(){
     fill(50);
     stroke(200);
@@ -42,23 +66,27 @@ function control_buttons(){
     faster(x0 + 3*(w + dx), y0, w);
 }
 
-function sims_buttons() {
+function latitude_buttons() {
     fill(50);
     stroke(200);
     strokeWeight(2);
     strokeJoin(ROUND);
     rectMode(CORNERS)
 
-    let w = 60; //px, width of the button
+    let w = 40; //px, width of the button
     let dx = width*0.01;
-    let x0 = width*0.99;
+    let x0 = width*0.01;
     let y0 = 0.5*height - 2*w - dx;
 
-    phases_button(x0,y0,w);
-    tides_button(x0, y0 + w + dx, w);
-    shadows_button(x0, y0 + 2*(w + dx), w);
-    scales_button(x0, y0 + 3*(w + dx), w);
-    inclination(x0, height - 100 - dx, 240, 100)
+    plus(x0,y0,w);
+    zero(x0, y0 + w + dx, w);
+    minus(x0, y0 + 2*(w + dx), w);
+    
+    fill(255);
+    textSize(30);
+    textAlign(LEFT);
+    text("Latitud:",x0,y0 - 2*w + dx)
+    text(phi+"°N",x0,y0 - w + dx)
 }
 
 function play_button(x0,y0,w){
@@ -166,60 +194,46 @@ function faster(x0,y0,w) {
     }
 }
 
-function phases_button(x0,y0,w){
-    if (phasesON){
-        strokeWeight(3);
-        stroke(255,255,0);
-    }
+function plus(x0,y0,w){
     push();
     translate(x0,y0);
     rect(0,0,w,w,5)
     scale(w);
 
-    noStroke();
-    fill(200)
-    arc(0.4, 0.5, 0.7, 0.7, -PI / 2, PI / 2, CHORD);
-    fill(50)
-    arc(0.4, 0.5, 0.4, 0.7, -PI / 2, PI / 2, CHORD);
+    strokeWeight(5/w)
+    line(0.5,0.2,0.5,0.8)
+    line(0.2,0.5,0.8,0.5)
 
     pop();
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Fases")
-        if (clicked) {
-            phasesON = !phasesON;
+        message("Aumentar Latitud")
+        if (clicked&&(phi<90)) {
+            phi += 15;
         }
     }
     stroke(200);
     strokeWeight(2);
 
 }
-function tides_button(x0,y0,w){
-    if (tidesON){
-        strokeWeight(3);
-        stroke(255,255,0);
-    }
-
+function zero(x0,y0,w){
     push();
     translate(x0,y0);
     rect(0,0,w,w,5)
     scale(w);
 
-
-    noStroke();
-    fill(150,150,255,200)
-    ellipse(0.5,0.5,0.7,0.4)
-    fill(200)
-    circle(0.5,0.5,0.3)
+    strokeWeight(5/w)
+    noFill()
+    ellipse(0.5, 0.5, 0.4, 0.6)
 
     pop();
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Mareas")
+        message("Latitud 0°")
         if (clicked) {
-            tidesON = !tidesON;
+            phi = 0;
         }
     }
     stroke(200);
@@ -227,67 +241,29 @@ function tides_button(x0,y0,w){
 
 }
 
-function shadows_button(x0,y0,w){
-    if (shadowsON){
-        strokeWeight(3);
-        stroke(255,255,0);
-    }
+function minus(x0,y0,w){
+
     push();
     translate(x0,y0);
     rect(0,0,w,w,5)
     scale(w);
 
-
-    noStroke();
-    fill(20);
-    rect(0.01,0.375,0.7,0.6)
-    fill(200)
-    circle(0.7,0.5,0.25)
+    strokeWeight(5/w)
+    line(0.2,0.5,0.8,0.5)
 
     pop();
 
     if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
         cursor(HAND);
-        message("Sombras")
-        if (clicked) {
-            
-            shadowsON = !shadowsON;
+        message("Disminuir latitud")
+        if (clicked&&(phi>0)) {
+            phi -= 15;
         }
     }
     stroke(200);
     strokeWeight(2);
 }
 
-function scales_button(x0,y0,w){
-    if (changing){
-        strokeWeight(3);
-        stroke(255,255,0);
-    }
-    push();
-    translate(x0,y0);
-    rect(0,0,w,w,5)
-    strokeWeight(0.01)
-    scale(w);
-
-    noStroke();
-    fill(200)
-    circle(0.5,0.5,0.7)
-    fill(100)
-    circle(0.7,0.7,0.3)
-
-    pop();
-
-    if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
-        cursor(HAND);
-        message("Cambiar escala")
-        if (clicked) {
-            if (!changing) {
-                changing = true
-              }
-        }
-    }
-
-}
 
 function inclination(x0,y0,w, h){
     stroke(200);

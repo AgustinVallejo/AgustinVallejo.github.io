@@ -1,7 +1,9 @@
 let az = 0;
 let h = 45;
 let dec = 45;
-let ra = 0;
+let ra = -45;
+let kra = 0.01;
+let r;
 
 let px = 0;
 let py = 0;
@@ -10,8 +12,8 @@ let R = 40;
 
 function all_telescopes(){
     strokeWeight(2)
-    horizontalMount(0.3*width,0.85*height)
-    equatorialMount(0.7*width,0.85*height)
+    horizontalMount(0.3*width,0.8*height)
+    equatorialMount(0.7*width,0.8*height)
 }
 
 function telescope(x=0,y=0){
@@ -26,6 +28,11 @@ function horizontalMount(x,y){
 
     push()
     legs()
+    fill(200);
+    textSize(0.5);
+    textAlign(CENTER);
+    noStroke()
+    text("Montura Horizontal",0,1.95)
     if (!equatorialON){
         noStroke();
         fill(255,255,0,100)
@@ -57,6 +64,11 @@ function equatorialMount(x,y){
 
     push()
     legs()
+    fill(200);
+    textSize(0.5);
+    textAlign(CENTER);
+    noStroke()
+    text("Montura Ecuatorial",0,1.95)
     if (equatorialON){
         noStroke();
         fill(255,255,0,100)
@@ -73,14 +85,14 @@ function equatorialMount(x,y){
     rotate(radians(phi))
     rect(0,-20,20,50)
     pop()
-    translate(30,-35)
+    translate(30*sin(radians(phi)),-35*cos(radians(phi)))
     
     let angle = radians(-90)
     if (equatorialON){
         angle = atan2(py-y,px-x)
     }
     rotate(angle)
-    translate(0, -10)
+    translate(0, 0)
     rect(0,0,5,60)
     rect(0,-40,20,20)
     telescope(-20,30)
@@ -103,8 +115,8 @@ function pointing(){
                 az--
             }
         }
-        else{
-            ra++
+        else if (((px<width/2)&&(py<0.8*height-R))||(px>width/2)){
+            ra--
         }
     } else if (key === "ArrowRight") {
         if (!equatorialON){
@@ -112,8 +124,8 @@ function pointing(){
                 az++
             }
         }
-        else{
-            ra--
+        else if (((px>width/2)&&(py<0.8*height-R))||(px<width/2)){
+            ra++
         }
     }
     else if (key === "ArrowUp") {
@@ -123,8 +135,8 @@ function pointing(){
             }
         }
         else{
-            if (dec<90){
-                dec++
+            if (dec>0){
+                dec--
             }
         }
     } 
@@ -135,24 +147,31 @@ function pointing(){
             }
         }
         else{
-            if (dec>0){
-                dec--
+            if (dec<90){
+                dec++
             }
         }
     }
+
+    if (play){
+        ra-= Wsky/kra
+    }
+
     noFill();
-    strokeWeight(5)
-    stroke(170,0,0);
+    stroke(255,0,0,100)
+    strokeWeight(10)
     if (!equatorialON){
         px = map(az,-90,90,0+R,width-R,true)
         py = map(h,0,90,0.8*height-R,0+R,true)
     }
     else{
-        let r = map(dec,0,90,height/2,0,true)
-        px = r*cos(ra*0.01) + width/2
-        py = r*sin(ra*0.01) + map(phi,0,90,0.8*height,0)
+        r = map(dec,0,90,height*0.8,0,true)
+        px = r*cos(ra*kra) + width/2
+        py = r*sin(ra*kra) + y0
     }
+    push()
     circle(px,py,2*R)
+    pop()
 }
 
 function keyReleased() {

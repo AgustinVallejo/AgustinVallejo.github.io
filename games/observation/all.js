@@ -8,6 +8,7 @@ function setup() {
 function draw() {
     background(20);
     twinklingStars();
+    guide();
     mountains();
     foreground();
     pointing();
@@ -15,9 +16,14 @@ function draw() {
     stickman();
     // atmosphere();
     // buttons();
-    control_buttons()
+    control_buttons();
+    latitude_buttons();
+    coordinates();
     if (play){
         H -= Wsky
+        if (H<-PI){
+            H+=2*PI
+        }
     }
 
     t0++;

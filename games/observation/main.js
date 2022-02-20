@@ -1,9 +1,11 @@
-let t0 = 0, H = 0;
+let t0 = 0
+let y0 = 0;
 let Wsky;
 let Xpos
+let H;
 let atmosphereON = true
 let equatorialON = false
-let phi = 45
+let phi = 0
 let play = false
 let clicked = false
 
@@ -11,6 +13,10 @@ let clicked = false
 function initializeFields(){
     Xpos = 0.1*width
     Wsky = 2*PI*1e-4;
+    H = 0;
+    map(dec,0,90,height*0.7,0,true);
+    textFont('Roboto Slab')
+
 }
 
 function keyPressed(){
@@ -22,7 +28,32 @@ function keyPressed(){
     }
 }
 
-function mountains() {
+function guide(){
+    stroke(255,0,0,100)
+    strokeCap(SQUARE);
+    strokeWeight(10)
+    noFill();
+
+    if (!equatorialON){
+        line(0,py,px-R,py)
+        line(px+R,py,width,py)
+        line(px,0,px,py-R)
+        line(px,py+R,px,height)
+    }
+    else{
+        push()
+        translate(width/2, y0)
+        let v = createVector(px,py)
+        arc(0,0, 2*r, 2*r,ra*kra+R/r,ra*kra-R/r)
+        line(10*cos(ra*kra),10*sin(ra*kra),(r-R)*cos(ra*kra),(r-R)*sin(ra*kra));
+        line((r+R)*cos(ra*kra),(r+R)*sin(ra*kra),width*cos(ra*kra),width*sin(ra*kra));
+        pop();
+    }
+    strokeCap(ROUND);
+
+}
+
+function mountains(){
     fill(0);
     noStroke();
     beginShape();
@@ -45,10 +76,9 @@ function foreground(){
     fill(80,100,80)
     textSize(50)
     textAlign(CENTER)
-    textFont('Roboto Slab')
     text("N",0.5*width,y)
-    text("E",0.85*width,y)
-    text("W",0.15*width,y)
+    text("E",0.95*width,y)
+    text("W",0.05*width,y)
 
 }
 

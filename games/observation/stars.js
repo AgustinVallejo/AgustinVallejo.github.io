@@ -9,12 +9,12 @@ let atm0 = 0.6
 function createStars() {
 	let x,y,z
 	for (i = 0; i < NStars; i++) {
-		x = random(-width/2,width/2)
-		y = random(-width/2,width/2)
+		x = random(-1.4*width/2,1.4*width/2)
+		y = random(-1.4*width/2,1.4*width/2)
 		z = atan2(y,x)
 		stars.push([x,y,z]);
-		x = random(-width/2,width/2)
-		y = random(-width/2,width/2)
+		x = random(-1.4*width/2,1.4*width/2)
+		y = random(-1.4*width/2,1.4*width/2)
 		z = atan2(y,x)
 		stars2.push([x,y,z]);
 	}
@@ -29,7 +29,7 @@ function twinklingStars(){
 
 	fill(255)
 	x = width/2
-	y0 = map(phi,0,90,0.8*height,0)
+	y0 = map(phi,0,90,0.8*height-R,0)
 	
 	translate(x, y0)
 	fill(70);
