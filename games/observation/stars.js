@@ -30,7 +30,7 @@ function twinklingStars(){
 
 	fill(255)
 	x = width/2
-	y0 = map(phi,0,90,0.8*height-R,0)
+	y0 = map(phi,0,90,0.8*height-R,0+R)
 	
 	translate(x, y0)
 	fill(70);
