@@ -21,7 +21,7 @@ function draw() {
     coordinates();
     if (play){
         H -= Wsky
-        if (H<-PI){
+        if (H<0){
             H+=2*PI
         }
     }

@@ -43,7 +43,9 @@ function coordinates(){
         text("Acimut: "+az+"°\nAltura: "+h+"°",0.02*width,0.07*height + 30)
     }
     else{
-        let raa = floor(map(ra*kra - H,0,PI,180,360))
+        let dth = 0
+        if (ra*kra - H < 0){dth = 2*PI}
+        let raa = floor(map(ra*kra - H + dth,0,2*PI,0,360))
         text("Ascención Recta: "+raa+"°\nDeclinación: "+dec+"°",0.02*width,0.07*height + 30)
     }
 }
@@ -109,9 +111,6 @@ function play_button(x0,y0,w){
             play = true;
             Wsky = 2*PI*1e-4;
         }
-    }
-    else{
-        cursor(ARROW);
     }
 }
 

@@ -5,15 +5,15 @@ let Xpos
 let H;
 let atmosphereON = true
 let equatorialON = false
-let phi = 0
+let phi = 45
 let play = false
 let clicked = false
 
 
 function initializeFields(){
     Xpos = 0.1*width
-    Wsky = 2*PI*1e-4;
-    H = 0;
+    Wsky = 2*PI*1e-4; // Sky Angular motion
+    H = 2*PI; // Sky position angle
     map(dec,0,90,height*0.7,0,true);
     textFont('Roboto Slab')
 
@@ -44,8 +44,10 @@ function guide(){
         push()
         translate(width/2, y0)
         let v = createVector(px,py)
-        arc(0,0, 2*r, 2*r,ra*kra+R/r,ra*kra-R/r)
-        line(10*cos(ra*kra),10*sin(ra*kra),(r-R)*cos(ra*kra),(r-R)*sin(ra*kra));
+        if (r>R){
+            arc(0,0, 2*r, 2*r,ra*kra+R/r,ra*kra-R/r)
+            line(10*cos(ra*kra),10*sin(ra*kra),(r-R)*cos(ra*kra),(r-R)*sin(ra*kra));
+        }
         line((r+R)*cos(ra*kra),(r+R)*sin(ra*kra),width*cos(ra*kra),width*sin(ra*kra));
         pop();
     }

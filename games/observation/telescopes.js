@@ -55,6 +55,19 @@ function horizontalMount(x,y){
     rotate(angle);
     telescope()
     pop()
+
+    let w = 100
+    if (((x - w < mouseX) && (mouseX < x + w)) && ((y - w < mouseY) && (mouseY < y + w)) && (equatorialON)) {
+        cursor(HAND);
+        message("Cambiar montura")
+        if (clicked) {
+            equatorialON = false
+        }
+    }
+    else{
+        cursor(ARROW);
+    }
+
 }
 
 function equatorialMount(x,y){
@@ -97,6 +110,15 @@ function equatorialMount(x,y){
     rect(0,-40,20,20)
     telescope(-20,30)
     pop()
+
+    let w = 100
+    if (((x - w < mouseX) && (mouseX < x + w)) && ((y - w < mouseY) && (mouseY < y + w)) && (!equatorialON)) {
+        cursor(HAND);
+        message("Cambiar montura")
+        if (clicked) {
+            equatorialON = true
+        }
+    }
 }
 
 function legs(){
@@ -155,6 +177,12 @@ function pointing(){
 
     if (play){
         ra-= Wsky/kra
+    }
+    if (ra<0){
+        ra += 2*PI/kra
+    }
+    if (ra*kra>2*PI){
+        ra -= 2*PI/kra
     }
 
     noFill();

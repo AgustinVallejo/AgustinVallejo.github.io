@@ -5,23 +5,24 @@ let NStars = 200;
 let twinkling = true;
 
 let atm0 = 0.6
+let D = 1
 
 function createStars() {
-	let x,y,z
+    D = 1.4*width/2 // Random range for background stars
+
 	for (i = 0; i < NStars; i++) {
-		x = random(-1.4*width/2,1.4*width/2)
-		y = random(-1.4*width/2,1.4*width/2)
-		z = atan2(y,x)
-		stars.push([x,y,z]);
-		x = random(-1.4*width/2,1.4*width/2)
-		y = random(-1.4*width/2,1.4*width/2)
-		z = atan2(y,x)
-		stars2.push([x,y,z]);
+		x = random(-D,D)
+		y = random(-D,D)
+		stars.push([x,y]);
+		x = random(-D,D)
+		y = random(-D,D)
+		stars2.push([x,y]);
 	}
 }
 
-function twinkle(z){
-	return map(sin(z+H),-1,1,0,3,true)
+function twinkle(y){
+	let mag = 4
+	return map((y/D),-0.5,1,0,2*mag,true) - mag*phi/90;
 }
 
 function twinklingStars(){
@@ -38,23 +39,27 @@ function twinklingStars(){
 	for (i = 0; i < NStars; i++) {
 		x = stars[i][0];
 		y = stars[i][1];
-		z = stars[i][2];
+		z = atan2(y,x)
+		rr = createVector(x, y).mag()
+		
 		push()
 		translate(x,y)
 		rotate(-H)
 		if (!atmosphereON) {atm=0}
-		else {atm = twinkle(z)}
+		else {atm = twinkle(rr*sin(z+H))}
 		star(0,0,10+10*(noise(0.1*t0+10*i)*atm + (1-atm)/3),2+5*(noise(0.01*t0+10*i)*atm + (1-atm)/3),4);
 		pop()
 		
         x = stars2[i][0];
 		y = stars2[i][1];
-		z = stars2[i][2];
+		z = atan2(y,x)
+		rr = createVector(x, y).mag()
+
 		push()
 		translate(x,y)
 		rotate(-H)
 		if (!atmosphereON) {atm=0}
-		else {atm = twinkle(z)}
+		else {atm = twinkle(rr*sin(z+H))}
 		star(0,0,4+5*(noise(0.1*t0+10*i)*atm + (1-atm)/3),1+ 2*(noise(0.01*t0+10*i)*atm + (1-atm)/3),4);
 		pop();
 	}
