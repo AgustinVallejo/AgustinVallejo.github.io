@@ -22,7 +22,7 @@ function createStars() {
 
 function twinkle(y){
 	let mag = 4
-	return map((y/D),-0.5,1,0,2*mag,true) - mag*phi/90;
+	return map(2*(y/D)-(phi/90),-0.8,0,0,mag,true)
 }
 
 function twinklingStars(){
@@ -65,7 +65,7 @@ function twinklingStars(){
 	}
 	fill(255)
 	if (!atmosphereON) {atm=0}
-	else {atm = twinkle(0,y0)}
+	else {atm = twinkle(0)}
 	rotate(-H);
 	star(0,0,10+10*(noise(0.1*t0+10*i)*atm + (1-atm)/3),2+5*(noise(0.01*t0+10*i)*atm + (1-atm)/3),4);
 	pop()

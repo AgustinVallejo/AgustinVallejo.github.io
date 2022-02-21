@@ -26,6 +26,9 @@ function keyPressed(){
     if (keyCode == ENTER) {
         equatorialON = !equatorialON
     }
+    if (key == "a"){
+        atmosphereON = !atmosphereON
+    }
 }
 
 function guide(){

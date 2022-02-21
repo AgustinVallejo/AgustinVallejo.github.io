@@ -15,7 +15,6 @@ function draw() {
     all_telescopes();
     stickman();
     // atmosphere();
-    // buttons();
     control_buttons();
     latitude_buttons();
     coordinates();
