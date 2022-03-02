@@ -10,8 +10,8 @@
 <body>
   <div id="navbar"></div>
   <div class="container-fluid mt-4 mx-3">
-      <div class="row">
-          <div id="card" class="col-md-2 card" style="width: 18rem;"></div>
+          <div id="card" class="card me-4" style="width: 18rem; float: left;"></div>
+          <div class="card p-md-4">
           <div id="content" class="col mt-4 mx-3">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
               <input type="radio" class="btn-check" name="btnradio" id="eng" autocomplete="off" checked>
@@ -21,9 +21,9 @@
               <label class="btn btn-outline-success" for="esp">Español</label>
             </div>
 
-            <div id="accordion">
           </div>
-      </div>
+            <div id="accordion" class="card-body">
+          </div>
   </div>
   <script>
       $("#navbar").load("components/navbar.html", function() {
