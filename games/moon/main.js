@@ -16,6 +16,12 @@ let scenario = 0;
 
 var IMG, font;
 
+function keyPressed(){
+    if (key == " "){
+        play = !play
+    }
+}
+
 function initializeFields() {
     // Time variables
     t = 0;
