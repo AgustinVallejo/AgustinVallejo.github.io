@@ -1,24 +1,31 @@
 precision mediump float;
 
+// Global uniforms
 uniform float u_time;
-uniform float u_lineStrength1;
-uniform float u_lineStrength2;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
-uniform vec3 u_lines1;
-uniform vec3 u_lines2;
 uniform bool u_whiteLight;
 uniform bool u_colorLight;
+
+// Arrays for depths of each line
+uniform float u_lineStrength1[3];
+uniform float u_lineStrength2[3];
+
+// Lines
+uniform float u_lines1[3];
+uniform float u_lines2[3];
+
+// GasTubes activated?
 uniform bool u_gas1ON;
 uniform bool u_gas2ON;
 
 float wave (
     in vec2 st,
-    in float w,
-    in float dt,
-    in float dy,
-    in float f,
-    in float A,
+    in float w, // Width
+    in float dt, // Timestep
+    in float dy, // Vertical position
+    in float f, // Wavelength
+    in float A, // Amplitude
     in float phase){
     /**
     * Creates the wave form by multiplying smoothsteps
@@ -47,6 +54,10 @@ float random (vec2 st) {
         43758.5453123);
 }
 
+vec3 h2rgb(in float f){
+    return hsb2rgb(vec3(f,1.0,0.01));
+}
+
 // 2D Noise based on Morgan McGuire @morgan3d
 // https://www.shadertoy.com/view/4dS3Wd
 float noise (in vec2 st) {
@@ -71,6 +82,12 @@ float noise (in vec2 st) {
             (d - b) * u.x * u.y;
 }
 
+float lineProfile(in vec2 st, in float line, in float lineWidth){
+    return smoothstep(line - lineWidth, line + lineWidth,st.y)*
+            smoothstep(line + lineWidth, line - lineWidth,st.y)*
+            step(0.83,st.x)*(1.-step(0.95,st.x));
+}
+
 void main(){
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
 
@@ -91,9 +108,9 @@ void main(){
         col += smoothstep(0.5-lightWidth,0.5+lightWidth,st.y)*
                 (1.-smoothstep(0.5-lightWidth,0.5+lightWidth,st.y));
 
-        float ii = 0.;
-        float k = 0.008;
-        lambda = 30.;
+        float ii = 0.; // Counter to differenciate between waves
+        float k = 0.008; // Phase difference
+        lambda = 30.; // Constant wavelength. If not, they get out of phase very quickly
         ii++;
         col += wave(st,w*3.,dt,dy,lambda,A,k*ii)*vec3(1.,0.,0.);
         ii++;
@@ -107,36 +124,39 @@ void main(){
         col += 2.*wave(st,w*.5,dt,dy,lambda,A,0.)*vec3(1.);
     }
 
-    col *= (1.0 - step(0.8,st.x));
-    col += step(0.8,st.x)*0.1;
+    col *= (1.0 - step(0.8,st.x)); // Black bar to the right
+    col += step(0.8,st.x)*0.1; // Grey area
 
-    col *= (1.-step(0.83,st.x)*(1.-step(0.95,st.x)));
-    float ycolor = map(st.y,0.,1., 0.,0.8);
+    col *= (1.-step(0.83,st.x)*(1.-step(0.95,st.x))); // Black bar for spectrum
+    float ycolor = map(st.y,0.,1., 0.,0.8); // Constrain colors hue
     float colorWidth = 0.1;
 
     if (u_whiteLight){
-        col += 100.*step(0.83,st.x)*(1.-step(0.95,st.x))*hsb2rgb(vec3(ycolor,1.0,0.01));
+        col += 100.*step(0.83,st.x)*(1.-step(0.95,st.x))*h2rgb(ycolor); // Full color spectrum
     }
     else if (u_colorLight) {
-        col += 1000.*step(0.83,st.x)*(1.-step(0.95,st.x))*hsb2rgb(vec3(ycolor,1.0,0.01))*
+        col += 1000.*step(0.83,st.x)*(1.-step(0.95,st.x))*h2rgb(ycolor)* // Part of spectrum
             smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y)*
             (1.-smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y));
     }
 
-    if (u_gas1ON){
-        float lineWidth = 0.05;
-        float lineStrength = u_lineStrength1*10.;
-        col *= 1. - lineStrength*smoothstep(u_lines1.x, u_lines1.x + lineWidth,st.y)*smoothstep(u_lines1.x + lineWidth, u_lines1.x,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
-        col *= 1. - lineStrength*smoothstep(u_lines1.y, u_lines1.y + lineWidth,st.y)*smoothstep(u_lines1.y + lineWidth, u_lines1.y,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
-        col *= 1. - lineStrength*smoothstep(u_lines1.z, u_lines1.z + lineWidth,st.y)*smoothstep(u_lines1.z + lineWidth, u_lines1.z,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
-    }
+    float emisivity = 30.;
+    float lineWidth = 0.01;
+    for (int i = 0; i < 3; i++){
+        if (u_gas1ON){
+            float lineStrength = 10.*u_lineStrength1[i];
+            float line = u_lines1[i];
 
-    if (u_gas2ON){
-        float lineWidth = 0.05;
-        float lineStrength = u_lineStrength2*10.;
-        col *= 1. - lineStrength*smoothstep(u_lines2.x, u_lines2.x + lineWidth,st.y)*smoothstep(u_lines2.x + lineWidth, u_lines2.x,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
-        col *= 1. - lineStrength*smoothstep(u_lines2.y, u_lines2.y + lineWidth,st.y)*smoothstep(u_lines2.y + lineWidth, u_lines2.y,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
-        col *= 1. - lineStrength*smoothstep(u_lines2.z, u_lines2.z + lineWidth,st.y)*smoothstep(u_lines2.z + lineWidth, u_lines2.z,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
+            col *= 1. - min(1.,lineStrength*lineProfile(st,line,lineWidth));
+            col += emisivity*h2rgb(ycolor)*lineStrength*lineProfile(st,line,2.*lineWidth);
+        }
+        if (u_gas2ON){
+            float lineStrength = 10.*u_lineStrength2[i];
+            float line = u_lines2[i];
+
+            col *= 1. - min(1.,lineStrength*lineProfile(st,line,lineWidth));
+            col += emisivity*h2rgb(ycolor)*lineStrength*lineProfile(st,line,2.*lineWidth);
+        }
     }
 
     gl_FragColor = vec4(col,0.0);

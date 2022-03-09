@@ -29,8 +29,8 @@ function setup(){
     gas2Button = new Button("Gas X",0.35*width,0.92*height,toggleGas2, false)
 
     // Creating GasTube elements
-    gas1 = new GasTube(gas1Lines,0.5*width, height/2,0.1*width, 0.8*height, color(100,150,200));
-    gas2 = new GasTube(gas2Lines,0.35*width, height/2,0.1*width, 0.8*height, color(50,150,50));
+    gas1 = new GasTube(gas1Lines,0.5*width, height/2,0.1*width, 0.8*height, color(255,255,0));
+    gas2 = new GasTube(gas2Lines,0.35*width, height/2,0.1*width, 0.8*height, color(255));
 }
 
 function draw(){
@@ -46,12 +46,12 @@ function draw(){
     // Uniforms for gas1
     theShader.setUniform("u_lines1",invertLines(gas1Lines))
     theShader.setUniform("u_gas1ON",gas1Enabled)
-    theShader.setUniform("u_lineStrength1",gas1.lineStrength/gas1.N)
+    theShader.setUniform("u_lineStrength1",gas1.lineStrength)
 
     // Uniforms for gas2
     theShader.setUniform("u_lines2",invertLines(gas2Lines))
     theShader.setUniform("u_gas2ON",gas2Enabled)
-    theShader.setUniform("u_lineStrength2",gas2.lineStrength/gas2.N)
+    theShader.setUniform("u_lineStrength2",gas2.lineStrength)
 
 
     canvas2.shader(theShader);
@@ -115,4 +115,5 @@ function windowResized(){
     canvas2.resizeCanvas(windowWidth*0.8, windowHeight*0.8);
     gas1Button.x0 = width*0.5;
     gas1.x0 = width*0.5;
+    gas2.x0 = width*0.35;
   }
