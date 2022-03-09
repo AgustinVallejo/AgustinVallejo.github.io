@@ -13,8 +13,12 @@ float wave (
     in float f,
     in float A,
     in float phase){
-    return (smoothstep(A*sin(f*(st.x + dt/100.+phase))+dy-w,A*sin(f*(st.x + dt/100.+phase))+dy,st.y)*
-     smoothstep(A*sin(f*(st.x + dt/100.+phase))+dy+w,A*sin(f*(st.x + dt/100.+phase))+dy,st.y));
+    /**
+    * Creates the wave form by multiplying smoothsteps
+    */
+    float singleWave = A*sin(f*(st.x + dt/100.+phase));
+    return (smoothstep(singleWave+dy-w,singleWave+dy,st.y)*
+     smoothstep(singleWave+dy+w,singleWave+dy,st.y));
 }
 
 vec3 hsb2rgb( in vec3 c ){
@@ -39,30 +43,32 @@ float random (vec2 st) {
 void main(){
     vec2 st = gl_FragCoord.xy/u_resolution.xy;
 
-    vec3 col = vec3(0.0);
+    vec3 col = vec3(0.0); // Background color
 
-    float lfrac = 0.8*u_mouse.y;
+    float lfrac = 0.8*u_mouse.y; // Mouse position for wavecolor
     vec3 waveColor = hsb2rgb(vec3(lfrac,1.0,1.0));
 
-    float A = 0.05;
-    float w = 0.01;
-    float dt = -0.*u_time;
-    float dy = 0.5;
-    float lambda = map(lfrac, 0.,1., 30.,70.);
+    // Wave properties
+    float A = 0.05; // Amplitude
+    float w = 0.01; // Width
+    float dt = -20.*u_time; // Timestep
+    float dy = 0.5; // Vertical position
+    float lambda = map(lfrac, 0.,1., 30.,70.); // Wavelength
 
     if (u_whiteLight){
-        float lightWidth = 0.1;
+        float lightWidth = 0.1; // White lightbar
         col += smoothstep(0.5-lightWidth,0.5+lightWidth,st.y)*
                 (1.-smoothstep(0.5-lightWidth,0.5+lightWidth,st.y));
 
         float ii = 0.;
-        lambda = 30.; //map(ii, 0., 4., 30.,33.);
+        float k = 0.008;
+        lambda = 30.;
         ii++;
-        col += wave(st,w*3.,dt,dy,lambda,A,0.005*ii)*vec3(1.,0.,0.);
+        col += wave(st,w*3.,dt,dy,lambda,A,k*ii)*vec3(1.,0.,0.);
         ii++;
-        col += wave(st,w*3.,dt,dy,lambda,A,0.005*ii)*vec3(0.,1.,0.);
+        col += wave(st,w*3.,dt,dy,lambda,A,k*ii)*vec3(0.,1.,0.);
         ii++;
-        col += wave(st,w*3.,dt,dy,lambda,A,0.005*ii)*vec3(0.,0.,1.);
+        col += wave(st,w*3.,dt,dy,lambda,A,k*ii)*vec3(0.,0.,1.);
     }
     else {
         col += wave(st,w,dt,dy,lambda,A,0.)*waveColor;
