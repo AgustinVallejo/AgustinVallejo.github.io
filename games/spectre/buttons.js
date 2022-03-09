@@ -17,6 +17,8 @@ class Button {
         let w = textWidth(this.text)*0.7;
         let h = 35;
         fill(50);
+        stroke(30);
+        strokeWeight(5);
         rect(0, 0, 2*w, 2*h)
         textAlign(CENTER, CENTER);
 
