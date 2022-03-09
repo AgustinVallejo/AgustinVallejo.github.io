@@ -44,7 +44,7 @@ class GasTube{
                     for (let i=0; i<3; i++){
                         let line = this.gasLines[i];
                         let colorID = i;
-                        if (abs(mouseY/height - line) < 0.05){
+                        if (abs(mouseY/height - line) < 0.08){
                             molecule.excited = true;
                             molecule.t0 = this.t;
                             molecule.colorID = colorID; // Tell molecule which color it is
