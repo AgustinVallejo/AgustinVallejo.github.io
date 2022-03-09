@@ -3,7 +3,9 @@ precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
+uniform vec3 u_lines;
 uniform bool u_whiteLight;
+uniform bool u_gasON;
 
 float wave (
     in vec2 st,
@@ -38,6 +40,30 @@ float random (vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))*
         43758.5453123);
+}
+
+// 2D Noise based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float noise (in vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    // Four corners in 2D of a tile
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+
+    // Smooth Interpolation
+
+    // Cubic Hermine Curve.  Same as SmoothStep()
+    vec2 u = f*f*(3.0-2.0*f);
+    // u = smoothstep(0.,1.,f);
+
+    // Mix 4 coorners percentages
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
 }
 
 void main(){
@@ -92,6 +118,12 @@ void main(){
             (1.-smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y));
     }
 
+    if (u_gasON){
+        float lineWidth = 0.05;
+        col *= 1. - 5.*smoothstep(u_lines.y, u_lines.y + lineWidth,st.y)*smoothstep(u_lines.y + lineWidth, u_lines.y,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
+        col *= 1. - 5.*smoothstep(u_lines.z, u_lines.z + lineWidth,st.y)*smoothstep(u_lines.z + lineWidth, u_lines.z,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
+        col *= 1. - 5.*smoothstep(u_lines.x, u_lines.x + lineWidth,st.y)*smoothstep(u_lines.x + lineWidth, u_lines.x,st.y)*step(0.83,st.x)*(1.-step(0.95,st.x));
+    }
 
     gl_FragColor = vec4(col,0.0);
 }

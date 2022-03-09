@@ -1,9 +1,9 @@
 let theShader;
-let whiteLight = true;
 let canvas2;
 
 let clicked = false;
-
+let whiteLight = true;
+let gas1Enabled = false;
 let gas1 = [0.1,0.5,0.7]
 let gas2 = [0.3,0.4,0.9]
 
@@ -31,6 +31,8 @@ function draw(){
     theShader.setUniform("u_time",millis()*1e-3)
     theShader.setUniform("u_mouse",[mouseX/width, map(mouseY,0,height,1,0)])
     theShader.setUniform("u_whiteLight",whiteLight)
+    theShader.setUniform("u_lines",[1-0.1,1-0.5,1-0.7])
+    theShader.setUniform("u_gasON",gas1Enabled)
     canvas2.shader(theShader);
     canvas2.rect(0,0,width,height);
     image(canvas2,0,0)
@@ -40,6 +42,10 @@ function draw(){
     strokeWeight(5)
     rectMode(CENTER)
     rect(0.75*width,height/2,0.1*width,0.15*width)
+
+    if (gas1Enabled){
+        drawGas();
+    }
 
     whiteButton.draw();
     colorButton.draw();
@@ -60,7 +66,19 @@ function enableColors(){
 }
 
 function toggleGas(){
+    gas1Enabled = !gas1Enabled;
+    gas1Button.toggled = gas1Enabled;
+}
 
+function drawGas(){
+    push()
+    translate(0,-18)
+    gas1.forEach(line => {
+        fill(255);
+        noStroke();
+        triangle(0.95*width,line*height,0.98*width,line*height-10,0.98*width,line*height+10)
+    })
+    pop()
 }
 
 function windowResized(){
