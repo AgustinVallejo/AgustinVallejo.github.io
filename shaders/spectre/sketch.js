@@ -18,6 +18,6 @@ function draw(){
     rect(0,0,width,height);
 }
 
-function keyPressed(){
+function mouseClicked(){
     whiteLight = !whiteLight;
 }

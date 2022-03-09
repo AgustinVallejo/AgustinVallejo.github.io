@@ -41,12 +41,12 @@ void main(){
 
     vec3 col = vec3(0.0);
 
-    float lfrac = clamp(u_mouse.x,0.,0.8);
+    float lfrac = 0.8*u_mouse.y;
     vec3 waveColor = hsb2rgb(vec3(lfrac,1.0,1.0));
 
     float A = 0.05;
     float w = 0.01;
-    float dt = -20.*u_time;
+    float dt = -0.*u_time;
     float dy = 0.5;
     float lambda = map(lfrac, 0.,1., 30.,70.);
 
@@ -56,15 +56,18 @@ void main(){
                 (1.-smoothstep(0.5-lightWidth,0.5+lightWidth,st.y));
 
         float ii = 0.;
-        for(int i=0; i < 5;i++){
-            ii++;
-            lambda = 30.; //map(ii, 0., 4., 30.,33.);
-            waveColor = hsb2rgb(vec3(ii/5.,1.0,1.0));
-            col += wave(st,w*3.,dt,dy,lambda,A,0.01*ii)*waveColor;
-        }
+        lambda = 30.; //map(ii, 0., 4., 30.,33.);
+        ii++;
+        col += wave(st,w*3.,dt,dy,lambda,A,0.005*ii)*vec3(1.,0.,0.);
+        ii++;
+        col += wave(st,w*3.,dt,dy,lambda,A,0.005*ii)*vec3(0.,1.,0.);
+        ii++;
+        col += wave(st,w*3.,dt,dy,lambda,A,0.005*ii)*vec3(0.,0.,1.);
     }
     else {
         col += wave(st,w,dt,dy,lambda,A,0.)*waveColor;
+        col += 0.8*wave(st,w*5.,dt,dy,lambda,A,0.)*waveColor;
+        col += 2.*wave(st,w*.5,dt,dy,lambda,A,0.)*vec3(1.);
     }
 
     col *= (1.0 - step(0.8,st.x));
@@ -79,8 +82,8 @@ void main(){
     }
     else {
         col += 1000.*step(0.83,st.x)*(1.-step(0.95,st.x))*hsb2rgb(vec3(ycolor,1.0,0.01))*
-            smoothstep(u_mouse.x, u_mouse.x+colorWidth, st.y)*
-            (1.-smoothstep(u_mouse.x, u_mouse.x+colorWidth, st.y));
+            smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y)*
+            (1.-smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y));
     }
 
 
