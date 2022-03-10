@@ -142,6 +142,9 @@ void main(){
 
     float emisivity = 30.;
     float lineWidth = 0.01;
+    if (u_colorLight){
+        emisivity *= 1./3.;
+    }
     for (int i = 0; i < 3; i++){
         if (u_gas1ON){
             float lineStrength = 10.*u_lineStrength1[i];
