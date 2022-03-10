@@ -1,6 +1,7 @@
 class GasTube{
-    constructor(gasLines, x0, y0, w, h, color){
-        this.color = color; // Lines' triangle color
+    constructor(gasLines, x0, y0, w, h, name, col){
+        this.name = name; // Lines' triangle name
+        this.color = col;
         this.gasLines = gasLines; // Array with the lines position (0.0 to 1.0)
         this.x0 = x0;
         this.y0 = y0;
@@ -65,6 +66,9 @@ class GasTube{
             fill(this.color);
             noStroke();
             triangle(0.95*width,line*height,0.98*width,line*height-10,0.98*width,line*height+10)
+            textSize(20);
+            textAlign(LEFT, CENTER);
+            text(this.name, 0.985*width, line*height)
         })
         this.t++;
     }

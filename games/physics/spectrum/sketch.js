@@ -25,12 +25,12 @@ function setup(){
     // Setting up buttons
     whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
     colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
-    gas1Button = new Button("Gas A",0.35*width,0.92*height,toggleGas1, false)
-    gas2Button = new Button("Gas B",0.5*width,0.92*height,toggleGas2, false)
+    gas1Button = new Button("Gas A",0.35*width,0.92*height,toggleGas1, gas1Enabled, color(255,255,0));
+    gas2Button = new Button("Gas B",0.5*width,0.92*height,toggleGas2, gas2Enabled, color(0,255,255));
 
     // Creating GasTube elements
-    gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, color(255,255,0));
-    gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, color(255));
+    gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, "A", color(255,255,0));
+    gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, "B", color(0,255,255));
 }
 
 function draw(){
@@ -58,11 +58,15 @@ function draw(){
     canvas2.rect(0,0,width,height);
     image(canvas2,0,0)
 
+    push()
+    translate(0.75*width,height/2)
     fill(255*0.1)
     stroke(30)
     strokeWeight(5)
     rectMode(CENTER)
-    rect(0.75*width,height/2,0.1*width,0.15*width)
+    rect(0, 0, 0.1*width, 0.15*width)
+    stroke(255)
+    pop()
 
     if (gas1Enabled){
         gas1.draw();
@@ -113,7 +117,14 @@ function toggleGas2(){
 function windowResized(){
     resizeCanvas(windowWidth*0.8, windowHeight*0.8);
     canvas2.resizeCanvas(windowWidth*0.8, windowHeight*0.8);
-    gas1Button.x0 = width*0.5;
-    gas1.x0 = width*0.5;
-    gas2.x0 = width*0.35;
+
+    // Setting up buttons
+    whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
+    colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
+    gas1Button = new Button("Gas A",0.35*width,0.92*height,toggleGas1, gas1Enabled, color(255,255,0));
+    gas2Button = new Button("Gas B",0.5*width,0.92*height,toggleGas2, gas2Enabled, color(0,255,255));
+
+    // Creating GasTube elements
+    gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, "A", color(255,255,0));
+    gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, "B", color(0,255,255));
   }
