@@ -25,12 +25,12 @@ function setup(){
     // Setting up buttons
     whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
     colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
-    gas1Button = new Button("Gas Y",0.5*width,0.92*height,toggleGas1, false)
-    gas2Button = new Button("Gas X",0.35*width,0.92*height,toggleGas2, false)
+    gas1Button = new Button("Gas A",0.35*width,0.92*height,toggleGas1, false)
+    gas2Button = new Button("Gas B",0.5*width,0.92*height,toggleGas2, false)
 
     // Creating GasTube elements
-    gas1 = new GasTube(gas1Lines,0.5*width, height/2,0.1*width, 0.8*height, color(255,255,0));
-    gas2 = new GasTube(gas2Lines,0.35*width, height/2,0.1*width, 0.8*height, color(255));
+    gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, color(255,255,0));
+    gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, color(255));
 }
 
 function draw(){
