@@ -93,7 +93,7 @@ void main(){
 
     vec3 col = vec3(0.0); // Background color
 
-    float lfrac = 0.8*u_mouse.y; // Mouse position for wavecolor
+    float lfrac = clamp(0.8*u_mouse.y,0.,0.8); // Mouse position for wavecolor
     vec3 waveColor = hsb2rgb(vec3(lfrac,1.0,1.0));
 
     // Wave properties
@@ -129,15 +129,15 @@ void main(){
 
     col *= (1.-step(0.83,st.x)*(1.-step(0.95,st.x))); // Black bar for spectrum
     float ycolor = map(st.y,0.,1., 0.,0.8); // Constrain colors hue
-    float colorWidth = 0.1;
+    float colorWidth = 0.05;
 
     if (u_whiteLight){
         col += 100.*step(0.83,st.x)*(1.-step(0.95,st.x))*h2rgb(ycolor); // Full color spectrum
     }
     else if (u_colorLight) {
         col += 1000.*step(0.83,st.x)*(1.-step(0.95,st.x))*h2rgb(ycolor)* // Part of spectrum
-            smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y)*
-            (1.-smoothstep(u_mouse.y, u_mouse.y+colorWidth, st.y));
+            smoothstep(u_mouse.y-colorWidth, u_mouse.y+colorWidth, st.y)*
+            (1.-smoothstep(u_mouse.y-colorWidth, u_mouse.y+colorWidth, st.y));
     }
 
     float emisivity = 30.;

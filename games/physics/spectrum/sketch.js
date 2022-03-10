@@ -2,8 +2,8 @@ let theShader;
 let canvas2;
 
 let clicked = false;
-let whiteLight = true;
-let colorLight = false;
+let whiteLight = false;
+let colorLight = true;
 let gas1Enabled = false;
 let gas2Enabled = false;
 let gas1Lines = [0.1,0.5,0.7];
@@ -23,8 +23,8 @@ function setup(){
     textFont("Roboto Slab");
 
     // Setting up buttons
-    whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, true)
-    colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, false)
+    whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
+    colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
     gas1Button = new Button("Gas Y",0.5*width,0.92*height,toggleGas1, false)
     gas2Button = new Button("Gas X",0.35*width,0.92*height,toggleGas2, false)
 
