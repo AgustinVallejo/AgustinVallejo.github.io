@@ -9,13 +9,25 @@ class GasTube{
         this.h = h;
         this.lineStrength = [0,0,0];
 
-        this.N = 100; // Number of molecules/atoms   
+        this.N = 60; // Number of molecules/atoms   
         this.molecules = [];
         for (let i = 0; i < this.N; i++){
             this.molecules.push( new GasMolecule(w, h) )
         }
 
         this.t = 0; // Time
+    }
+
+    add(){
+        for (let i = 0; i < 10; i++){
+            this.molecules.push( new GasMolecule(this.w, this.h) )
+        }
+    }
+
+    pop(){
+        for (let i = 0; i < 10; i++){
+            this.molecules.pop(i)
+        }
     }
 
     draw(){

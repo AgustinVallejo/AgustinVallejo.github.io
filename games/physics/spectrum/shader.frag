@@ -140,13 +140,14 @@ void main(){
             (1.-smoothstep(u_mouse.y-colorWidth, u_mouse.y+colorWidth, st.y));
     }
 
-    float emisivity = 30.;
+    float emisivity = 15.;
     float lineWidth = 0.01;
     if (u_colorLight){
         emisivity *= 1./3.;
     }
     for (int i = 0; i < 3; i++){
         if (u_gas1ON){
+            lineWidth = 0.015*min(u_lineStrength1[i],1.);
             float lineStrength = 10.*u_lineStrength1[i];
             float line = u_lines1[i];
 
@@ -154,6 +155,7 @@ void main(){
             col += emisivity*h2rgb(ycolor)*lineStrength*lineProfile(st,line,2.*lineWidth);
         }
         if (u_gas2ON){
+            lineWidth = 0.015*min(u_lineStrength2[i],1.);
             float lineStrength = 10.*u_lineStrength2[i];
             float line = u_lines2[i];
 

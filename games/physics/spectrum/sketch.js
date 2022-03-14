@@ -11,17 +11,13 @@ let gas2Lines = [0.3,0.85,0.95];
 let gas1, gas2;
 
 let whiteButton, colorButton, gas1Button, gas2Button;
+let AplusButton, AminusButton, BplusButton, BminusButton;
 
 function preload(){
     theShader = loadShader("shader.vert","shader.frag");
 }
 
-function setup(){
-    let canvas = createCanvas(windowWidth*0.8, windowHeight*0.8);
-    canvas.parent("game")
-    canvas2 = createGraphics(width, height, WEBGL);
-    textFont("Roboto Slab");
-
+function initializeFields(){
     // Setting up buttons
     whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
     colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
@@ -31,6 +27,36 @@ function setup(){
     // Creating GasTube elements
     gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, "A", color(255,255,0));
     gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, "B", color(0,255,255));
+
+    AminusButton = new Button("  -  ",0.32*width,0.05*height,popGasA, true);
+    AplusButton = new Button("  +  ",0.38*width,0.05*height,addGasA, true);
+    BminusButton = new Button("  -  ",0.47*width,0.05*height,popGasB, true);
+    BplusButton = new Button("  +  ",0.53*width,0.05*height,addGasB, true);
+
+}
+
+function popGasA(){
+    gas1.pop();
+}
+
+function addGasA(){
+    gas1.add();
+}
+
+function popGasB(){
+    gas2.pop();
+}
+
+function addGasB(){
+    gas2.add();
+}
+
+function setup(){
+    let canvas = createCanvas(windowWidth*0.8, windowHeight*0.8);
+    canvas.parent("game")
+    canvas2 = createGraphics(width, height, WEBGL);
+    textFont("Roboto Slab");
+    initializeFields();
 }
 
 function draw(){
@@ -70,9 +96,13 @@ function draw(){
 
     if (gas1Enabled){
         gas1.draw();
+        AplusButton.draw();
+        AminusButton.draw();
     }
     if (gas2Enabled){
         gas2.draw();
+        BplusButton.draw();
+        BminusButton.draw();
     }
 
     whiteButton.draw();
@@ -117,14 +147,5 @@ function toggleGas2(){
 function windowResized(){
     resizeCanvas(windowWidth*0.8, windowHeight*0.8);
     canvas2.resizeCanvas(windowWidth*0.8, windowHeight*0.8);
-
-    // Setting up buttons
-    whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
-    colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
-    gas1Button = new Button("Gas A",0.35*width,0.92*height,toggleGas1, gas1Enabled, color(255,255,0));
-    gas2Button = new Button("Gas B",0.5*width,0.92*height,toggleGas2, gas2Enabled, color(0,255,255));
-
-    // Creating GasTube elements
-    gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, "A", color(255,255,0));
-    gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, "B", color(0,255,255));
+    initializeFields()
   }
