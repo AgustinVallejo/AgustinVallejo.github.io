@@ -29,6 +29,7 @@ function draw() {
 
   uniformsShader.setUniform('mouse', [mx, my]);
   uniformsShader.setUniform("u_resolution", [width, height]);
+  uniformsShader.setUniform("u_aspectRatio",width/height)
   uniformsShader.setUniform("u_time", millis() / 1000.0);
 
   // rect gives us some geometry on the screen
