@@ -21,6 +21,7 @@ function draw(){
   
     sunsetShader.setUniform("u_mouse", [mx, my]);
     sunsetShader.setUniform("u_resolution", [width, height]);
+    sunsetShader.setUniform("u_pixelDensity",pixelDensity());
     sunsetShader.setUniform("u_time", millis() / 1000.0);
     sunsetShader.setUniform("u_scattering", scattering);
 

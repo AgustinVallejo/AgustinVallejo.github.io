@@ -64,6 +64,7 @@ function draw(){
 
     // Set general sim uniforms
     theShader.setUniform("u_resolution",[width,height])
+    theShader.setUniform("u_pixelDensity",pixelDensity())
     theShader.setUniform("u_time",millis()*1e-3)
     theShader.setUniform("u_mouse",[mouseX/width, map(mouseY,0,height,1,0)])
     theShader.setUniform("u_whiteLight",whiteLight)

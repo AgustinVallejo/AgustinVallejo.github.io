@@ -6,6 +6,7 @@ uniform vec3 u_scattering;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+uniform float u_pixelDensity;
 
 float map(float value, float min1, float max1, float min2, float max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
@@ -53,7 +54,7 @@ float dashedCircle(
 }
 
 void main(){
-    vec2 st = gl_FragCoord.xy/u_resolution;
+    vec2 st = gl_FragCoord.xy/u_resolution/u_pixelDensity;
     float X = u_resolution.x/u_resolution.y;
     st.x *= X;
     vec3 col = vec3(0.0);

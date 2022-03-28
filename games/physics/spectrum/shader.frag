@@ -2,6 +2,7 @@ precision mediump float;
 
 // Global uniforms
 uniform float u_time;
+uniform float u_pixelDensity;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform bool u_whiteLight;
@@ -89,7 +90,7 @@ float lineProfile(in vec2 st, in float line, in float lineWidth){
 }
 
 void main(){
-    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    vec2 st = gl_FragCoord.xy/u_resolution.xy/u_pixelDensity;
 
     vec3 col = vec3(0.0); // Background color
 
