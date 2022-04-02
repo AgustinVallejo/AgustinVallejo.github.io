@@ -2,30 +2,38 @@ let N = 200; //Cantidad de puntos en la linea
 let xpos;
 let col;
 
+let theShader;
+let canvas2;
+
 let p1 = 0.2; //Fracción del width donde empieza el visible
 let p2 = p1*7.5/3.8; //Fracción del width donde termina el visible
 let lfin = 0.38/p1; //Longitud de onda donde termina el gráfico en micrómetros
 let dp = p2 - p1; //Ancho del espectro visible
 let Temp; //Temperatura inicial
+let Tmax = 20000;
+let Tmin = 300;
 let L;
 
 let frame = 0;
 
+function preload(){
+  theShader = loadShader("planck.vert","planck.frag");
+}
+
 function setup() {
   Temp = 5700;
   L = 1000*2898/Temp;
-  let canvas = createCanvas(1000, 500);
+  let canvas = createCanvas(windowWidth*0.8, windowHeight*0.8);
   canvas.parent("game")
+  canvas2 = createGraphics(width, height, WEBGL);
+
   background(0);
   colorMode(HSB, 1.5*N, N, N); //Esto es para hacer el arcoíris
   noStroke();
   rainbow();
-  star();
   go();
 
   draw_text()
-
-  //delay(3000);
 }
 
 function draw_text(){
@@ -38,10 +46,27 @@ function draw_text(){
 }
 
 function draw() {
-  Temp = map(mouseX,0,width,20000,300)
+  // Set the temperature based on mouse position
+  Temp = constrain(map(mouseX,0,width,Tmax,Tmin),Tmin,Tmax);
+  
+  // Set general sim uniforms
+  theShader.setUniform("u_resolution",[width,height])
+  theShader.setUniform("u_pixelDensity",pixelDensity())
+  theShader.setUniform("u_mouse",[mouseX/width, map(mouseY,0,height,1,0)])
+  
+  // Set Planck distribution uniforms
+  let c1 = I(Temp, (p1*width)); //AZUL
+  let c2 = I(Temp, ((p1+dp/2)*width)); //VERDE
+  let c3 = I(Temp, (p2*width)); //ROJO
+  theShader.setUniform("u_color", [c3, c2, c1])
+  
   background(0);
+  canvas2.shader(theShader);
+  canvas2.rect(0,0,width,height);
+  image(canvas2,0,0)
+
+
   rainbow();
-  star();
   go();
   draw_text()
   //Temp += 10;
@@ -86,12 +111,12 @@ function star() {
   let size = 40;
   let T = pow(Temp+3840,1);
   
-  fill(c3,0,0,T);
-  ellipse(0.7*width-(1)*size,0.7*height, size, size);
-  fill(0,c2,0,T);
-  ellipse(0.7*width-(0)*size,0.7*height, size, size);
-  fill(0,0,c1,T);
-  ellipse(0.7*width+(1)*size,0.7*height, size, size);
+  // fill(c3,0,0,T);
+  // ellipse(0.7*width-(1)*size,0.7*height, size, size);
+  // fill(0,c2,0,T);
+  // ellipse(0.7*width-(0)*size,0.7*height, size, size);
+  // fill(0,0,c1,T);
+  // ellipse(0.7*width+(1)*size,0.7*height, size, size);
 }
 
 function go() { //Dibuja la función de Planck  
@@ -135,4 +160,9 @@ function I(T_, pix_) {
   let inn = planck(T, lambda);
 
   return inn;
+}
+
+function windowResized(){
+  resizeCanvas(windowWidth*0.8, windowHeight*0.8);
+  canvas2.resizeCanvas(windowWidth*0.8, windowHeight*0.8);
 }
