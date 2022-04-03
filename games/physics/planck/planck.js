@@ -21,15 +21,14 @@ function preload(){
 }
 
 function setup() {
-  Temp = 5700;
-  L = 1000*2898/Temp;
   let canvas = createCanvas(windowWidth*0.8, windowHeight*0.8);
   canvas.parent("game")
   canvas2 = createGraphics(width, height, WEBGL);
 
+  Temp = 5700;
+  L = 1000*2898/Temp; // Longitud de onda
+
   background(0);
-  colorMode(HSB, 1.5*N, N, N); //Esto es para hacer el arcoíris
-  noStroke();
   rainbow();
   go();
 
@@ -42,12 +41,13 @@ function draw_text(){
     stroke(1);
     text("T=" + int(Temp) + " K", width - 150, 0.3*height-15); //Pone la Temperatura en Pantalla
     text("  =" + int(Temp-273) + "°C", width - 150, 0.3*height+10); //Pone la Temperatura en Pantalla
-    text("λ=" + int(L) + " nm", width - 150, 0.3*height+50); //Pone la Longitud de onda Mäxima en Pantalla
+    text("λ=" + int(L+200) + " nm", width - 150, 0.3*height+50); //Pone la Longitud de onda Mäxima en Pantalla
 }
 
 function draw() {
   // Set the temperature based on mouse position
   Temp = constrain(map(mouseX,0,width,Tmax,Tmin),Tmin,Tmax);
+  L = 1000*2898/Temp;
   
   // Set general sim uniforms
   theShader.setUniform("u_resolution",[width,height])
@@ -65,26 +65,18 @@ function draw() {
   canvas2.rect(0,0,width,height);
   image(canvas2,0,0)
 
-
   rainbow();
   go();
   draw_text()
-  //Temp += 10;
-  L = 1000*2898/Temp;
-
-  if ((Temp > 2e4)||(Temp<0)) {
-    setup(); //Reinicia cuando llega a 20 000K
-  }
 }
 
 function rainbow() { //Dibuja el espectro visible
   colorMode(HSB, 1.5*N, N, N);
   for (let i = 0; i < N; i++) {
-    col = color(N-i, N, 0.3*N);
+    col = color(N-i, N, 0.6*N);
     xpos = map(i, 0, N, p1*width, p2*width);
-    noStroke();
-    fill(col);
-    rect(xpos, 0, dp*width/N, height);
+    stroke(col);
+    line(xpos, 0, xpos, height);
   }
 }
 
@@ -107,16 +99,6 @@ function star() {
   ellipse(0.7*width, 0.3*height, radius, radius);
   ellipse(0.7*width, 0.3*height, 0.9*radius, 0.9*radius);
   ellipse(0.7*width, 0.3*height, 0.8*radius, 0.8*radius);
-  
-  let size = 40;
-  let T = pow(Temp+3840,1);
-  
-  // fill(c3,0,0,T);
-  // ellipse(0.7*width-(1)*size,0.7*height, size, size);
-  // fill(0,c2,0,T);
-  // ellipse(0.7*width-(0)*size,0.7*height, size, size);
-  // fill(0,0,c1,T);
-  // ellipse(0.7*width+(1)*size,0.7*height, size, size);
 }
 
 function go() { //Dibuja la función de Planck  
@@ -124,16 +106,19 @@ function go() { //Dibuja la función de Planck
   let xini = 0;
   let yini = height;
 
+  let ymax = 0;
+  let xmax = 0;
+
   for (let i = 1; i < N; i++) {
 
     xpos = map(i, 0, N, 0, width);
     let y = I(Temp, xpos);
     let ypos = map(y, 0, 1, height, 0);
+    if (y > ymax){
+      ymax = y;
+      xmax = xpos;
+    }
 
-    //fill(N);
-    //ellipse(xpos,ypos,5,5);
-
-    fill(255);
     stroke(N);
     strokeWeight(3);
     line(xini, yini, xpos, ypos);
@@ -141,6 +126,22 @@ function go() { //Dibuja la función de Planck
     xini = xpos;
     yini = ypos;
   }
+
+  if (ymax != 0){
+    ymax = map(ymax, 0, 1, height, 0);
+  
+    line(xmax,ymax - 20, xmax, ymax - 40);
+    line(xmax,ymax - 20, xmax - 5, ymax - 25);
+    line(xmax,ymax - 20, xmax + 5, ymax - 25);
+  }
+}
+
+function I(T_, pix_) {
+  let T = T_;
+  let lambda = map(pix_, 0, width, 0, lfin);
+  let inn = planck(T, lambda);
+
+  return inn;
 }
 
 function planck(T_, lm_) {
@@ -152,14 +153,6 @@ function planck(T_, lm_) {
   let tres = exp((h*c)/(k*T_*lm_))-1;
 
   return 1e6*uno/(dos*tres);
-}
-
-function I(T_, pix_) {
-  let T = T_ + 3840;
-  let lambda = map(pix_, 0, width, 0, lfin);
-  let inn = planck(T, lambda);
-
-  return inn;
 }
 
 function windowResized(){
