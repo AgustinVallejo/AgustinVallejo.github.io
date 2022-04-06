@@ -35,13 +35,13 @@ void main() {
       if (i < u_N) {
           vec3 star = u_stars[i];
           star.x *= X;
-          float r = star.z/10.;
+          float r = star.z/5.;
           vec3 color = 10.*u_colors[i];
 
           float d = distance(st,star.xy);
           float glow = 0.0;
           if (d<r){
-              glow += brightness*r;
+              glow += 0.5*brightness*r;
           }
           else {
               glow += 0.1*brightness*exp(-pow((d-r),1.)*200.)*r;
