@@ -12,17 +12,46 @@
     <div id="navbar"></div>
     <div class="container-fluid mt-4 mx-3">
         <div class="row">
-            <div id="card" class="col-md-2 card" style="width: 18rem;"></div>
-            <div class="col mt-4 mx-3">
-                <p> This page is currently under development. If you wish to play with interactive educational experiences, click here:</p>
-                <a type="button" class="btn btn-dark" href="games.html">EduGames</a>
-                <p></p>
-                <p> For the Poster presented in the Symposium of Space Educational Activities:</p>
-                <a type="button" class="btn btn-primary" href="ssea.html">SSEA Poster</a>
-                <p></p>
-                <p> If you wish to look at the Apophis Project, click here:</p>
-                <a type="button" class="btn btn-success" href="apophis.html">Asteroid Apophis</a>
-                <p></p>
+            <div id="card" class="col-md-2 card"></div>
+            <div class="col mt-4 mx-5">
+                <div class="row"></div>
+                    <h1>Welcome! / Bienvenidos!</h1>
+                <div class="row card p-3">
+                    <div id="carouselDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <a href="/ssea.html"><img src="assets\ssea\posterImage.jpg" class="d-block" style="opacity: 0.5; height: 500px;  width:auto; margin: auto"></a>
+                        <div class="carousel-caption d-none d-md-block">
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/games.html"><img src="assets\ssea\hr.png" class="d-block w-75" style="opacity: 0.5; height: 500px;  width:auto; margin: auto"></a>
+                        <div class="carousel-caption d-none d-md-block">
+                          <h5>Astrophysics Simulations</h5>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/art.html"><img src="assets\art\2022-01-14.jpeg" class="d-block" style="opacity: 0.5; height: 500px;  width:auto; margin: auto"></a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Watercolor and Digital Art!</h5>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDark" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselDark" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                </div>
             </div>
         </div>
     </div>
