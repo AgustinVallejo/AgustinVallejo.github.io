@@ -25,20 +25,24 @@ let files = [
     '2022-02-08.jpeg',
     '2022-02-12.jpeg',
     '2022-02-22.jpeg',
-    '2022-03-10.png',
+    '2022-03-10.jpeg',
     '2022-03-27.jpeg',
     '2022-03-30.jpeg',
     '2022-04-02.jpeg',
     '2022-04-13.jpeg',
     '2022-04-29.jpeg',
     '2022-04-30.jpeg',
+    '2022-05-08.jpeg',
+    '2022-05-16.jpeg',
+    '2022-05-17.jpeg',
 ]
 
 // import os
 // for n in os.listdir():
 //   print(f"'{n}',")
 
-shuffleArray(files)
+// shuffleArray(files)
+files.reverse()
 
 let gallery = document.getElementById("gallery")
 
@@ -59,3 +63,4 @@ function shuffleArray(array) {
         array[j] = temp;
     }
 }
+
