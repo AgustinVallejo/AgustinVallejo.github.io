@@ -5,7 +5,7 @@ class Star {
     this.t = 0; // Absolute time
     this.tau = 0; // Relative time
     this.alive = true;
-
+    this.supernova = false;
     this.pos = new createVector(x, y);
     this.vel = new createVector(random(-1,1), random(-1,1));
     this.vel.mult(random(10));
@@ -29,7 +29,7 @@ class Star {
     if (play){
       let brownian = createVector(
         1-2*noise(this.id + this.t*0.001),1-2*noise(2*this.id + this.t*0.001));
-      brownian.mult(0.5*pow(dt,1/dt));
+      brownian.mult(0.2);
       this.pos.add(brownian);
     }
   }
@@ -42,6 +42,7 @@ class Star {
     push();
     translate(this.pos.x, this.pos.y)
     fill(this.col);
+    noStroke();
     if (!shaded){
       circle(0, 0, this.r);
     }
@@ -59,24 +60,19 @@ class Star {
       if (this.shownMass < 0.8) {
         return "Enana roja"
       }
-      else if (this.shownMass < 1.6) {
+      if (this.shownMass < 1.6) {
         return "Enana amarilla"
       }
-      else {
-        return "Gigante azul"
-      }
+      return "Gigante azul"
     }
-    else if ((this.tau < 1.5) && (this.mass < 4)) {
+    if ((this.tau < 1.5) && (this.mass < 4)) {
       if (this.shownMass < 8) {
         return "Gigante Roja"
       }
     }
-    else if (this.tau < 5){
-      if (this.mass < 3){
+    if (this.tau < 5){
+      if (this.mass < 4){
         return "Enana Blanca"
-      }
-      else {
-        return "Estrella de Neutrones"
       }
     }
   }
@@ -95,23 +91,88 @@ class Star {
         map(this.mass, minMass,3, 0.0,1.0, false)*map(this.mass, 4,10, 1.,3.0, true) * pow(4,1-this.tau),
       )
     }
-    else if (this.mass < 5){
+    else if ( this.mass < 4 ){
       this.r = 4;
       this.col = color(0.5 * pow(1.5,1.5-this.tau));
     }
     else {
+      this.supernova = true;
       this.alive = false;
     }
-
     if (this.tau > 5){
       this.alive = false;
     }
   }
 }
 
+class Supernova {
+  constructor( star ){
+    this.star = star;
+    this.r = 3*this.star.mass
+    this.t = 0; // Absolute time
+    star.airDrag = 0.1;
+
+    // Evolucionary state as function to be consistent with Star logic
+    this.evolutionaryState = () => {
+      return star.mass < 8 ? "Estrella de Neutrones" : "Agujero Negro";
+    }
+  }
+
+  draw() {
+    push();
+    translate(this.star.pos.x, this.star.pos.y)
+
+    // Drawing of the explosion
+    if ( this.t < 50 ){
+      noFill();
+      stroke( 1.0 * exp( -0.05*this.t ) );
+      circle( 0, 0, 10*this.t )
+      circle( 0, 0, 5*this.t )
+      circle( 0, 0, 3*this.t )
+    }
+
+    // Drawing of the bodies
+    if ( this.star.mass < 8 ){
+      // Neutron Star
+      noStroke();
+      fill( 1 );
+      circle( 0, 0, this.r )
+
+    }
+    else {
+      // Black Hole
+      let value = exp( 0.01 * ( this.t - 40 ) ) - 1;
+      stroke( value, value,0);
+      fill(0);
+      circle( 0, 0, this.r )
+      fill(1,1,0)
+    }
+
+    if (showFlags){
+      textSize(12)
+      noStroke();
+      text(this.evolutionaryState(),0,1.1*this.r)
+      text(this.star.shownMass + " Msol",0,1.1*this.r + 10)
+      text(int(30*this.t,2) + " mill. años",0,1.1*this.r+20)
+    }
+    pop();
+  }
+
+  evolve() {
+    this.t += dt;
+    this.star.t += dt;
+  }
+
+  move(){
+    this.star.move();
+  }
+}
+
 class Stars {
   constructor(){
-    this.stars = []
+    this.stars = [];
+    this.supernovae = [];
+    this.blackHoles = [];
   }
 
   push(element){
@@ -119,10 +180,11 @@ class Stars {
   }
 
   move(){
-    this.stars.forEach((star) => {
-      if (star.alive){
-        star.move();
-      }
+    this.stars.forEach( star => {
+      star.move();
+    })
+    this.supernovae.forEach( nova => {
+      nova.move();
     })
   }
 
@@ -130,12 +192,13 @@ class Stars {
     noStroke();
     colorMode(RGB,1);
     if ((!shaded)||(showFlags)){
-      this.stars.forEach((star) => {
-        if (star.alive){
-          star.draw();
-        }
+      this.stars.forEach( star => {
+        star.draw();
       })
     }
+    this.supernovae.forEach( nova => {
+      nova.draw();
+    })
   }
 
   evolve(){
@@ -147,9 +210,16 @@ class Stars {
       else {
         this.stars.splice(i,1)
       }
+      if ( star.supernova ) {
+        this.supernovae.push( new Supernova( star ) );
+      }
     }
 
-    if ((autoEvolve)&(random()>0.98)&(play)) {
+    this.supernovae.forEach( nova => {
+      nova.evolve();
+    })
+
+    if ( ( autoEvolve ) & ( random() > 0.98 ) & ( play ) ) {
       if (this.stars.length < MAX_STAR_COUNT){
         let N = int(random(1,CREATED_STARS))
         let posx = width*(0.8*random()+0.1)

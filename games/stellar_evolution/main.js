@@ -77,7 +77,9 @@ function draw() {
   // UI
   control_buttons();
   other_buttons();
-  if (showHR){HR.display();}
+  if (showHR){
+    HR.display();
+  }
   clicked = false;
   
 }
