@@ -17,6 +17,7 @@ class Graph{
   move() {
     if (this.moving) {
       if (mouseIsPressed) {
+        cursor(MOVE);
         this.x0 = mouseX - this.dx;
         this.y0 = mouseY - this.dy;
       }
@@ -26,7 +27,7 @@ class Graph{
     }
     else if (((this.x0 - this.h*0.5 < mouseX) && (mouseX < this.x0 + this.h*0.5)) &&
       ((this.y0 - this.h*0.5 < mouseY) && (mouseY < this.y0 + this.h*0.5))) {
-      cursor(CROSS);
+      cursor(MOVE);
       hovering = true;
       if (mouseIsPressed) {
         this.moving = true;

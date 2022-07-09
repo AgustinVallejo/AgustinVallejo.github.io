@@ -36,11 +36,16 @@ function control_buttons(){
   let dx = width*0.01;
   let x0 = width*0.25-2*w-dx;
   let y0 = 0.99*height - w;
+  
+  play_button (x0 + 0*(w + dx), y0, w);
+  pause_button(x0 + 1*(w + dx), y0, w);
+  slower      (x0 + 2*(w + dx), y0, w);
+  faster      (x0 + 3*(w + dx), y0, w);
 
-  faster(x0 + 3*(w + dx), y0, w);
-  slower(x0 + 2*(w + dx), y0, w);
-  pause_button(x0 + w + dx, y0, w);
-  play_button(x0,y0,w);
+  textSize(14)
+  noStroke();
+  fill(255)
+  text(int(30*t / 1000,2) + " mil millones de años", x0, y0 - 10)
   colorMode(RGB,1);
 
 }
@@ -123,10 +128,17 @@ function slower(x0,y0,w) {
   strokeWeight(2/w)
 
   beginShape();
-  vertex(0.4, 0.2);
-  vertex(0.7, 0.5);
-  vertex(0.4, 0.8);
+  vertex(0.5, 0.2);
+  vertex(0.2, 0.5);
+  vertex(0.5, 0.8);
   endShape();
+
+  beginShape();
+  vertex(0.7, 0.2);
+  vertex(0.4, 0.5);
+  vertex(0.7, 0.8);
+  endShape();
+
   pop();
 
   if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
