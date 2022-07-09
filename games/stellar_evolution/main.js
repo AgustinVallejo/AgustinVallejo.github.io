@@ -36,7 +36,7 @@ function setup() {
   canvas.parent("game")
   noStroke();
   // Define HR variable as a Graph
-  HR = new Graph(0.27,0.5,"Diagrama HR","<= Temperatura","Luminosidad =>");
+  HR = new Graph(0.27,0.5,"Diagrama HR","+ Temperatura -"," - Luminosidad +");
 }
 
 function windowResized(){

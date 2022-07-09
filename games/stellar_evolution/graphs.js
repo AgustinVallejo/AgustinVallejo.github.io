@@ -2,15 +2,46 @@ class Graph{
   constructor(y0,h,TITLE="",XLABEL="",YLABEL=""){
     this.y0 = y0*height; // Relative vertical position
     this.h = h*height; // Relative height (and width)
+    this.x0 = width - 0.6*this.h;
     this.title = TITLE;
     this.xlabel = XLABEL;
     this.ylabel = YLABEL;
+
+    // Mouse dragging offset
+    this.dx = 0;
+    this.dy = 0;
+
+    this.moving = false;
+  }
+
+  move() {
+    if (this.moving) {
+      if (mouseIsPressed) {
+        this.x0 = mouseX - this.dx;
+        this.y0 = mouseY - this.dy;
+      }
+      else {
+        this.moving = false;
+      }
+    }
+    else if (((this.x0 - this.h*0.5 < mouseX) && (mouseX < this.x0 + this.h*0.5)) &&
+      ((this.y0 - this.h*0.5 < mouseY) && (mouseY < this.y0 + this.h*0.5))) {
+      cursor(CROSS);
+      hovering = true;
+      if (mouseIsPressed) {
+        this.moving = true;
+        this.dx = mouseX - this.x0;
+        this.dy = mouseY - this.y0;
+      }
+    }
   }
 
   display(){
+    this.move();
+
     rectMode(CENTER);
     push()
-    translate(width - 0.6*this.h,this.y0);
+    translate(this.x0,this.y0);
     // colorMode(RGB,255);
     strokeWeight(3);
     stroke(0.15);
@@ -43,5 +74,6 @@ class Graph{
       circle(HR_COLOR, HR_R, star.r);      
     });
     pop()
+
   }
 }
