@@ -48,9 +48,10 @@ class Star {
     }
     if (showFlags){
       textSize(12)
-      text(this.evolutionaryState(),0,1.1*this.r)
-      text(this.shownMass + " Msol",0,1.1*this.r + 10)
-      text(int(30*this.t/1000,2) + " mil millones de años",0,1.1*this.r+20)
+      let dist = 0.5*this.r;
+      text(this.evolutionaryState(),dist,dist)
+      text(this.shownMass + " Msol",dist,dist + 10)
+      text(int(30*this.t/1000,2) + " mil millones de años",dist,dist+20)
     }
     pop();
   }
@@ -151,9 +152,10 @@ class Supernova {
     if (showFlags){
       textSize(12)
       noStroke();
-      text(this.evolutionaryState(),0,1.1*this.r)
-      text(this.star.shownMass + " Msol",0,1.1*this.r + 15)
-      text(int(30*this.t/1000,2) + " mil millones de años",0,1.1*this.r + 30)
+      let dist = 0.5*this.r;
+      text(this.evolutionaryState(), dist, dist)
+      text(this.star.shownMass + " Msol", dist, dist + 15)
+      text(int(30*this.t/1000,2) + " mil millones de años", dist, dist + 30)
     }
     pop();
   }
