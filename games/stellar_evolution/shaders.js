@@ -27,27 +27,27 @@ void main() {
   float X = u_resolution.x/u_resolution.y;
   st.x *= X;
 
-  gl_FragColor = vec4(vec3(0.0), 1.0);
+  gl_FragColor = vec4(0.0);
 
-  float brightness = 100.;
+  float brightness = 200.;
   
   for (int i = 0; i < ${MAX_STAR_COUNT}; i++) {
       if (i < u_N) {
           vec3 star = u_stars[i];
           star.x *= X;
           float r = star.z/5.;
-          vec3 color = 10.*u_colors[i];
+          vec3 color = u_colors[i];
 
           float d = distance(st,star.xy);
           float glow = 0.0;
           if (d<r){
-              glow += 0.5*brightness*r;
+              glow += brightness*r;
           }
           else {
-              glow += 0.1*brightness*exp(-pow((d-r),1.)*200.)*r;
+              glow += 0.5*brightness*exp(-pow((d-r),1.)*150.)*r;
           }
 
-          gl_FragColor += vec4(color*glow,1.0);
+          gl_FragColor += vec4(color*glow,glow);
       }
   }
 }

@@ -7,7 +7,7 @@
 
 
 let stars = new Stars(); // Class that manages the list of stars
-let shaded = false;
+let shaded = true;
 let t = 0; // Time
 let T = 500; // Reference halflife
 let dt = 1; 
@@ -27,11 +27,13 @@ let HR; // HR Diagram variable
 function preload(){
   // Preload the shaders
   theShader = new p5.Shader(this.renderer, vertShader, fragShader);
+  cloudShader = new p5.Shader(this.renderer, cloudVertShader, cloudFragShader);
 }
 
 function setup() {
   // Create main canvas and shader canvas
   let canvas = createCanvas(windowWidth*0.7, windowHeight*0.8);
+  cloudCanvas = createGraphics(width, height, WEBGL);
   canvas2 = createGraphics(width, height, WEBGL);
   canvas.parent("game")
   noStroke();
@@ -42,6 +44,8 @@ function setup() {
 function windowResized(){
   resizeCanvas(windowWidth*0.7, windowHeight*0.8);
   canvas2.resizeCanvas(windowWidth*0.7, windowHeight*0.8);
+  cloudCanvas.resizeCanvas(windowWidth*0.7, windowHeight*0.8);
+  HR.windowResized();
 }
 
 function draw() {
@@ -58,12 +62,21 @@ function draw() {
     theShader.setUniform("u_resolution",[width,height]);
     theShader.setUniform("u_pixelDensity",pixelDensity());
     theShader.setUniform("u_mouse",[mouseX/width, map(mouseY,0,height,1,0)]);
+    cloudShader.setUniform("u_resolution",[width,height]);
+    cloudShader.setUniform("u_pixelDensity",pixelDensity());
+    cloudShader.setUniform("u_time",t/100);
     
     // Send Star data
     let data = serializeSketch()
     theShader.setUniform("u_N",stars.stars.length);
     theShader.setUniform("u_stars",data.stars);
     theShader.setUniform("u_colors",data.colors);
+
+    blendMode( BLEND )
+
+    cloudCanvas.shader(cloudShader);
+    cloudCanvas.rect(0,0,width,height);
+    image(cloudCanvas,0,0);
 
     canvas2.shader(theShader);
     canvas2.rect(0,0,width,height);
@@ -81,7 +94,7 @@ function draw() {
     HR.display();
   }
   clicked = false;
-  
+  console.log( frameRate() );
 }
 
 function mousePressed(){

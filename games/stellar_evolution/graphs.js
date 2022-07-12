@@ -1,8 +1,10 @@
 class Graph{
   constructor(y0,h,TITLE="",XLABEL="",YLABEL=""){
-    this.y0 = y0*height; // Relative vertical position
     this.h = h*height; // Relative height (and width)
     this.x0 = width - 0.6*this.h;
+    this.y0 = y0*height; // Relative vertical position
+
+    // Text
     this.title = TITLE;
     this.xlabel = XLABEL;
     this.ylabel = YLABEL;
@@ -12,6 +14,11 @@ class Graph{
     this.dy = 0;
 
     this.moving = false;
+  }
+
+  windowResized() {
+    this.x0 = width - 0.6*this.h;
+    this.y0 = 0.6*this.h;
   }
 
   move() {

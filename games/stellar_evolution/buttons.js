@@ -45,7 +45,7 @@ function control_buttons(){
   textSize(14)
   noStroke();
   fill(255)
-  text(int(30*t / 1000,2) + " mil millones de años", x0, y0 - 10)
+  text(int(30*t / 1000) + " mil millones de años", x0, y0 - 10)
   colorMode(RGB,1);
 
 }
