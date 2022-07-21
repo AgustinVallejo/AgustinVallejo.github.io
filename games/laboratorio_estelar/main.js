@@ -94,7 +94,6 @@ function draw() {
     HR.display();
   }
   clicked = false;
-  console.log( frameRate() );
 }
 
 function mousePressed(){

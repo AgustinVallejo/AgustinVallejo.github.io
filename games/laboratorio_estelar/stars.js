@@ -1,6 +1,7 @@
 
 class Star {
   constructor(x, y, mass){
+    colorMode(RGB,1);
     this.id = random(100);
     this.t = 0; // Absolute time
     this.tau = 0; // Relative time
