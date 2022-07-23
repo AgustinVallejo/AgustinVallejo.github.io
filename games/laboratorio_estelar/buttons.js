@@ -25,7 +25,7 @@ function message(msg) {
 }
 
 function other_buttons(){
-  let dx = width*0.1;
+  let dx = width*0.15;
   let y0 = 0.99*(height) - 40;
 
   createStars(dx,y0);

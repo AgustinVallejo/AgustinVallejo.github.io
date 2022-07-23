@@ -35,8 +35,6 @@ class Planet {
 			this.t += 0.1
 			}
 
-			console.log(middle, this.pos.dist(middle))
-
 			if (this.pos.mag() < 0.5*Rsun) {
 				this.alive = false
 			}

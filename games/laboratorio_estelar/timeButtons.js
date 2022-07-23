@@ -25,29 +25,62 @@ function message(msg) {
 }
 
 function control_buttons(){
+  
+  let w = 40; //px, width of the button
+  let dx = width*0.01;
+  let x0 = width*0.5 - w;
+  let y0 = 0.99*height - w;
+
   colorMode(RGB,255);
+  textSize(14)
+  noStroke();
+  fill(255)
+  text(int(30*t / 1000) + " mil millones de años", x0, y0 - 10)
+
   fill(50);
   stroke(200);
   strokeWeight(2);
   strokeJoin(ROUND);
   rectMode(CORNERS)
-
-  let w = 40; //px, width of the button
-  let dx = width*0.01;
-  let x0 = width*0.5-2*w-dx;
-  let y0 = 0.99*height - w;
   
+  reset_button(x0 - 1*(w + dx), y0, w);
   play_button (x0 + 0*(w + dx), y0, w);
   pause_button(x0 + 1*(w + dx), y0, w);
   slower      (x0 + 2*(w + dx), y0, w);
   faster      (x0 + 3*(w + dx), y0, w);
 
-  textSize(14)
-  noStroke();
-  fill(255)
-  text(int(30*t / 1000) + " mil millones de años", x0, y0 - 10)
   colorMode(RGB,1);
+}
 
+function reset_button(x0,y0,w){
+  push();
+  translate(x0,y0);
+  rect(0,0,w,w,5)
+  scale(w);
+  strokeWeight(2/w)
+
+  translate(0.5,0.5)
+  rotate(-PI/2 )
+  let r = 0.3;
+  let th = 0.2*PI;
+  arc(0,0,2*r,2*r,th,-th,OPEN)
+  line(r*cos(th),r*sin(th),1.5*r*cos(th+0.4),1.5*r*sin(th+0.4))
+  line(r*cos(th),r*sin(th),0.5*r*cos(th+0.4),0.5*r*sin(th+0.4))
+
+  pop();
+
+  if (((x0 < mouseX) && (mouseX < x0 + w)) && ((y0 < mouseY) && (mouseY < y0 + w))) {
+      cursor(HAND);
+      hovering = true;
+      message("Reset")
+      if (clicked) {
+        play = true;
+        t = 0;
+        stars.stars = [];
+        stars.supernovae = [];
+        stars.blackHoles = [];
+      }
+  }
 }
 
 function play_button(x0,y0,w){
