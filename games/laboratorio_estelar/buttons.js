@@ -51,6 +51,8 @@ function createStars(x0,y0){
 
   rect(0, 0, 2*w, 2*h, 5)
   textAlign(CENTER, CENTER);
+  fill(150);
+  noStroke();
 
 
   if (((x0 - w < mouseX) && (mouseX < x0 + w)) && ((y0 - h < mouseY) && (mouseY < y0 + h))) {
@@ -93,6 +95,8 @@ function toggleFlags(x0,y0){
   rect(0, 0, 2*w, 2*h, 5)
   textAlign(CENTER, CENTER);
 
+  fill(150);
+  noStroke();
   if (showFlags) {
     fill(255)
   }
