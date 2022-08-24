@@ -39,14 +39,17 @@ function draw_text(){
     fill(255);
     textSize(20);
     stroke(1);
-    text("T=" + int(Temp) + " K", width - 150, 0.3*height-15); //Pone la Temperatura en Pantalla
-    text("  =" + int(Temp-273) + "°C", width - 150, 0.3*height+10); //Pone la Temperatura en Pantalla
-    text("λ=" + int(L+200) + " nm", width - 150, 0.3*height+50); //Pone la Longitud de onda Mäxima en Pantalla
+    text("Temperatura", width*0.43, 0.3*height-40); //Pone la Temperatura en Pantalla
+    text(int(Temp) + " K", width*0.45, 0.3*height-15); //Pone la Temperatura en Pantalla
+    text(int(Temp-273) + "°C", width*0.45, 0.3*height+10); //Pone la Temperatura en Pantalla
+
+    text("Longitud de Onda", width*0.43, 0.3*height+60); //Pone la Longitud de onda Mäxima en Pantalla
+    text("λ=" + int(L+200) + " nm", width*0.45, 0.3*height+85); //Pone la Longitud de onda Mäxima en Pantalla
 }
 
 function draw() {
   // Set the temperature based on mouse position
-  Temp = constrain(map(mouseX,0,width,Tmax,Tmin),Tmin,Tmax);
+  Temp = constrain(map(mouseY,0,height,Tmax,Tmin),Tmin,Tmax);
   L = 1000*2898/Temp;
   
   // Set general sim uniforms
@@ -68,6 +71,7 @@ function draw() {
   rainbow();
   go();
   draw_text()
+
 }
 
 function rainbow() { //Dibuja el espectro visible
@@ -137,7 +141,7 @@ function go() { //Dibuja la función de Planck
 }
 
 function I(T_, pix_) {
-  let T = T_;
+  let T = T_ + 3840;
   let lambda = map(pix_, 0, width, 0, lfin);
   let inn = planck(T, lambda);
 
