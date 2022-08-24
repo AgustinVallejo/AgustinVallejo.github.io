@@ -13,7 +13,8 @@ let collision = false;
 let inAtmosphere = false;
 
 function setup() {
-	createCanvas(windowWidth*0.8, windowHeight*0.8);
+	let canvas = createCanvas(windowWidth*0.8, windowHeight*0.8);
+	canvas.parent("game");
 	background(0);
 	textSize(64);
 	
@@ -78,13 +79,13 @@ function drawAsteroid(){
 	if (inAtmosphere & !collision){
 		fill(255,a);
 		stroke(0,a);
-		text("Meteor",mouseX+width*0.05,mouseY+0.04*height);
+		text("Meteoro",mouseX+width*0.05,mouseY+0.04*height);
 	}
 	else{
 		a = (1 - mouseY/(atmosY*0.9))* 255;
 		fill(0,a);
 		stroke(255,a);
-		text("Asteroid",mouseX+width*0.05,mouseY+0.04*height);
+		text("Meteoroide",mouseX+width*0.05,mouseY+0.04*height);
 	}
 }
 
@@ -105,9 +106,9 @@ function collisionAnim(){
 		textSize(100);
 		textAlign(CENTER);
 		aa = map(t,50,Tmax*2,0,255);
-		text("Meteorite!",width/2,height/2);
+		text("¡Meteorito!",width/2,height/2);
 		textSize(20);
-		text("Click to Restart",width/2,height/2+100);
+		text("Haz clic para reiniciar",width/2,height/2+100);
 	}
 }
 
