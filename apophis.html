@@ -15,17 +15,19 @@
         <div class="row justify-content-center d-flex">
             <div class="col-4">
                 <h1>Apophis Bistatic Radar Calculations</h1>
-                <p>This (deprecated) ephemeris calculator is based on the following MNRAS Paper: <br><a href="https://arxiv.org/abs/2201.12205">Conditions for high-resolution bistatic radar observations of Apophis in 2029. Vallejo, Chaparro & Zuluaga (2022)</a></p>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    If observatory list is not displaying, try again in one minute. The API is waking up.
-                    </div>
-                    <label for="obs1">First Observatory:</label>
-                    <select id="obs1" name="id1" class="form-select"></select>
-                    <p></p>
-                    <label for="obs2">Second Observatory:</label>
-                    <select id="obs2" name="id2" class="form-select"></select>
-                    <p></p>
-                    <div class="container"><button type="button" class="btn btn-primary" onclick="update()">Update</button></div>
+                <p>This (deprecated) ephemeris calculator is based on the following MNRAS Paper: <br>
+                    <a href="https://arxiv.org/abs/2201.12205">Conditions for high-resolution bistatic radar observations of Apophis in 2029. Vallejo, Zuluaga & Chaparro (2022)</a>
+                </p>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                If observatory list is not displaying, try again in one minute. The API is waking up.
+                </div>
+                <label for="obs1">First Observatory:</label>
+                <select id="obs1" name="id1" class="form-select"></select>
+                <p></p>
+                <label for="obs2">Second Observatory:</label>
+                <select id="obs2" name="id2" class="form-select"></select>
+                <p></p>
+                <div class="container"><button type="button" class="btn btn-primary" onclick="update()">Update</button></div>
 
             </div>
         </div>
