@@ -72,6 +72,7 @@ let files = [
     '2022-09-29.jpeg',
 ]
 
+// Shuffle the array
 // import os
 // for n in os.listdir():
 //   print(f"'{n}',")
