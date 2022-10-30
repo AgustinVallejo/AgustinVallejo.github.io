@@ -78,6 +78,8 @@ let files = [
     '2022-10-16.jpeg',
     '2022-10-21.jpeg',
     '2022-10-22.jpeg',
+    '2022-10-24.jpeg',
+    '2022-10-30.jpeg',
 ]
 
 // Shuffle the array
