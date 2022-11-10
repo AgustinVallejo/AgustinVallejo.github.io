@@ -96,22 +96,25 @@ function draw() {
   clicked = false;
 }
 
-// function mousePressed(){
-//   // Create new Stars
-//   if (!hovering){
-//     if (stars.stars.length < MAX_STAR_COUNT){
-//       let N = int(random(1,CREATED_STARS))
-//       for (let i = 0; i < N; i++){
-//         stars.push(new Star(mouseX, mouseY, 1/N));
-//       }
-//     }
-//   }
-// }
+function mousePressed(){
+  // Create new Stars
+  if (!hovering){
+    if (stars.stars.length < MAX_STAR_COUNT){
+      let N = int(random(1,CREATED_STARS))
+      for (let i = 0; i < N; i++){
+        stars.push(new Star(mouseX, mouseY, 1/N));
+      }
+    }
+  }
+}
 
 function keyPressed(){
   // Press a to toggle shaded mode
   if (key == "a"){
     shaded = !shaded;
+  }
+  else if (key=="h") {
+    showHR = !showHR;
   }
 }
 
