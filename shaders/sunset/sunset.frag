@@ -53,6 +53,28 @@ float dashedCircle(
 
 }
 
+float line(
+    in vec2 st,
+    in vec2 p1,
+    in vec2 p2,
+    in float dY
+    ){
+    float m = (p1.y - p2.y)/(p1.x - p2.x);
+    float b = p1.y - m*p1.x;
+    float y = m*st.x + b;
+    float x = (st.y - b)/m;
+    float width = 0.004;
+    float lineBoundaries = 1.
+        * step( p1.x - width, st.x )
+        * ( 1. - step( p2.x + width, st.x ))
+        * step( min( p1.y, p2.y ) - width + dY, st.y )
+        * ( 1. - step( max( p1.y, p2.y ) + width + dY, st.y ));
+    float result = 0.;
+    result += ( 1. - step(y + width + dY,st.y)) * step(y - width + dY,st.y) * lineBoundaries;
+    result += ( 1. - step(x + width,st.x)) * step(x - width,st.x) * lineBoundaries;
+    return result;
+}
+
 void main(){
     vec2 st = gl_FragCoord.xy/u_resolution/u_pixelDensity;
     float X = u_resolution.x/u_resolution.y;
@@ -60,58 +82,71 @@ void main(){
     vec3 col = vec3(0.0);
 
     // CONSTANTS
-    vec2 earthCenter = vec2(0.9*X,0.2);
-    float earthRadius = 0.3;
-    float atmosphereRadius = 0.5*X;
-    float MAX_ANGLE = 90.*3.14/180.;
+    vec2 earthCenter = vec2(0.9*X,0.1);
+    float earthRadius = 0.4;
+    float atmosphereRadius = 1.5*earthRadius;
+    float MAX_ANGLE = 3.14/2.;
     vec3 groundColor = vec3(0.1,0.15,0.2);
-    float sunOrbitRadius = 0.55*X;
+    float sunOrbitRadius = 2.0 * earthRadius;
+    float viewsBorder = 0.4;
 
 
     float mouseY = 1.;
     float angle = MAX_ANGLE;
 
     // MOUSE CONTROL
-    if (u_mouse.x < 0.3){
+    if (u_mouse.x * X < viewsBorder){
         mouseY = clamp(u_mouse.y, 0.,1.);
         angle = map(mouseY, 0.,1., 0.,MAX_ANGLE);
     }
     else {
-        vec2 dir = u_mouse - earthCenter;
+        vec2 dir = vec2( u_mouse.x*X - earthCenter.x, u_mouse.y - earthCenter.y );
         angle = atan(dir.y,-dir.x);
         angle = clamp(angle, 0.,MAX_ANGLE);
         mouseY = map(angle, 0.,MAX_ANGLE, 0.,1.);
     }
 
-    // INTERNAL VIEW
-    // Center around the left side of the screen
-    vec2 point = st - vec2(0.15,0.9*mouseY+0.1);
-    float d = length(point);
-    col += exp(-d*40.); // Sun's disk
-    col += 3.*(u_scattering)*exp(-d*.5)*pow(mouseY,0.6) +
-        (1.-u_scattering)*exp(-d*60.*(mouseY+0.03)); // Sunset shader
-
-    // Horizon
-    col *= step(0.1,st.y);
-    col += (1.-step(0.1,st.y))*groundColor;
-
-
     // EXTERNAL VIEW
-    col *= (1. - step(0.3,st.x));
-    point = st - earthCenter;
-    //col += step(0.3,st.x)*pow(smoothstep(atmosphereRadius,earthRadius,length(point)),2.)
-    //        *vec3(0.2,0.3,1.0);
-    col += step(0.3,st.x)*(1.-step(earthRadius,length(point)))*groundColor;
+    // Atmosphere
+    // col += pow(smoothstep(atmosphereRadius,earthRadius,length(st - earthCenter)),1.)
+    //        *vec3(0.5,0.5,1.0)*0.7;
+    // Earth
+    col += (1.-step(earthRadius,length(st - earthCenter)))*groundColor;
 
 
     // The Sun
-    vec2 sun = st - earthCenter + vec2(sunOrbitRadius*cos(angle), -sunOrbitRadius*sin(angle));
-    col += smoothstep(0.05,0.009,length(sun));
+    vec2 sun = earthCenter + sunOrbitRadius * vec2(-cos(angle), sin(angle));
+    col += smoothstep(0.05,0.009,length( st - sun));
 
-    vec2 observer = earthCenter + vec2(0.,earthRadius + 0.02);
-    point = st - observer;
-    col += smoothstep(0.01,0.009,length(point));
+    // Observer
+    vec2 observer = earthCenter + vec2(0.,earthRadius + 0.055);
+    col += smoothstep(0.01,0.009,length(st - observer));
+
+    // Atmosphere border
     col += dashedCircle(st, earthCenter, atmosphereRadius, 0.001, 50.);
+
+    // Line of Sight
+    // Make a line between sun and observer
+    float len = length( st - sun );
+    col += line(st, sun, observer, 0.) * vec3( 0.2 );
+
+
+    
+    // INTERNAL VIEW
+    // Center around the left side of the screen
+    col *= step(viewsBorder,st.x);
+
+    float layer = 1. - step(viewsBorder,st.x);
+
+    vec2 point = st - vec2(viewsBorder / 2.,0.9*mouseY+0.1);
+    float d = length(point);
+    col += layer*exp(-d*40.); // Sun's disk
+    col += layer*( 3.*(u_scattering)*exp(-d*.5)*pow(mouseY,0.6) +
+        (1.-u_scattering)*exp(-d*60.*(mouseY+0.03)) ); // Sunset shader
+
+    // Horizon
+    col += layer*(1.-step(0.1,st.y))*groundColor;
+    
 
     gl_FragColor = vec4(col, 1.0);
 }
