@@ -1,90 +1,86 @@
 let theShader;
 let canvas2;
 
+let t = 0;
+
 let clicked = false;
 let whiteLight = false;
 let colorLight = true;
-let gas1Enabled = false;
-let gas2Enabled = false;
-let gas1Lines = [0.1,0.5,0.7];
-let gas2Lines = [0.3,0.85,0.95];
-let gas1, gas2;
+let mainLine = 0;
+let gasALines = [0.1,0.5,0.7];
+let gasBLines = [0.3,0.85,0.95];
+let gasA, gasB;
 
-let whiteButton, colorButton, gas1Button, gas2Button;
+let whiteButton, colorButton, gasAButton, gasBButton;
 let AplusButton, AminusButton, BplusButton, BminusButton;
+
+let graph;
+let showGraph = true;
 
 function preload(){
     theShader = loadShader("shader.vert","shader.frag");
 }
 
 function initializeFields(){
+    // Creating GasTube elements
+    gasA = new GasTube(gasALines,0.35*width, height/2,0.1*width, 0.8*height, "A", color(255,255,0));
+    gasB = new GasTube(gasBLines,0.5*width, height/2,0.1*width, 0.8*height, "B", color(0,255,255));
+
     // Setting up buttons
     whiteButton = new Button("Luz Blanca",0.1*width,0.8*height,enableWhiteLights, whiteLight)
     colorButton = new Button("Color Manual",0.117*width,0.92*height,enableColors, colorLight)
-    gas1Button = new Button("Gas A",0.35*width,0.92*height,toggleGas1, gas1Enabled, color(255,255,0));
-    gas2Button = new Button("Gas B",0.5*width,0.92*height,toggleGas2, gas2Enabled, color(0,255,255));
-
-    // Creating GasTube elements
-    gas1 = new GasTube(gas1Lines,0.35*width, height/2,0.1*width, 0.8*height, "A", color(255,255,0));
-    gas2 = new GasTube(gas2Lines,0.5*width, height/2,0.1*width, 0.8*height, "B", color(0,255,255));
-
-    AminusButton = new Button("  -  ",0.32*width,0.05*height,popGasA, true);
-    AplusButton = new Button("  +  ",0.38*width,0.05*height,addGasA, true);
-    BminusButton = new Button("  -  ",0.47*width,0.05*height,popGasB, true);
-    BplusButton = new Button("  +  ",0.53*width,0.05*height,addGasB, true);
-
-}
-
-function popGasA(){
-    gas1.pop();
-}
-
-function addGasA(){
-    gas1.add();
-}
-
-function popGasB(){
-    gas2.pop();
-}
-
-function addGasB(){
-    gas2.add();
+    gasAButton = new Button("Gas A",0.35*width,0.92*height,toggleGasA, gasA.enabled, color(255,255,0));
+    gasBButton = new Button("Gas B",0.5*width,0.92*height,toggleGasB, gasB.enabled, color(0,255,255));
+    
+    AminusButton = new Button("  -  ",0.31*width,0.05*height,() => { gasA.pop() }, true);
+    AplusButton = new Button("  +  ",0.35*width,0.05*height,() => { gasA.add() }, true);
+    AElectrifyButton = new Button("  E  ",0.395*width,0.05*height,() => { gasA.electrify() }, gasA.electrified);
+    BminusButton = new Button("  -  ",0.46*width,0.05*height,() => { gasB.pop() }, true);
+    BplusButton = new Button("  +  ",0.50*width,0.05*height,() => { gasB.add() }, true);
+    BElectrifyButton = new Button("  E  ",0.545*width,0.05*height,() => { gasB.electrify() }, gasB.electrified);
+    
 }
 
 function setup(){
-    let canvas = createCanvas(windowWidth*0.8, windowHeight*0.8);
+    let canvas = createCanvas(1200, 500);
     canvas.parent("game")
     canvas2 = createGraphics(width, height, WEBGL);
     textFont("Roboto Slab");
     initializeFields();
+    
+    graph = new Graph(0.27,0.4,"Espectro","Longitud de Onda","Intensidad");
 }
 
 function draw(){
     cursor(ARROW);
 
+    mainLine = map(mouseY,0,height,1,0);
+    
     // Set general sim uniforms
     theShader.setUniform("u_resolution",[width,height])
     theShader.setUniform("u_pixelDensity",pixelDensity())
     theShader.setUniform("u_time",millis()*1e-3)
-    theShader.setUniform("u_mouse",[mouseX/width, map(mouseY,0,height,1,0)])
+    theShader.setUniform("u_mouse",[mouseX/width, mainLine])
     theShader.setUniform("u_whiteLight",whiteLight)
     theShader.setUniform("u_colorLight",colorLight)
-
-    // Uniforms for gas1
-    theShader.setUniform("u_lines1",invertLines(gas1Lines))
-    theShader.setUniform("u_gas1ON",gas1Enabled)
-    theShader.setUniform("u_lineStrength1",gas1.lineStrength)
-
-    // Uniforms for gas2
-    theShader.setUniform("u_lines2",invertLines(gas2Lines))
-    theShader.setUniform("u_gas2ON",gas2Enabled)
-    theShader.setUniform("u_lineStrength2",gas2.lineStrength)
-
-
+    
+    // Uniforms for gasA
+    theShader.setUniform("u_lines1",invertLines(gasALines))
+    theShader.setUniform("u_gasAON",gasA.enabled)
+    theShader.setUniform("u_lineStrength1",gasA.lineStrength)
+    theShader.setUniform("u_electrified1",gasA.electrified)
+    
+    // Uniforms for gasB
+    theShader.setUniform("u_lines2",invertLines(gasBLines))
+    theShader.setUniform("u_gasBON",gasB.enabled)
+    theShader.setUniform("u_lineStrength2",gasB.lineStrength)
+    theShader.setUniform("u_electrified2",gasB.electrified)
+    
+    
     canvas2.shader(theShader);
     canvas2.rect(0,0,width,height);
     image(canvas2,0,0)
-
+    
     push()
     translate(0.75*width,height/2)
     fill(255*0.1)
@@ -94,23 +90,29 @@ function draw(){
     rect(0, 0, 0.1*width, 0.15*width)
     stroke(255)
     pop()
-
-    if (gas1Enabled){
-        gas1.draw();
+    
+    if (gasA.enabled){
+        gasA.draw();
         AplusButton.draw();
         AminusButton.draw();
+        // AElectrifyButton.draw();
     }
-    if (gas2Enabled){
-        gas2.draw();
+    if (gasB.enabled){
+        gasB.draw();
         BplusButton.draw();
         BminusButton.draw();
+        // BElectrifyButton.draw();
     }
-
+    if (showGraph){
+        graph.draw();
+    }
+    
     whiteButton.draw();
     colorButton.draw();
-    gas1Button.draw();
-    gas2Button.draw();
+    gasAButton.draw();
+    gasBButton.draw();
     clicked = false;
+    t++;
 }
 
 function invertLines(lines){
@@ -122,7 +124,7 @@ function invertLines(lines){
 function enableWhiteLights(){
     whiteLight = !whiteLight;
     whiteButton.toggled = !whiteButton.toggled;
-
+    
     colorLight = false;
     colorButton.toggled = false;
 }
@@ -130,23 +132,29 @@ function enableWhiteLights(){
 function enableColors(){
     whiteLight = false;
     whiteButton.toggled = false;
-
+    
     colorLight = !colorLight;
     colorButton.toggled = !colorButton.toggled;
 }
 
-function toggleGas1(){
-    gas1Enabled = !gas1Enabled;
-    gas1Button.toggled = gas1Enabled;
+function toggleGasA(){
+    gasA.enabled = !gasA.enabled;
+    gasAButton.toggled = gasA.enabled;
 }
 
-function toggleGas2(){
-    gas2Enabled = !gas2Enabled;
-    gas2Button.toggled = gas2Enabled;
+function toggleGasB(){
+    gasB.enabled = !gasB.enabled;
+    gasBButton.toggled = gasB.enabled;
 }
 
 function windowResized(){
     resizeCanvas(windowWidth*0.8, windowHeight*0.8);
     canvas2.resizeCanvas(windowWidth*0.8, windowHeight*0.8);
-    initializeFields()
-  }
+    initializeFields()}
+
+function keyPressed(){
+    // Press a to toggle shaded mode
+    if (key == "g"){
+        showGraph = !showGraph;
+    }
+}

@@ -17,8 +17,12 @@ uniform float u_lines1[3];
 uniform float u_lines2[3];
 
 // GasTubes activated?
-uniform bool u_gas1ON;
-uniform bool u_gas2ON;
+uniform bool u_gasAON;
+uniform bool u_gasBON;
+
+// GasTubes Electrified
+uniform bool u_electrified1;
+uniform bool u_electrified2;
 
 float wave (
     in vec2 st,
@@ -147,7 +151,7 @@ void main(){
         emisivity *= 1./3.;
     }
     for (int i = 0; i < 3; i++){
-        if (u_gas1ON){
+        if (u_gasAON){
             lineWidth = 0.015*min(u_lineStrength1[i],1.);
             float lineStrength = 10.*u_lineStrength1[i];
             float line = u_lines1[i];
@@ -155,7 +159,7 @@ void main(){
             col *= 1. - min(1.,lineStrength*lineProfile(st,line,lineWidth));
             col += emisivity*h2rgb(ycolor)*lineStrength*lineProfile(st,line,2.*lineWidth);
         }
-        if (u_gas2ON){
+        if (u_gasBON){
             lineWidth = 0.015*min(u_lineStrength2[i],1.);
             float lineStrength = 10.*u_lineStrength2[i];
             float line = u_lines2[i];

@@ -8,6 +8,8 @@ class GasTube{
         this.w = w;
         this.h = h;
         this.lineStrength = [0,0,0];
+        this.enabled = false;
+        this.electrified = false;
 
         this.N = 60; // Number of molecules/atoms   
         this.molecules = [];
@@ -28,6 +30,10 @@ class GasTube{
         for (let i = 0; i < 10; i++){
             this.molecules.pop(i)
         }
+    }
+
+    electrify(){
+        this.electrified = !this.electrified;
     }
 
     draw(){

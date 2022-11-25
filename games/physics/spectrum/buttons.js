@@ -14,9 +14,9 @@ class Button {
         translate(this.x0,this.y0);
         rectMode(CENTER)
         
-        textSize(30 * width / 1500);
+        textSize(25 * width / 1500);
         let w = textWidth(this.text)*0.7;
-        let h = 35 * width / 1500;
+        let h = 25 * width / 1500;
         fill(50);
         stroke(30);
         strokeWeight(5);
