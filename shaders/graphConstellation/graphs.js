@@ -1,4 +1,4 @@
-let stars, t;
+let starsLeft, starsRight, t, id, yShift;
 
 let canvas;
 
@@ -6,32 +6,46 @@ function setup() {
 	canvas = createCanvas(windowWidth, 1.5*windowHeight);
   canvas.position(0,0);
   canvas.style('z-index', '-1');
-	stars = new StarSystem( 700 );
+
+  // Set parent to #constellation
+  canvas.parent('constellations');
+
+	id = 0;
+  yShift = 0;
+	starsLeft  = new StarSystem( 350, 0.0, 0.2 );
+	starsRight = new StarSystem( 350, 0.8, 1.0 );
 	t = 0;
-	
 	strokeWeight( 2 );
 }
 
 function draw() {
 	background( 255 );
+
+  canvas.position(0, lerp( canvas.position().y, -min(window.scrollY, 100), 0.1));
+
+  yShift = lerp( yShift, window.scrollY, 0.2 );
 	
 	t++;
-	stars.draw();
-	stars.update();
+	starsLeft.draw();
+  starsRight.draw();
+	starsLeft.update( yShift );
+  starsRight.update( yShift );
 }
 
 class StarSystem {
-	constructor( N ){
+	constructor( N, x0, x1 ){
 		this.N = N;
 		this.drawLines = true;
 		this.stars = [];
 		for( let i = 0; i < N; i++ ){
-			this.stars.push( new Star() );
+			this.stars.push( new Star( x0, x1 ) );
 		}
 	}
 	
-	update(){
-		this.stars.forEach( star => star.update() );
+	update( yShift ){
+		this.stars.forEach( star => {
+      star.update( yShift );
+    });
 	}
 	
 	draw(){
@@ -65,15 +79,21 @@ class StarSystem {
 }
 
 class Star {
-	constructor(){
-		this.x0 = random( width );
+	constructor( x0, x1 ){
+    // Returns a random horizontal number in one of the side margins
+    this.randomX0 = () => { return random( x0 * width, x1 * width ) };
+    this.randomR = () => { return 15 * Math.pow( random( 1 ), 5 ) + 2 };
+
+    this.id = id;
+    id++;
+		this.x0 = this.randomX0();
 		this.y0 = random( height );
 		this.x = 0;
 		this.y = 0;
 		
-		this.r = 15 * Math.pow( random( 1 ), 10 ) + 1;
+		this.r = this.randomR();
 		this.starSpeed = random(10) / 1000;
-		this.amplitude = 2 * random(60,100);
+		this.amplitude = random(60,100);
 		if ( random() > 0.5 ){
 			this.amplitude *= -1;
 		}
@@ -81,11 +101,25 @@ class Star {
 		this.update();
 	}
 	
-	update(){
-		this.x = this.x0 + this.amplitude*noise( this.starSpeed * t + this.x0 );
-		this.y = this.y0 + this.amplitude*noise( this.starSpeed * t + this.y0 );
-	}
-	
+	update( yShift ){
+		this.x = this.x0 + this.amplitude*noise( this.starSpeed * t + 2*this.id );
+		this.y = this.y0 + this.amplitude*noise( this.starSpeed * t + this.id ) - yShift;
+  
+    const yMin = height * 0.0;
+    const yMax = height * 0.9;
+
+      if ( this.y < yMin - 0.1 * height ){
+        this.x0 = this.randomX0();
+        this.y0 += height;
+        this.r = this.randomR();
+      }
+      else if ( this.y > yMax +  0.1 * height ) {
+        this.x0 = this.randomX0();
+        this.y0 -= height;
+        this.r = this.randomR();
+      }
+  }	
+
 	draw(){
 		noStroke();
 		circle( this.x, this.y, this.r );
