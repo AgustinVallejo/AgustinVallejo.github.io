@@ -22,26 +22,54 @@ function setup() {
   magneticField = new MagneticField();
 }
 
+function draw(){
+  
+  translate( width/2, height/2 );
+  background(0);
+  magneticField.draw();
+  sun.draw(); 
+}
+
 function windowResized(){
   resizeCanvas(windowWidth*relativeWidth, windowHeight*relativeHeight);
   canvas2.resizeCanvas(windowWidth*relativeWidth, windowHeight*relativeHeight);
   cloudCanvas.resizeCanvas(windowWidth*relativeWidth, windowHeight*relativeHeight);
 }
 
-function draw() {
-  translate( width/2, height/2 );
-  background(0);
-  magneticField.draw();
-  sun.draw();
-}
 
 class MagneticField{
   constructor(){
-    this.positiveSide = createVector( 0, sun.radius );
-    this.negativeSide = createVector( 0, -sun.radius );
   }
 
   draw(){
+
+    stroke(0,255,255)
+    noFill();
+    const N = 60; // Number of lines
+    const NN = 100; // Number of points in each line
+    const R = 200;
+
+    const dx = 8;
+    for (let i = 0; i < N; i++) {
+      const theta = map(i, 0, N, -TWO_PI, TWO_PI);
+      let x = 0;
+      let y = 0;
+      beginShape();
+      for (let j = 0; j < NN; j++) {
+        vertex(x, y);
+
+        y += ( dx * tan(theta) - ( 0.9 * dx * tan(theta) * abs(x) / R ) )*( 1 - min( abs(x) / R, 1 )  );
+        y *= ( 1 - min( abs(x) / R / 50, 1 )  );
+        y += ( 1 - min( abs(x) / R / 50, 1 )  )* tan(theta);
+        x += dx * abs(theta)/theta;
+
+        if ( abs( y ) > height/2 + 50 ){
+          break;
+        }
+
+      }
+      endShape(OPEN);
+    }
   }
 
   update(){
