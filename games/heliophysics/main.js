@@ -65,12 +65,10 @@ class MagneticField {
       for (let j = 0; j < NN; j++) {
         this.paths[i].addPoint(createVector(x, y));
 
-        y +=
-          (dx * tan(theta) - (0.9 * dx * tan(theta) * abs(x)) / R) *
-          (1 - min(abs(x) / R, 1));
-        y *= 1 - min(abs(x) / R / 50, 1);
-        y += (1 - min(abs(x) / R / 50, 1)) * tan(theta);
-        x += (dx * abs(theta)) / theta;
+        y += 0.4 * dx * tan(theta) * (1 - min(abs(x) / R, 1)); // First section of the field: radial lines
+        y *= 1 - min(abs(x) / R / 50, 1); // Lowers the strength of of that section
+        y += (1 - min(abs(x) / R / 50, 1)) * tan(theta); // Second section of the field: horizontal lines
+        x += (dx * abs(theta)) / theta; // Horizontal movement, the angle stuff sets the direction
 
         if (abs(y) > height / 2 + 50) {
           break;

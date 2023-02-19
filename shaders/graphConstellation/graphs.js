@@ -1,4 +1,5 @@
-let starsLeft, starsRight, t, id, yShift;
+let pointsLeft, pointsRight, t, id, yShift;
+let mousePoint;
 
 let canvas;
 
@@ -12,8 +13,9 @@ function setup() {
 
 	id = 0;
   yShift = 0;
-	starsLeft  = new StarSystem( 350, 0.0, 0.2 );
-	starsRight = new StarSystem( 350, 0.8, 1.0 );
+	pointsLeft  = new PointSystem( 350, 0.0, 0.2 );
+	pointsRight = new PointSystem( 350, 0.8, 1.0 );
+	mousePoint = new MousePoint();
 	t = 0;
 	strokeWeight( 2 );
 }
@@ -26,41 +28,45 @@ function draw() {
   yShift = lerp( yShift, window.scrollY, 0.2 );
 	
 	t++;
-	starsLeft.draw();
-  starsRight.draw();
-	starsLeft.update( yShift );
-  starsRight.update( yShift );
+	pointsLeft.draw();
+  pointsRight.draw();
+	pointsLeft.update( yShift );
+  pointsRight.update( yShift );
+	mousePoint.update();
 }
 
-class StarSystem {
+class PointSystem {
 	constructor( N, x0, x1 ){
 		this.N = N;
 		this.drawLines = true;
-		this.stars = [];
+		this.points = [];
 		for( let i = 0; i < N; i++ ){
-			this.stars.push( new Star( x0, x1 ) );
+			this.points.push( new Point( x0, x1 ) );
 		}
 	}
 	
 	update( yShift ){
-		this.stars.forEach( star => {
+		this.points.forEach( star => {
       star.update( yShift );
     });
 	}
 	
 	draw(){
 		for( let i = 0; i < this.N; i++ ){
-			if ( this.stars[ i ].r > 5 ) {
-				this.connect( this.stars[i], createVector( mouseX, mouseY ) );
+			if ( this.points[ i ].r > 5 ) {
+				this.connect( mousePoint, this.points[i] );
 				for( let j = 0; j < this.N; j++ ){
-					if ( i < j && this.stars[ j ].r > 5 ) {
-						this.connect( this.stars[i], this.stars[j] );
+					if ( i < j && this.points[ j ].r > 5 ) {
+						this.connect( this.points[i], this.points[j] );
 					}
 				}
 			}
 			noStroke();
 			fill( 200 );
-			this.stars[ i ].draw();
+			if ( this.points[i].death > t ){
+				fill( 150, 150, 200 );
+			}
+			this.points[ i ].draw();
 		}
 	}
 	
@@ -72,13 +78,18 @@ class StarSystem {
 		const r =  dist( x1, y1, x2, y2 );
 		if ( r < 100 ) {
 			const a = map( r, 100, 0, 0, 255);
+			
 			stroke( 200,a );
+			if ( obj1.death > t ){
+				stroke( 150, 150, 200, a );
+				obj2.death = t + obj2.lifetime;
+			}
 			line( x1, y1, x2, y2 );
 		}
 	}
 }
 
-class Star {
+class Point {
 	constructor( x0, x1 ){
     // Returns a random horizontal number in one of the side margins
     this.randomX0 = () => { return random( x0 * width, x1 * width ) };
@@ -98,6 +109,9 @@ class Star {
 			this.amplitude *= -1;
 		}
 		
+		this.lifetime = 10;
+		this.death = 0; // Will sometimes change to t+lifetime to activate the point
+
 		this.update();
 	}
 	
@@ -118,10 +132,29 @@ class Star {
         this.y0 -= height;
         this.r = this.randomR();
       }
+
+		// if ( random() < 0.0001 ) {
+		// 	this.death = t + this.lifetime;
+		// }
   }	
 
 	draw(){
 		noStroke();
 		circle( this.x, this.y, this.r );
+	}
+}
+
+class MousePoint {
+	constructor(){
+		this.x = mouseX;
+		this.y = mouseY;
+		this.r = 1;
+		this.death = 0;
+	}
+
+	update(){
+		this.x = mouseX;
+		this.y = mouseY;
+		this.death = t + 10;
 	}
 }

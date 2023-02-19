@@ -1,4 +1,5 @@
 // Write a basic p5 sketch
+// Se supone que aquí irán los nodos de la vida
 
 
 function setup() {
