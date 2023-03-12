@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Line breaks</title>
+</head>
+<body>
+  <script>
+    /* A program that displays a textbox on the left, which takes paragraphs and on the right displays them with the line breaks replaced for spaces */
+var textbox = document.createElement('textarea');
+textbox.style.width = '50%';
+textbox.style.height = '100%';
+var output = document.createElement('div');
+output.style.width = '45%';
+output.style.height = '100%';
+output.style.float = 'right';
+document.body.appendChild(textbox);
+document.body.appendChild(output);
+textbox.addEventListener('input', function() {
+  output.innerHTML = textbox.value.replace(/\n/g, ' ');
+});
+  </script>
+</body>
+</html>
