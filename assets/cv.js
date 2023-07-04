@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $.ajax({
         type: "GET",
-        url: "data/CV_eng.csv",
+        url: "assets/CV_eng.csv",
         dataType: "text",
         success: function(data) {processData(data);}
      });
@@ -11,7 +11,7 @@ $('#eng').on('click', function(event) {
     $("#accordion").empty()
     $.ajax({
         type: "GET",
-        url: "data/CV_eng.csv",
+        url: "assets/CV_eng.csv",
         dataType: "text",
         success: function(data) {processData(data);}
      });
@@ -21,7 +21,7 @@ $('#esp').on('click', function(event) {
     $("#accordion").empty()
     $.ajax({
         type: "GET",
-        url: "data/CV.csv",
+        url: "assets/CV.csv",
         dataType: "text",
         success: function(data) {processData(data);}
      });
