@@ -21,21 +21,28 @@ new_files = [
     if file not in files and not file.endswith((".xlsx", ".xls"))
 ]
 
+commented_files = []
+
+for line in content.split("\n"):
+    if line.strip().startswith("//"):
+        commented_files.append( re.findall(r"'([\w.-]+)'", line)[0] )
+
+all_files = new_files + files
+all_files.sort()
+all_files.reverse()
+
 if new_files:
     # Construct the updated content
     updated_content = ""
 
     # Add the new filenames to the appropriate location
     updated_content += "let files = [\n"
-    for file in new_files:
-        updated_content += f"\t'{file}',\n"
-    updated_content += "\t// The rest of the files\n"
+    for file in all_files:
+        if file in commented_files:
+            updated_content += f"\t// '{file}',\n"
+        else:
+            updated_content += f"\t'{file}',\n"
     updated_content += "]"
-
-    # Add the commented lines and preserve their position
-    for line in content.split("\n"):
-        if line.strip().startswith("//"):
-            updated_content += line + "\n"
 
     # Print the added filenames
     print("Added filenames:")
