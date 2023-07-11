@@ -68,8 +68,8 @@ function processData(allText) {
             }
 
             // DATES
-            if (row[4] == "X"){content += ". <b>(" + row[3] + ")</b>"}
-            else{content += ". <b>(" + row[3] + "-" + row[4] + ")</b>"}
+            if (row[4] == "X"){content += " <b>(" + row[3] + ")</b>"}
+            else{content += " <b>(" + row[3] + "-" + row[4] + ")</b>"}
             content += "<ul>"
         }
         // ADDITIONAL INFO
