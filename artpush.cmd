@@ -3,6 +3,8 @@
 REM Run the Python script
 python assets/fileUpdater.py
 
+git status
+
 REM Prompt for confirmation to commit and push
 set /p "commit_confirmation=Do you want to commit and push the changes? (y/n): "
 
