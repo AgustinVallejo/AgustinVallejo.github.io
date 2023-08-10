@@ -6,9 +6,11 @@ python assets/fileUpdater.py
 git status
 
 REM Prompt for confirmation to commit and push
-set /p "commit_confirmation=Do you want to commit and push the changes? (y/n): "
+set /p "commit_confirmation=Do you want to "git add ." and commit and push the changes? (y/n): "
 
 IF /I "%commit_confirmation%"=="y" (
+    git add .
+
     REM Make the commit
     git commit -am "Automatic commit of artwork"
 
