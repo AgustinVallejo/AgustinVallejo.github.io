@@ -1,76 +1,66 @@
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.3.1/p5.min.js"></script>
-    <script src="https://kit.fontawesome.com/00c0d9805f.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/00c0d9805f.js"
+      crossorigin="anonymous"
+    ></script>
     <title>AVV | Home</title>
-</head>
-<body>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
     <div id="navbar"></div>
-    <div id="constellations" style="position: fixed">
-      <script src="shaders/graphConstellation/graphs.js"></script>
+    <div class="full-screen">
+      <div id="constellations">
+        <script src="shaders/graphConstellation/graphs.js"></script>
+      </div>
+      <div class="title-container" id="tituloTransparente">
+        <h1>Agustín Vallejo-Villegas</h1>
+        <p class="subtitle">Astrónomo, Educador, Artista</p>
+      </div>
     </div>
-    <div class="container-fluid mt-4 mx-3">
-        <div class="row justify-content-center">
-            <small id="card" class="card col-md-2"></small>
-            <div class="col-md-5 mt-4 mx-5 ">          
-                <div class="row card p-3">
-                    <div id="carouselDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                      <button type="button" data-bs-target="#carouselDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
-                    </div>
-                    <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <a href="/tesis.html"><img src="assets\ssea\posterImage.jpg" class="d-block" style="opacity: 0.3; height: 500px;  width:auto; margin: auto"></a>
-                        <div class="carousel-caption d-none d-md-block">
-                          <h3 style="background-color: rgba(255,255,255,0.5);"><br>Trabajo de Grado<br></br></h3>
-                        </div>
-                      </div>
-                      <div class="carousel-item">
-                        <a href="/games.html"><img src="assets/imgs/gallery/spheres.png" class="d-block" style="justify-content: center; opacity: 0.5; height: 500px;  width:auto; margin: auto"></a>
-                        <div class="carousel-caption d-none d-md-block">
-                          <h3 style="background-color: rgba(255,255,255,0.5);"><br>AstroLab<br></br></h3>
-                        </div>
-                      </div>
-                      <div class="carousel-item">
-                        <a href="/art.html"><img src="assets/art/2024-02-08.jpg" class="d-block" style="opacity: 0.5; height: 500px;  width:auto; margin: auto"></a>
-                        <div class="carousel-caption d-none d-md-block">
-                          <h3 style="background-color: rgba(255,255,255,0.5);"><br>Galería de Arte<br></br></h3>
-                        </div>
-                      </div>
-                      <div class="carousel-item">
-                        <a href="https://doi.org/10.1093/mnras/stac3046"><img src="assets\art\2022-06-22.jpg" class="d-block" style="opacity: 0.5; height: 500px;  width:auto; margin: auto"></a>
-                        <div class="carousel-caption d-none d-md-block">
-                          <h3 style="background-color: rgba(255,255,255,0.5);"><br> Asteroide Apophis (MNRAS) <br></br></h3>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDark" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselDark" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                </div>
-            </div>
-        </div>
+
+    <div class="scroll-arrow" id="flecha">↓</div>
+
+    <div class="custom-ul-container" id="secondaryContent">
+      <ul class="custom-ul">
+        <li><a href="games.html" class="simulaciones">Simulaciones</a></li>
+        <li><a href="art.html" class="arte">Arte</a></li>
+        <li><a href="cv.html" class="hoja-de-vida">Hoja de Vida</a></li>
+        <li><a href="https://doi.org/10.1093/mnras/stac3046" class="papers">Papers</a></li>
+      </ul>
     </div>
+
     <script>
-        $("#navbar").load("components/navbar.html", function() {
-            $("#home").addClass("active");
-        });
-        $("#card").load("components/card.html");
+      $("#navbar").load("components/navbar.html", function () {
+        $("#home").addClass("active");
+      });
+      $("#card").load("components/card.html");
     </script>
-</body>
+    <script>
+      document.getElementById("secondaryContent").style.opacity = 0;
+
+      window.onscroll = function () {
+        var opacity = 1 - Math.max(0, window.pageYOffset / 200);
+        document.getElementById("tituloTransparente").style.opacity = opacity;
+        document.getElementById("flecha").style.opacity = opacity;
+        document.getElementById("secondaryContent").style.opacity = 1 - opacity;
+      };
+    </script>
+  </body>
 </html>

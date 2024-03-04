@@ -26,6 +26,8 @@ function draw() {
   canvas.position(0, lerp( canvas.position().y, -min(window.scrollY, 100), 0.1));
 
   yShift = lerp( yShift, window.scrollY, 0.2 );
+
+	background( 255 * ( 1 - yShift / windowHeight * 3) );
 	
 	t++;
 	pointsLeft.draw();
