@@ -54,8 +54,12 @@ function drawAsteroid(){
 	// Direction of Movement
 	mouse = createVector(mouseX,mouseY);
 	pmouse = createVector(pmouseX,pmouseY);
-	angle = mouse.sub(pmouse).heading();
-	rotAngle = lerp(rotAngle,angle,0.1);
+	diff = mouse.sub(pmouse);
+	if ( diff.mag() !== 0 ){
+		console.log( diff )
+		angle = diff.heading();
+		rotAngle = lerp(rotAngle,angle,0.1);
+	}
 	rotate(rotAngle - PI/4);
 
 	if ( collision ) { 
