@@ -55,13 +55,16 @@ function drawAsteroid(){
 	mouse = createVector(mouseX,mouseY);
 	pmouse = createVector(pmouseX,pmouseY);
 	angle = mouse.sub(pmouse).heading();
-	if (angle != 0){
-		rotAngle = angle;
-	}
+	rotAngle = lerp(rotAngle,angle,0.1);
 	rotate(rotAngle - PI/4);
+
+	if ( collision ) { 
+		pop();
+		return;
+	 }
 	
 	// Drawing
-	if (mouseY > atmosY*0.9 & !collision){
+	if (mouseY > atmosY*0.9){
 		a = (mouseY/(atmosY*0.9) - 1)* 255;
 		tint(255, a);
 		image(fire,-astSize/3,-astSize/4,fireSize,fireSize);
@@ -76,15 +79,15 @@ function drawAsteroid(){
 	image(asteroid,0,0,astSize,astSize);
 	pop();
 	
-	if (inAtmosphere & !collision){
+	if (inAtmosphere){
 		fill(255,a);
 		stroke(0,a);
 		text("Meteoro",mouseX+width*0.05,mouseY+0.04*height);
 	}
 	else{
 		a = (1 - mouseY/(atmosY*0.9))* 255;
-		fill(0,a);
-		stroke(255,a);
+		fill(255,a);
+		stroke(0,a);
 		text("Meteoroide",mouseX+width*0.05,mouseY+0.04*height);
 	}
 }
