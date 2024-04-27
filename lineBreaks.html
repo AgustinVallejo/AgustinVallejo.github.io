@@ -18,7 +18,8 @@ output.style.float = 'right';
 document.body.appendChild(textbox);
 document.body.appendChild(output);
 textbox.addEventListener('input', function() {
-  output.innerHTML = textbox.value.replace(/\n/g, ' ');
+  // It also replaces vowels with tilde for the accented vowels, ie: o´ -> ó
+  output.innerHTML = textbox.value.replace(/\n/g, ' ').replace(/a´/g, 'á').replace(/e´/g, 'é').replace(/i´/g, 'í').replace(/o´/g, 'ó').replace(/u´/g, 'ú');
 });
   </script>
 </body>
