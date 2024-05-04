@@ -1,9 +1,9 @@
 $(document).ready(function() {
     $.ajax({
         type: "GET",
-        url: "assets/CV_eng.csv",
+        url: "assets/CV.csv",
         dataType: "text",
-        success: function(data) {processData(data);}
+        success: function(data) {processData(data,8);}
      });
 });
 
@@ -11,9 +11,9 @@ $('#eng').on('click', function(event) {
     $("#accordion").empty()
     $.ajax({
         type: "GET",
-        url: "assets/CV_eng.csv",
+        url: "assets/CV.csv",
         dataType: "text",
-        success: function(data) {processData(data);}
+        success: function(data) {processData(data,8);}
      });
   });
 
@@ -23,11 +23,11 @@ $('#esp').on('click', function(event) {
         type: "GET",
         url: "assets/CV.csv",
         dataType: "text",
-        success: function(data) {processData(data);}
+        success: function(data) {processData(data,0);}
      });
 });
 
-function processData(allText) {
+function processData(allText, langIndex) {
     var allTextLines = allText.split(/\r\n|\n/);
     var headers = allTextLines[0].split(',');
     var lines = [];
@@ -37,14 +37,14 @@ function processData(allText) {
         if (data.length == headers.length) {
 
             var tarr = [];
-            for (var j=0; j<headers.length; j++) {
+            for (var j=0; j<headers.length/2; j++) {
                 // tarr.push(headers[j]+":"+data[j]);
-                tarr.push(data[j]);
+                tarr.push(data[j+langIndex]);
             }
             lines.push(tarr);
         }
     }
-    // INDEXES
+    // INDEXES IN SPANISH
     // 0: "TYPE"
     // 1: "MAGNITUDE"
     // 2: "TITLE"
@@ -53,6 +53,17 @@ function processData(allText) {
     // 5: "DESCRIPTION"
     // 6: "WHERE"
     // 7: "WHERE2"
+
+    // INDEXES IN ENGLISH
+    // 8: "TYPE"
+    // 9: "MAGNITUDE"
+    // 10: "TITLE"
+    // 11: "FROM"
+    // 12: "TO"
+    // 13: "DESCRIPTION"
+    // 14: "WHERE"
+    // 15: "WHERE2"
+
     let lastHeader = ""
     let lastTitle = ""
     let content = "<p>"
