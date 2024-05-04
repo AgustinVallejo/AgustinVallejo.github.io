@@ -1,3 +1,3 @@
-[submodule "Simulations"]
-	path = Simulations
-	url = https://github.com/AgustinVallejo/Simulations.git
+[submodule "simulations"]
+	path = simulations
+	url = https://github.com/AgustinVallejo/simulations.git
