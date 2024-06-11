@@ -9,7 +9,7 @@
       background-color: #1a1a1a;
       color: white;
     }
-    textarea, div {
+    textarea, output {
       background-color: #333333;
       color: white;
       border: none;
@@ -18,14 +18,15 @@
   </style>
 </head>
 <body>
+  <p>Para transformar texto copiado de un PDF y arreglar los errores comunes: saltos de linea indeseados, o tildes mal puestas.</p>
   <script>
     /* A program that displays a textbox on the left, which takes paragraphs and on the right displays them with the line breaks replaced for spaces */
 var textbox = document.createElement('textarea');
 textbox.style.width = '50%';
-textbox.style.height = '100%';
-var output = document.createElement('div');
+textbox.style.height = '50%';
+var output = document.createElement('output');
 output.style.width = '45%';
-output.style.height = '100%';
+output.style.height = '50%';
 output.style.float = 'right';
 document.body.appendChild(textbox);
 document.body.appendChild(output);
