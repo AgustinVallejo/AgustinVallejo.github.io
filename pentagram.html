@@ -43,16 +43,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Random Number and Direction Generator</h1>
-        <button onclick="generate()">Generate</button>
+        <h1>Posiciones Aleatorias del Pentagrama</h1>
+        <button onclick="generate()">Generar</button>
         <div id="result"></div>
     </div>
 
     <script>
         function generate() {
             const number = Math.floor(Math.random() * 22) + 1;
-            const direction = Math.random() < 0.5 ? 'left' : 'right';
-            document.getElementById('result').innerHTML = `Number: ${number}<br>Direction: ${direction}`;
+            const direction = Math.random() < 0.5 ? 'izquierda' : 'derecha';
+            document.getElementById('result').innerHTML = `Posición: ${number}<br>Mano: ${direction}`;
         }
     </script>
 </body>
