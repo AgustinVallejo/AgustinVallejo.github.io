@@ -1,59 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Number and Direction Generator</title>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Posiciones Aleatorias del Pentagrama</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            text-align: center;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 24px;
-            font-weight: bold;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .generate {
+        background-color: #4caf50;
+      }
+      .reveal {
+        background-color: #2196f3;
+      }
+      #result,
+      #staff {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      #staff {
+        display: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Posiciones Aleatorias del Pentagrama</h1>
-        <button onclick="generate()">Generar</button>
-        <div id="result"></div>
+      <h1>Posiciones Aleatorias del Pentagrama</h1>
+      <button class="generate" onclick="generate()">Generar</button>
+      <button class="reveal" onclick="reveal()" id="revealButton" disabled>
+        Revelar
+      </button>
+      <div id="result"></div>
+      <div id="staff"></div>
     </div>
 
     <script>
-        function generate() {
-            const number = Math.floor(Math.random() * 22) + 1;
-            const direction = Math.random() < 0.5 ? 'izquierda' : 'derecha';
-            document.getElementById('result').innerHTML = `Posición: ${number}<br>Mano: ${direction}`;
+      let currentNumber;
+      let currentDirection;
+
+      function generate() {
+        currentNumber = Math.floor(Math.random() * 22) + 1;
+        currentDirection = Math.random() < 0.5 ? "izquierda" : "derecha";
+        document.getElementById(
+          "result"
+        ).innerHTML = `Posición: ${currentNumber}<br>Mano: ${currentDirection}`;
+        document.getElementById("revealButton").disabled = false;
+        document.getElementById("staff").style.display = "none";
+      }
+
+      function reveal() {
+        const staffSVG = createStaffSVG(currentNumber, currentDirection);
+        document.getElementById("staff").innerHTML = staffSVG;
+        document.getElementById("staff").style.display = "block";
+      }
+
+      function createStaffSVG(position, direction) {
+        const svgWidth = 300;
+        const svgHeight = 250;
+        const lineSpacing = 10;
+        const middleSpacing = 10;
+        const startY = direction === "izquierda" ? 135 : 125; // Adjust for bass or treble clef
+
+        let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
+
+        // Position note
+        let noteY;
+        if (direction === 'izquierda') {
+            // Bass clef (left hand)
+            noteY = startY + 4.5 * lineSpacing + (11 - position) * lineSpacing / 2;
+        } else {
+            // Treble clef (right hand)
+            noteY = startY + (11 - position) * lineSpacing / 2;
         }
+
+
+        // Draw staff lines
+        for (let i = 0; i < 5; i++) {
+          svg += `<line x1="10" y1="${startY + i * lineSpacing}" x2="${
+            svgWidth - 10
+          }" y2="${startY + i * lineSpacing}" stroke="black" />`;
+        }
+
+        // Draw clef (simplified)
+        if (direction === "izquierda") {
+          svg += `<text x="15" y="${startY + 27}" font-size="40">𝄢</text>`; // Bass clef
+        } else {
+          svg += `<text x="15" y="${startY + 35}" font-size="40">𝄞</text>`; // Treble clef
+        }
+
+        // Draw note
+        svg += `<ellipse cx="150" cy="${noteY}" rx="6" ry="4" fill="black" />`;
+
+        // Draw ledger lines always from the center
+        const step = noteY < startY ? -lineSpacing : lineSpacing;
+        for (
+          let y = startY;
+          step > 0 ? y <= noteY : y >= noteY;
+          y += step
+        ) {
+          svg += `<line x1="140" y1="${y}" x2="160" y2="${y}" stroke="black" />`;
+        }
+
+        svg += "</svg>";
+        return svg;
+      }
     </script>
-</body>
+  </body>
 </html>
