@@ -3,45 +3,50 @@ $(document).ready(function() {
         type: "GET",
         url: "assets/CV.csv",
         dataType: "text",
-        success: function(data) {processData(data,8);}
+        success: function(data) {processData(data, 8);}
      });
 });
 
 $('#eng').on('click', function(event) {
-    $("#accordion").empty()
+    $("#accordion").empty();
     $.ajax({
         type: "GET",
         url: "assets/CV.csv",
         dataType: "text",
-        success: function(data) {processData(data,8);}
+        success: function(data) {processData(data, 8);}
      });
-  });
+});
 
 $('#esp').on('click', function(event) {
-    $("#accordion").empty()
+    $("#accordion").empty();
     $.ajax({
         type: "GET",
         url: "assets/CV.csv",
         dataType: "text",
-        success: function(data) {processData(data,0);}
+        success: function(data) {processData(data, 0);}
      });
 });
 
 function processData(allText, langIndex) {
+    // Fix HTML links before processing - ensure href attributes have quotes
+    allText = allText.replace(/<a href=([^"'][^>]*)>/g, '<a href="$1">');
+    
     var allTextLines = allText.split(/\r\n|\n/);
-    var headers = allTextLines[0].split(',');
+    var headers = allTextLines[0].split(';');  // Using semicolon as delimiter
     var lines = [];
 
     for (var i=1; i<allTextLines.length; i++) {
-        var data = allTextLines[i].split(',');
+        if (allTextLines[i].trim() === '') continue; // Skip empty lines
+        
+        var data = allTextLines[i].split(';');  // Using semicolon as delimiter
         if (data.length == headers.length) {
-
             var tarr = [];
             for (var j=0; j<headers.length/2; j++) {
-                // tarr.push(headers[j]+":"+data[j]);
                 tarr.push(data[j+langIndex]);
             }
             lines.push(tarr);
+        } else {
+            console.error("Line " + i + " has incorrect number of fields: " + data.length);
         }
     }
     // INDEXES IN SPANISH
@@ -64,37 +69,85 @@ function processData(allText, langIndex) {
     // 14: "WHERE"
     // 15: "WHERE2"
 
-    let lastHeader = ""
-    let lastTitle = ""
-    let content = "<p>"
-    lines.forEach(function(row, indice, array) {
-        if (row[2] != lastTitle){ // Si hay nuevo item
-            lastTitle = row[2]
-            $("#accordion").append(content+"</ul>") // Poner lo anterior y cerrar párrafo
-            content = "<ul>" + row[2] // Iniciar párrafo y empezar con el título
-
-            if (row[5] == ""){
-                if (row[6] != ""){content += ", "+row[6]}
-                if (row[7] != ""){content += ", "+row[7]}
-            }
-
-            // DATES
-            if (row[4] == "X"){content += " <b>(" + row[3] + ")</b>"}
-            else{content += " <b>(" + row[3] + "-" + row[4] + ")</b>"}
-            content += "<ul>"
+    // Group the CV entries by type (section)
+    const groupedByType = {};
+    lines.forEach(function(row) {
+        const type = row[0];
+        if (!groupedByType[type]) {
+            groupedByType[type] = [];
         }
-        // ADDITIONAL INFO
-        if (row[5] != ""){
-             content += "<li>"+row[5]
-            if (row[6] != ""){content += ", "+row[6]}
-            if (row[7] != ""){content += ", "+row[7]}
-        }
+        groupedByType[type].push(row);
+    });
 
-        if (row[0] != lastHeader){ // Si hay nuevo header
-            $("#accordion").append("<h3>"+row[0]+"</h3>")
-            lastHeader = row[0]
-        }
+    // Render each section
+    Object.keys(groupedByType).forEach(function(type) {
+        // Create section header
+        $("#accordion").append(`<h3>${type}</h3>`);
+        const sectionContent = $("<div class='cv-section-content'></div>");
         
-    })
-    $("#accordion").append(content+"</p>")
+        // Group entries by title
+        const entriesByTitle = {};
+        groupedByType[type].forEach(function(row) {
+            const title = row[2];
+            if (!entriesByTitle[title]) {
+                entriesByTitle[title] = [];
+            }
+            entriesByTitle[title].push(row);
+        });
+        
+        // Render each title group
+        Object.keys(entriesByTitle).forEach(function(title) {
+            const entries = entriesByTitle[title];
+            const firstEntry = entries[0];
+            
+            // Create entry container
+            const entryDiv = $("<div class='cv-item mb-3'></div>");
+            
+            // Add title and institution
+            let titleHtml = `<p class="mb-1"><strong>${firstEntry[2]}</strong>`;
+            
+            // Add location if no description (common for education entries)
+            if (firstEntry[5] === "") {
+                if (firstEntry[6] !== "") {
+                    titleHtml += `, ${firstEntry[6]}`;
+                }
+                if (firstEntry[7] !== "") {
+                    titleHtml += `, ${firstEntry[7]}`;
+                }
+            }
+            
+            // Add date range
+            if (firstEntry[4] === "") {
+                titleHtml += ` <b>(${firstEntry[3]})</b>`;
+            } else if (firstEntry[4] === "X") {
+                titleHtml += ` <b>(${firstEntry[3]})</b>`;
+            } else {
+                titleHtml += ` <b>(${firstEntry[3]}-${firstEntry[4]})</b>`;
+            }
+            
+            titleHtml += "</p>";
+            entryDiv.append(titleHtml);
+            
+            // Add descriptions if any
+            const entriesWithDescription = entries.filter(row => row[5] !== "");
+            if (entriesWithDescription.length > 0) {
+                const descList = $("<ul class='mb-0'></ul>");
+                entriesWithDescription.forEach(function(row) {
+                    let descHtml = row[5];
+                    if (row[6] !== "") {
+                        descHtml += `, ${row[6]}`;
+                    }
+                    if (row[7] !== "") {
+                        descHtml += `, ${row[7]}`;
+                    }
+                    descList.append(`<li>${descHtml}</li>`);
+                });
+                entryDiv.append(descList);
+            }
+            
+            sectionContent.append(entryDiv);
+        });
+        
+        $("#accordion").append(sectionContent);
+    });
 }
