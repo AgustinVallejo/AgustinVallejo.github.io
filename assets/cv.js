@@ -118,7 +118,7 @@ function processData(allText, langIndex) {
             
             // Add date range
             if (firstEntry[4] === "") {
-                titleHtml += ` <b>(${firstEntry[3]})</b>`;
+                titleHtml += ` <b>(${firstEntry[3]}→)</b>`;
             } else if (firstEntry[4] === "X") {
                 titleHtml += ` <b>(${firstEntry[3]})</b>`;
             } else {
