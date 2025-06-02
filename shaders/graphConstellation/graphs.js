@@ -13,7 +13,7 @@ function setup() {
 
 	id = 0;
   yShift = 0;
-	pointsLeft  = new PointSystem( 350, 0.0, 0.2 );
+	pointsLeft  = new PointSystem( 350, 0.0, 0.3 );
 	pointsRight = new PointSystem( 350, 0.8, 1.0 );
 	mousePoint = new MousePoint();
 	t = 0;
