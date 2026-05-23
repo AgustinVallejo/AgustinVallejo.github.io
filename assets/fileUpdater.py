@@ -18,7 +18,7 @@ files = re.findall(r"'([\w.-]+)'", content)
 new_files = [
     file
     for file in os.listdir(art_dir)
-    if file not in files and not file.endswith((".xlsx", ".xls"))
+    if file not in files and not file.endswith((".xlsx", ".xls",".html",".py"))
 ]
 
 commented_files = []

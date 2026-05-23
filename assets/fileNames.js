@@ -1,6 +1,4 @@
 let files = [
-	'editor.py',
-	'art_editor.html',
 	'2026-05-23.jpg',
 	'2026-05-20.jpg',
 	'2026-05-04.jpg',
