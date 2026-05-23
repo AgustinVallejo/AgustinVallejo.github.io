@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Art Editor</title>
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --panel: #242424;
+    --border: #383838;
+    --accent: #c8a97e;
+    --text: #e8e8e8;
+    --muted: #888;
+    --input-bg: #2e2e2e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Top bar ── */
+  #topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  #topbar h1 { font-size: 1rem; font-weight: 600; color: var(--accent); flex: 1; }
+
+  #counter { font-size: 0.85rem; color: var(--muted); }
+
+  #search {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    width: 180px;
+  }
+
+  /* ── Main layout ── */
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Image panel ── */
+  #img-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #111;
+    overflow: hidden;
+  }
+
+  #artwork {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.15s;
+  }
+
+  #artwork.loading { opacity: 0.3; }
+
+  #img-date {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.6);
+    color: var(--accent);
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* nav arrows */
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.45);
+    border: none;
+    color: #fff;
+    font-size: 1.8rem;
+    width: 48px;
+    height: 72px;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    z-index: 10;
+  }
+  .nav-btn:hover { background: rgba(200,169,126,0.5); }
+  #btn-prev { left: 8px; }
+  #btn-next { right: 8px; }
+
+  /* ── Metadata panel ── */
+  #meta-panel {
+    width: 320px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #meta-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #meta-header h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  #filename-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  #meta-fields {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .field-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .field-group input,
+  .field-group select {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+
+  .field-group input:focus,
+  .field-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* Fecha is read-only */
+  .field-group input[readonly] {
+    color: var(--muted);
+    cursor: default;
+  }
+
+  #meta-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+
+  #btn-save {
+    flex: 1;
+    padding: 8px;
+    background: var(--accent);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  #btn-save:hover { opacity: 0.85; }
+  #btn-save:disabled { opacity: 0.4; cursor: default; }
+
+  #save-status {
+    font-size: 0.78rem;
+    color: var(--muted);
+    align-self: center;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ── Thumbnail strip ── */
+  #strip {
+    height: 80px;
+    background: #111;
+    border-top: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-shrink: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .thumb {
+    flex-shrink: 0;
+    width: 72px;
+    height: 80px;
+    cursor: pointer;
+    border-right: 1px solid #222;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.55;
+    transition: opacity 0.12s;
+  }
+
+  .thumb:hover img { opacity: 0.85; }
+  .thumb.active img { opacity: 1; }
+
+  .thumb.active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent);
+    pointer-events: none;
+  }
+
+  /* missing image placeholder */
+  .thumb.missing { background: #1e1e1e; display: flex; align-items: center; justify-content: center; }
+  .thumb.missing::before { content: '?'; color: var(--muted); font-size: 1.2rem; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>Art Editor</h1>
+  <input id="search" type="text" placeholder="Buscar por fecha o nombre…" oninput="onSearch(this.value)" tabindex="-1">
+  <span id="counter">–</span>
+</div>
+
+<div id="main">
+  <div id="img-panel">
+    <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" tabindex="-1">&#8249;</button>
+    <img id="artwork" src="" alt="artwork">
+    <div id="img-date"></div>
+    <button class="nav-btn" id="btn-next" onclick="navigate(1)" tabindex="-1">&#8250;</button>
+  </div>
+
+  <div id="meta-panel">
+    <div id="meta-header">
+      <h2 id="meta-title">—</h2>
+      <div id="filename-label">—</div>
+    </div>
+    <div id="meta-fields"></div>
+    <div id="meta-footer">
+      <button id="btn-save" onclick="saveRecord()" tabindex="-1" disabled>Guardar</button>
+      <span id="save-status"></span>
+    </div>
+  </div>
+</div>
+
+<div id="strip"></div>
+
+<script>
+// Nombre and Lugar first so Tab lands on them immediately
+const COLUMNS = ["Fecha","Nombre","Lugar","Inspiración","Idea","Técnica","Colección","Temática","Poseedor"];
+const TECNICA_OPTIONS = ["","Acuarela","Óleo","Gouache","Lápiz","Digital","Tinta","Mixta","Pastel","Acrílico"];
+const TEMATICA_OPTIONS = ["","Paisaje","Arquitectura","Retrato","Escena","Flora","Fauna","Abstracto","Figura"];
+
+let allRecords = [];
+let filtered = [];
+let current = 0;
+let dirty = false;
+
+async function init() {
+  const res = await fetch("/api/records");
+  allRecords = await res.json();
+  filtered = allRecords;
+  buildFields();
+  buildStrip();
+  goTo(filtered.length - 1); // start at most recent
+}
+
+function buildFields() {
+  const container = document.getElementById("meta-fields");
+  container.innerHTML = "";
+  for (const col of COLUMNS) {
+    const div = document.createElement("div");
+    div.className = "field-group";
+    const label = document.createElement("label");
+    label.textContent = col;
+    div.appendChild(label);
+
+    let input;
+    if (col === "Técnica") {
+      input = document.createElement("select");
+      TECNICA_OPTIONS.forEach(o => {
+        const opt = document.createElement("option");
+        opt.value = o; opt.textContent = o || "—";
+        input.appendChild(opt);
+      });
+    } else if (col === "Temática") {
+      input = document.createElement("select");
+      TEMATICA_OPTIONS.forEach(o => {
+        const opt = document.createElement("option");
+        opt.value = o; opt.textContent = o || "—";
+        input.appendChild(opt);
+      });
+    } else {
+      input = document.createElement("input");
+      input.type = "text";
+    }
+
+    if (col === "Fecha") {
+      input.readOnly = true;
+      input.tabIndex = -1;
+    } else {
+      input.tabIndex = 0;
+    }
+    input.dataset.col = col;
+    input.addEventListener("input", () => markDirty());
+    input.addEventListener("change", () => markDirty());
+    div.appendChild(input);
+    container.appendChild(div);
+  }
+}
+
+function buildStrip() {
+  const strip = document.getElementById("strip");
+  strip.innerHTML = "";
+  for (let i = 0; i < filtered.length; i++) {
+    const rec = filtered[i];
+    const div = document.createElement("div");
+    div.className = "thumb" + (rec.filename ? "" : " missing");
+    div.dataset.index = i;
+    if (rec.filename) {
+      const img = document.createElement("img");
+      img.loading = "lazy";
+      img.src = `/img/${rec.filename}`;
+      img.title = rec.date;
+      div.appendChild(img);
+    }
+    div.addEventListener("click", () => goTo(i));
+    strip.appendChild(div);
+  }
+}
+
+function goTo(index) {
+  if (index < 0) index = 0;
+  if (index >= filtered.length) index = filtered.length - 1;
+  current = index;
+
+  // Update strip
+  document.querySelectorAll(".thumb").forEach(t => t.classList.remove("active"));
+  const activeThumb = document.querySelector(`.thumb[data-index="${index}"]`);
+  if (activeThumb) {
+    activeThumb.classList.add("active");
+    activeThumb.scrollIntoView({ inline: "center", behavior: "smooth" });
+  }
+
+  // Update image
+  const rec = filtered[index];
+  const img = document.getElementById("artwork");
+  img.classList.add("loading");
+  if (rec.filename) {
+    img.src = `/img/${rec.filename}`;
+    img.onload = () => img.classList.remove("loading");
+    img.onerror = () => img.classList.remove("loading");
+  } else {
+    img.src = "";
+    img.classList.remove("loading");
+  }
+
+  document.getElementById("img-date").textContent = rec.date;
+  document.getElementById("meta-title").textContent = rec.meta["Nombre"] || rec.date;
+  document.getElementById("filename-label").textContent = rec.filename || "(sin imagen)";
+  document.getElementById("counter").textContent = `${index + 1} / ${filtered.length}`;
+
+  // Fill fields
+  for (const col of COLUMNS) {
+    const el = document.querySelector(`[data-col="${col}"]`);
+    if (!el) continue;
+    const val = rec.meta[col] ?? "";
+    if (el.tagName === "SELECT") {
+      el.value = val;
+      if (el.value !== val) el.value = ""; // fallback if option missing
+    } else {
+      el.value = val;
+    }
+  }
+
+  markClean();
+}
+
+function navigate(dir) {
+  goTo(current + dir);
+}
+
+function markDirty() {
+  dirty = true;
+  document.getElementById("btn-save").disabled = false;
+  document.getElementById("save-status").textContent = "sin guardar";
+  document.getElementById("save-status").style.color = "#e07a5f";
+}
+
+function markClean() {
+  dirty = false;
+  document.getElementById("btn-save").disabled = true;
+  document.getElementById("save-status").textContent = "";
+}
+
+async function saveRecord() {
+  const rec = filtered[current];
+  const meta = {};
+  for (const col of COLUMNS) {
+    const el = document.querySelector(`[data-col="${col}"]`);
+    meta[col] = el ? el.value : "";
+  }
+
+  document.getElementById("btn-save").disabled = true;
+  document.getElementById("save-status").textContent = "guardando…";
+
+  const res = await fetch("/api/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date: rec.date, meta })
+  });
+  const data = await res.json();
+
+  if (data.ok) {
+    rec.meta = { ...rec.meta, ...meta };
+    document.getElementById("meta-title").textContent = rec.meta["Nombre"] || rec.date;
+    document.getElementById("save-status").textContent = "guardado ✓";
+    document.getElementById("save-status").style.color = "#81b29a";
+    markClean();
+    document.activeElement?.blur();
+  } else {
+    document.getElementById("save-status").textContent = "error ✗";
+    document.getElementById("save-status").style.color = "#e07a5f";
+    document.getElementById("btn-save").disabled = false;
+  }
+}
+
+function onSearch(q) {
+  q = q.trim().toLowerCase();
+  if (!q) {
+    filtered = allRecords;
+  } else {
+    filtered = allRecords.filter(r =>
+      r.date.includes(q) ||
+      (r.meta["Nombre"] || "").toLowerCase().includes(q) ||
+      (r.meta["Temática"] || "").toLowerCase().includes(q) ||
+      (r.meta["Técnica"] || "").toLowerCase().includes(q)
+    );
+  }
+  buildStrip();
+  goTo(0);
+}
+
+document.addEventListener("keydown", e => {
+  const inField = e.target.tagName === "INPUT" || e.target.tagName === "SELECT";
+
+  // Ctrl+Enter or Ctrl+S: save from anywhere
+  if ((e.ctrlKey || e.metaKey) && (e.key === "Enter" || e.key === "s")) {
+    e.preventDefault();
+    if (dirty) saveRecord();
+    return;
+  }
+
+  // Escape: drop focus so arrow keys work for navigation
+  if (e.key === "Escape" && inField) {
+    e.target.blur();
+    return;
+  }
+
+  // Arrow keys navigate images only when not in a field
+  if (!inField) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowUp") navigate(-1);
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") navigate(1);
+  }
+});
+
+init();
+</script>
+</body>
+</html>
