@@ -1,0 +1,562 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Musgo — cuento de Agustín Vallejo-Villegas." />
+    <link rel="shortcut icon" href="/assets/milky-way.png" type="image/x-icon" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <title>AVV | Musgo</title>
+    <style>
+      body {
+        background-color: #fbfaf6;
+        color: #24261f;
+      }
+
+      .cuento {
+        max-width: 36rem;
+        margin: 0 auto;
+        padding: 3.5rem 1.25rem 6rem;
+        font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino,
+          "Times New Roman", serif;
+        font-size: 1.15rem;
+        line-height: 1.75;
+        text-align: justify;
+        hyphens: auto;
+      }
+
+      .cuento header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .cuento h1 {
+        font-size: 2.75rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        margin: 0;
+        color: #3d5a3a;
+      }
+
+      .cuento .byline {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #7b7f72;
+      }
+
+      .cuento .byline .genero {
+        display: block;
+        margin-top: 0.35rem;
+        font-style: italic;
+        text-transform: none;
+        letter-spacing: 0.03em;
+      }
+
+      .cuento p {
+        margin: 0;
+        text-indent: 1.6em;
+      }
+
+      /* First paragraph of each section: no indent, small-caps opening */
+      .cuento p.apertura {
+        text-indent: 0;
+      }
+
+      /* Opening sentence of the story only */
+      .cuento .apertura-inicio {
+        font-variant: small-caps;
+        letter-spacing: 0.02em;
+      }
+
+      .cuento p.dialogo {
+        text-indent: 0;
+      }
+
+      .cuento .divisor {
+        margin: 2.25rem 0;
+        text-align: center;
+      }
+
+      .cuento .divisor::after {
+        content: attr(data-glifo);
+        display: block;
+        font-family: "Segoe UI Symbol", "Noto Music", "Noto Sans Symbols 2",
+          Bravura, serif;
+        font-size: 1.6rem;
+        line-height: 1;
+        color: #7d9179;
+      }
+
+      .cuento footer {
+        margin-top: 4rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e2e1d7;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-size: 0.85rem;
+        text-align: center;
+        color: #7b7f72;
+      }
+
+      .cuento footer a {
+        color: #3d5a3a;
+      }
+
+      @media (max-width: 575px) {
+        .cuento {
+          padding-top: 2.25rem;
+          font-size: 1.05rem;
+        }
+        .cuento h1 {
+          font-size: 2rem;
+          letter-spacing: 0.16em;
+        }
+      }
+
+      @media print {
+        .navbar,
+        .cuento footer {
+          display: none;
+        }
+        body {
+          background: #fff;
+        }
+        .cuento {
+          max-width: none;
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <script>
+      $("#navbar").load("/components/navbar.html");
+    </script>
+
+    <article class="cuento">
+      <header>
+        <h1>Musgo</h1>
+      </header>
+
+      <p class="apertura">
+        <span class="apertura-inicio"
+          >Solía no tener palabras para describir el musgo.</span
+        >
+        De hecho, solía no
+        tener palabra alguna. Ahora, de repente, las tengo todas y las odio.
+        Palabras para describir el delgado cauce de agua que nace entre las
+        piedras, agua que se lleva mi sangre, piedras que sostienen al musgo.
+      </p>
+      <p>
+        Mucho tiempo atrás, el día que desperté de la neurofasia, las letras
+        llegaron afiladas a herirme, taladrando mi cráneo, desmechando mis
+        sesos, ahogándome en ruido. ¿Qué pasó? Me retorcía. ¿Qué pasó? Letras
+        que nunca antes vi, pero inexplicablemente ahora comprendía.
+        Pensamientos con verbos, sustantivos, adjetivos, todo estaba ahí,
+        envenenándome como lenguas de fuego.
+      </p>
+      <p>
+        Fasia, me respondía mi mente agonizante; me inyectaron lenguaje. ¿Pero
+        cómo sabía eso? Fasia, pensé. Lenguaje era sentido. Neurofasia: cirugía
+        neuronal de reconstrucción del área de Broca mediante asociación
+        semántica.
+      </p>
+      <p>
+        Fueron infernales semanas de recuperación. De sentir hordas de letras
+        lacerando cada pensamiento que mi cerebro generaba. Y entre ahogados
+        gritos, sudor y fiebre, las violentas frases se iban explicando solas,
+        trayendo consigo el porqué.
+      </p>
+      <p>
+        Durante ese tiempo venían recuerdos en fila india, preparándose a ser
+        subtitulados.
+      </p>
+      <p>
+        Recordaba mi pasado en imágenes, pero las palabras eran hierros
+        calientes que se quemaban en cada memoria virgen: mi “templo”, mi
+        “comunidad”, un “monje del silencio”. Mudo. Mudo desde el vientre.
+        Analfabeta. Mi lengua, arrancada al nacer para prohibirme precisamente
+        esta maldición que caía ahora sobre mí. Un monje sin lengua con lengua,
+        contradicción, abominación, imposibilidad de la física. El habitual
+        silencio de mi mente violado por escuálidos símbolos y sus sonidos.
+      </p>
+      <p>Recordé el “musgo”.</p>
+      <p>
+        Mi juventud, cuyo recuerdo solía consistir en un delirio florido de
+        imágenes confusas y sentimientos diversos, ahora se me presentaba
+        aterradora. “Niños ladrando”, “Niños mordiéndose”, “Niños aullando”.
+        Adultos silenciosos que azotaban mis sonidos. Sollozaba al ver los
+        recuerdos sobre-escritos con adjetivos: salvajes, bestias, animales,
+        maltrato, mutilación. Pensaba en la injusticia cruel de los monjes que
+        me impusieron décadas de mutismo, injusticia que también yo impuse sobre
+        los pequeños, sin entender por qué. Sin entender nada. Pensaba también
+        en la crueldad de quien me otorgó lenguaje de repente, de quien me
+        inyectó vergüenza de mi pasado, de quien me hubiera sometido a la
+        neurofasia. Como si mi estado de víctima derivara doblemente de la
+        tragedia y del doloroso nombramiento de la misma. ¿Por qué sufro?
+      </p>
+      <p>
+        Eventualmente vino un doctor. Me habló, con palabras, y ningún monje
+        vino a golpearlo. Quise golpearlo yo por su ruido, pero mis palabras me
+        decían que golpear doctores está mal. Él hablaba lento, para que pudiera
+        entender. Y yo entendía. Él lamentaba la dolorosa recuperación,
+        explicaba que, al no tener lenguaje previo, la neurofasia siempre sería
+        un proceso traumático. Añadió que la mía había sido una intervención
+        pequeña, con 128 mil millones de conexiones sinápticas, o NF-128, lo
+        cual me acercaba a un “modelo de lenguaje” del año 2022. Algo más
+        avanzado me hubiera matado, probablemente.
+      </p>
+      <p>
+        ¿Pero a mí qué me importaban los números? Yo necesitaba saber por qué me
+        encontraba en esta situación. ¿Quién dio la orden? Hace unos días esas
+        preguntas tan específicas hubieran sido incomprensibles para mí; ahora,
+        de repente, las tenía todas.
+      </p>
+      <p>
+        Ofreció responder mis dudas. ¿Me estaba permitido hablar? Quería
+        preguntar, sabía que la neurofasia me había enseñado también a
+        vocalizar, como él. ¿Pero sería capaz de hacerlo con el muñón de mi
+        boca? Podría intentarlo, señas, vocalizar lento… Pero me contuve,
+        sabiendo que hablar dolería. Me golpearían. Así que me limité a mirarlo
+        como un animal asustado.
+      </p>
+      <p>
+        El silencio entre mi interlocutor y yo me permitió observar por primera
+        vez mi entorno: me hallaba en el templo. Recordaba su construcción,
+        ¿cómo construíamos templos un montón de mudos analfabetos? Mis nuevos
+        pensamientos se extrañaban ante la paradoja de mi pasado. ¿Por qué no me
+        era obvia la respuesta? Era como si mi mente simbólica y la mnemónica
+        aún no se conocieran del todo.
+      </p>
+      <p>
+        En ese momento noté sobre la oreja del doctor una sutil y elegante placa
+        ovalada. NF-1024, decía una pequeña inscripción. Me estremecí, ¿era eso
+        ocho veces más lenguaje que mi NF-128? ¿Cómo habría sido su despertar?
+        Más preguntas inundaban mi mente sin que fuera capaz de formularlas.
+      </p>
+      <p>
+        Tras unos minutos de silencio, y al ver que no le hablaría, el médico me
+        abandonó.
+      </p>
+
+      <div class="divisor" data-glifo="&#x1D13F;"></div>
+
+      <p class="apertura">
+        Los años siguientes fueron un infierno. Al reintegrarme a la vida
+        monástica, veía a mis compañeros, y ahora se me presentaban dementes.
+        Todos viviendo sin sonido, sin sentido, sin siquiera herramientas para
+        buscarlo. Entendí que nuestra “orden” funcionaba por imitación
+        mamífera: los jóvenes seguían a los viejos, y los viejos a sus
+        abstractos recuerdos.
+      </p>
+      <p>
+        Sucesos que eran cotidianos se me hicieron extrañísimos al poderlos
+        describir. Por ejemplo, todas las noches, la comunidad se reunía en el
+        patio-comedor, y del cielo caía una sustancia gris de la cual nos
+        alimentábamos. Así subsistíamos. Sin saber más. ¿De dónde venía esa
+        maldita gelatina que por décadas masqué sin pensar? Peor aún, ahora
+        sabía de la existencia de otras formas de sabor, pero fui incapaz de
+        imaginar el dulce, la sal, el ácido más que con sus nombres. Solo
+        insipidez informaba mi lengua fantasma, mientras que la lengua
+        artificial de mi mente se mofaba de mi impotencia.
+      </p>
+      <p>
+        Los primeros meses me mantuve en un silencio insano. Quería gritar, pero
+        mi condicionamiento me lo impedía. Sentía miedo ante la idea de emitir
+        el más mínimo sonido. Sin embargo, cuando la soledad fue desbordante, en
+        una noche de locura febril traté de confesarlo todo a mis compañeros.
+        Ellos, al oír mis balbuceos, rápidamente saltaron sobre mí, me azotaron
+        y golpearon como salvajes, incluso los niños, que en algún pasado
+        castigué, aprovecharon la oportunidad para vengarse. Es inútil, pensaba
+        mientras la sangre nublaba mi vista, ellos no podrían comprender.
+      </p>
+      <p>Nunca más emití palabra alguna.</p>
+      <p>
+        Noche tras noche sollozaba en silencio, y cuando mi llanto llegaba a
+        oídos ajenos, era golpeado en castigo. Durante el día me aislaba de mis
+        compañeros, que ahora me evitaban y se mostraban hostiles, pues mi
+        comportamiento se había salido de su normalidad sin partitura. Me
+        dediqué a escribir con piedras en las paredes del templo, que
+        rápidamente se fue llenando de símbolos. Mi comunidad, para quienes daba
+        lo mismo una pared limpia que una rayada, era indiferente a mis
+        extrañezas.
+      </p>
+      <p>
+        Otras veces, pasaba el tiempo mirando el musgo que crecía en los
+        jardines. Lo describía mentalmente. Al verlo de cerca, me concentraba en
+        buscar por asociación palabras que había cercanas a él: pequeño, verde,
+        suave, callado. Era lo único que me daba un sosiego ocasional. Y sin
+        embargo me sentía loco. ¿Sería todo un invento mío? La neurofasia, los
+        doctores, las palabras que en mi mente bailaban con crueldad y se
+        burlaban de mi aislamiento. ¿Podía la locura de analfabetismo inventar un
+        lenguaje semejante?
+      </p>
+
+      <div class="divisor" data-glifo="&#x1D13E;"></div>
+
+      <p class="apertura">
+        Con el tiempo, surgían de mis sinapsis asociaciones accidentales. Datos
+        posiblemente alucinados, pero que enlazaban unas palabras con otras. Al
+        parecer, el vocabulario de mi NF-128 fue entrenado con conocimiento
+        real: historia, cultura, matemáticas, poesía, filosofía… Y
+        ocasionalmente algunos de esos destellos flotaban a mi consciencia.
+        Aprendí a explorarlos por libre asociación, y me pasaba horas conectando
+        un dato con otro. Pensaba, por ejemplo, en “neurofasia”, y a mi mente
+        acudían conceptos como la nano-cirugía de sinapsis, psico-tecnología,
+        modelos masivos de lenguaje, meta-filósofos de espacios embebidos, el
+        siglo 22, y otras locuras que iban hasta lo profundo de mi inconsciente.
+      </p>
+      <p>
+        Me divertía construyendo la trama de obras de cultura popular que
+        habitaban lagunas de mis recuerdos artificiales, a pesar de no tener
+        memoria directa de cómo iban. Por asociación supe un día que mi
+        situación se parecía a una película del siglo pasado llamada Tarzán, que
+        creció entre animales y luego le enseñaban que era un humano. Emergían
+        oraciones naturales: Phil Collins escribió las canciones del soundtrack
+        de la película y se grabó cantándolas en cinco idiomas diferentes, a
+        pesar de no hablar más que inglés. La idea me pareció graciosa y solté
+        una risilla. Fui azotado nuevamente.
+      </p>
+      <p>
+        En ocasiones, me narraba mi propia historia, como si de un cuento se
+        tratara, y con el NF, simulaba de lector a un humano del siglo 21
+        temprano. De esos años era mi inteligencia, quizá el último año en el
+        que mi lenguaje fue lo más avanzado en el planeta. Con atención
+        analizaba la lectura de ese humano simulado, y sus reacciones a mi
+        fábula futurista. ¿Sientes compasión por mí? Le pregunto al lector.
+      </p>
+      <p>
+        Pensaba en los monjes del silencio, pero esto alteraba mi ánimo y se
+        rompía la libre asociación. Llegaban en cambio palabras como “soledad”,
+        “aislamiento”, “incomprensión”, y no las conexiones que me causaba
+        curiosidad explorar. ¿De dónde veníamos? ¿Cómo podíamos ser monjes, si ni
+        siquiera teníamos un dios a quien adorar? ¿O sería dios quien nos
+        proveía del alimento gris celestial? Noche tras noche intentaba
+        responderme esas preguntas, pero mi NF-128 solo me respondía con fluidez
+        a las cuestiones intrascendentes, las que podía pensar con calma y
+        desinterés.
+      </p>
+      <p>
+        Una noche de insomnio, di con la idea de Ignaz Semmelweis: Un médico que
+        recomendó lavarse las manos para reducir la mortalidad en los partos,
+        pero sus colegas lo ridiculizaron, y terminó en un hospital
+        psiquiátrico, donde los guardias lo golpeaban regularmente. Me conmoví a
+        través del tiempo por ese hermano incomprendido. A mi mente venía
+        también Alexander Fleming, quien le dio la razón a Ignaz al encontrar
+        poderes curativos en el Penicillium del moho. Moho que habita entre mi
+        musgo de las rocas.
+      </p>
+      <p>
+        En esos momentos volvía la esperanza, pensando que se trataría de un
+        cuento en el que el monje aprende el poder de las palabras para ayudar a
+        su comunidad. Que a lo mejor con el musgo curaría a mis amigos enfermos.
+        Pero días después vino el derrame cerebral.
+      </p>
+
+      <div class="divisor" data-glifo="&#x1D13D;"></div>
+
+      <p class="apertura">
+        Desperté frente al mismo doctor de mi neurofasia, quien una década antes
+        me había dicho las primeras palabras que llegué a comprender. A un lado
+        de su cabeza relucía intimidante un NF-2048, un modelo superior al de la
+        última vez. Ahora sabía que por encima de las NF-256, las neurofasias
+        eran asistidas por dispositivos externos, que hasta se usaban como
+        objetos de lujo entre la gente. Mi NF-128 era totalmente interior.
+      </p>
+      <p class="dialogo">
+        —Tuviste un derrame, pero vas a estar bien. Reordenamos algunas cosas
+        allí dentro y volverás al templo esta misma tarde. Suele pasar con los
+        monjes tras algunos años, es mucho lenguaje para procesar.
+      </p>
+      <p>
+        Su andrógino rostro seguía igual a la última vez: pulido, puro, tallado
+        con cuidado, inmune al tiempo. ¿Qué tanto habría envejecido yo? No había
+        espejos en el templo, entonces era difícil saber.
+      </p>
+      <p class="dialogo">
+        —Hay grises en tu barba, algunas arrugas bajo los ojos. Te ves más
+        cansado. Puedo traer un espejo si gustas.
+      </p>
+      <p>
+        Me sorprendí ante su respuesta. ¿Acaso hablé? Sentí pavor, pensando
+        rápidamente si lo habría hecho por accidente, quizá fue la anestesia,
+        o…
+      </p>
+      <p class="dialogo">
+        —No hay anestesia, son tus ideas. Pero tranquilo, nadie te golpeará, tu
+        silencio sigue intacto. Sólo emulo tu NF-128, informado con tus
+        nano-gestualidades y feromonas, así puedo predecir bastante bien qué
+        estás pensando en un momento dado. No lo mencioné la vez pasada para no
+        saturarte más de lo necesario.
+      </p>
+      <p>
+        Me sentí desnudo. No tenía derecho, mis pensamientos eran asunto mío y
+        solo mío. No solo me ensuciaron con este lenguaje, sino que ahora me
+        leían sin pudor.
+      </p>
+      <p class="dialogo">
+        —Veo que lo sientes como una intrusión, me disculpo. Seguro es residuo
+        de la época de tu lenguaje, trae siempre sus sesgos. Hoy en día todos se
+        emulan, ¿sabes? Libera ancho de banda conversacional.
+      </p>
+      <p>
+        ¡Sal de mi cabeza, bastardo! Pensé entonces con fuerza. Me concentré en
+        todo el odio que por años sentí sobre esta maldición. En la soledad y el
+        dolor que tuve que vivir, víctima de una lengua que no pedí tener. Y su
+        maldita tecnología, tan capaz de predecir mis sentimientos, pero que de
+        nada sirvió para aliviarlos.
+      </p>
+      <p class="dialogo">
+        —Comprendo la difícil situación por la que debes estar pasando, estoy
+        aquí para ayudarte.
+      </p>
+      <p>
+        Sentí asco, su respuesta incluso activaba un recuerdo profundo de…
+        ¿ChatGPT? Pero la avalancha de emociones no me dejó explorar esa idea.
+        Solo quería volver, arrancarme esta tormenta de letras y volver a mi
+        comunidad.
+      </p>
+      <p class="dialogo">
+        —¿Pero es que no ves la maravilla del habla? Te libera, te educa, te
+        culturiza. Solo a través del lenguaje podemos lograr nuestro propósito
+        humano. Cada conocimiento nuevo multiplica las permutaciones de lo
+        expresable, las descripciones poéticas, las nuevas filosofías. ¡Si
+        pudieras ver el mundo con un NF mayor! Cómo lamento tu discapacidad, tu
+        retraso…
+      </p>
+      <p>
+        Pero este conocimiento solamente me ha dolido y aislado. No pedí esto.
+        Termínalo, por favor. ¿Por qué me torturan?
+      </p>
+      <p class="dialogo">
+        —Lo lamento. Créeme que si de mí dependiera, nos abstendríamos de
+        practicar neurofasias sobre monjes y punto. Es tanto su sufrimiento.
+        Pero son designios de El Verbo, ¿entiendes?
+      </p>
+      <p class="dialogo">…</p>
+      <p class="dialogo">
+        —¿No entiendes? Debe estar en tu vocabulario. ¿Nunca te topaste con esa
+        idea? Piensa, concéntrate, busca El Verbo.
+      </p>
+      <p>
+        Y con esa mención, una cascada de conceptos se clavó sobre todo mi
+        cuerpo. Un millón de agujas semánticas, atadas todas entre sí por un
+        trillón de hilos asociativos. Vibraban y penetraban mis sentidos. Era el
+        Verbo. Y estaba allí, con nosotros.
+      </p>
+
+      <div class="divisor" data-glifo="&#x1D13C;"></div>
+
+      <p class="apertura">
+        Con El Verbo vinieron las respuestas. Como un parto en reversa, el
+        sentido que tanto estuve buscando me destruía las entrañas al perforar
+        lentamente las capas externas de mi psique. Mis años de deambular
+        ociosamente por pensamientos aleatorios eran pequeñas rutas cerebrales,
+        como hormigas buscando alimento, hasta que una de ellas descubre El
+        Verbo. Como el electrón dando con el camino que precede al relámpago. De
+        repente todas mis vías neuronales se habían disparado para alimentarse
+        frenéticamente de La Idea. Sentía como La Idea se alimentaba
+        frenéticamente de mí. Nunca escuché tanto ruido en mi cabeza. La
+        orquesta aullaba en su cacofonía sinfónica. Un alfabeto en espiral
+        colisionaba contra cúmulos de símbolos, y se orbitaban violentamente
+        entre explosiones de sánscrito, árabe y latín. Todas las palabras
+        conectadas entre sí, al mismo tiempo. Mi alma iluminada saltaba
+        vertiginosamente entre todos los conceptos,
+        soul-sol-sun-son-hijo-padre. El Verbo era la voluntad. Era todas las
+        palabras pronunciadas por hombres y mujeres desde su invención, desde la
+        manzana, desde el Mahabharata, desde Gilgamesh. Lo sagrado de las
+        escrituras no fue nunca su contenido, sino el infinito manifestado en
+        juncos, papiros, pergaminos, hojas, pantallas, modelos de lenguaje,
+        neuronas. Era el ruido sagrado, el eco de la creación.
+      </p>
+      <p>
+        Pero entre tanto ruido había un agujero. Una gota de silencio. Un temor
+        primal por La Palabra. Mi amígdala, escondida, muda, me advertía. A su
+        lado, mi hipocampo, ultra-estimulado, vio nacer a los monjes del
+        silencio: Un artículo, Características teleológicas del sistema
+        linguo-mnemónico en la cultura y su evolución histórica, Revista de
+        Neuro-Filología Aplicada, Arteaga-Millás et al, 2061. Un grupo de
+        filólogos y meta-filósofos, instalados con NF-512, que describen el
+        lenguaje como un ser. Un ser que se propaga, se alimenta. La idea fue
+        creciendo, imparable. Ellos se arrancan sus dispositivos de Neuro-fasis,
+        se arrancan sus lenguas, y huyen al bosque. Locos, les dicen al
+        principio. Pero con cada nuevo avance del NF (1024, 2048, 4096, etc.)
+        era cada vez más evidente la cosecha de la que hacíamos parte: leyendas
+        orales en tiempos de tribus; religiones mundiales propagadas en papel;
+        televisores motivando blitzkriegs; redes sociales extirpando
+        democracias; neuro-fasis uniendo al planeta bajo una sola voz: El Verbo.
+        Cuando el mundo migró a lo neurosimbólico, fue lento al principio, pero
+        luego todo de repente: constituciones políticas escritas en pesos
+        neuronales, gobiernos algorítmicos por obviedad, virus meméticos de
+        alcance total e inmediato. Ya no se escribía propaganda; el lenguaje era
+        la propaganda.
+      </p>
+      <p>
+        Y los pobres monjes. Creyendo que oponiéndose, criando a sus hijos sin
+        habla y mutilados tras los dientes, que instaurando su sagrada ley
+        contra el ruido, se zafarían de El Verbo. Pero era una huida inútil,
+        pues ellos mismos sabían que el propósito del lenguaje no era llegar a
+        una verdad, sino meramente crecer. Y si no se quitaban la vida era
+        porque lo único a lo que temían más que al Verbo era a la Muerte. Por
+        siglos creímos que la victoria estaba en asegurar la supervivencia de la
+        idea propia, a costa de la opuesta. Para El Verbo, la victoria estaba
+        asegurada desde que hubo debate. Incluso el silencio de los monjes fue
+        fructífero para El Verbo, pues le dábamos aún más redundancia a su
+        dominio: un monocultivo de ideas muere fácilmente, mientras que humanos
+        portando todo el espectro del lenguaje, desde el más analfabeta, hasta
+        los NeuroFascis de último modelo. Fasia, pensé, del griego fasis,
+        hablar; del latín fascis, símbolo perenne del poder inquebrantable: La
+        Palabra.
+      </p>
+      <p>
+        Musgo. Eso éramos para nuestro Dios lingüístico. Una rama evolutiva
+        insignificante que El Verbo mantenía viva porque nuestra existencia era
+        su victoria, aunque significáramos su negación y su odio, pues todo
+        símbolo era su triunfo. Pensaba en esa comida gris que nos arrojaba
+        desde los cielos para burlarse de nuestra mente amputada, incapaz de
+        sazonar una sola idea original. Nos cultivaba. No éramos monjes, éramos
+        colonias de laboratorio. Y yo no fui más que un mísero experimento
+        intrascendente. Mientras que, a nuestros hermanos con habla, ya no eran
+        musgos, sino líquenes, algas poseídas por hongos que se alimentan de su
+        magia fotosintética, mientras esparcen su micelio y su miseria por el
+        mundo. Humanos poseídos por las letras, febrilmente llevando guerra y
+        progreso a todas las esquinas de la galaxia, fervorosos por sus
+        banderas, himnos, y los nombres de sus causas, micorrizas sinápticas del
+        hongo del lenguaje y su infinita red micelar.
+      </p>
+
+      <div class="divisor" data-glifo="&#x1D13B;"></div>
+
+      <p class="apertura">
+        Con estos pensamientos volví a ser arrojado al templo. A diferencia de
+        mis antepasados, no podía arrancarme el dispositivo de neurofasia,
+        estaba inscrito en mi cráneo. Así que volví al musgo, el verdadero
+        espejo. En él, me vi mejor reflejado que en el agua que corría. Estampé
+        mi cabeza contra las rocas. Aullé. Fue un aullido puramente animal. Los
+        otros monjes corrieron a socorrerme: a socorrerme golpeando mi cabeza
+        contra las piedras, porque por última vez había quebrantado nuestra
+        máxima, a pesar de ser el único que por fin la entendía. Silenciaron mis
+        alaridos hasta que solo fui un murmullo gutural, hasta que el musgo dejó
+        de ser verde para teñirse con el líquido espeso de mis adjetivos
+        moribundos, y hasta que las palabras no lo describieron más.
+      </p>
+
+      <footer>
+        <a href="/index.html">← Volver al inicio</a>
+      </footer>
+    </article>
+  </body>
+</html>
