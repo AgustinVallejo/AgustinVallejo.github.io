@@ -1,0 +1,139 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Negativo</title>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: white;
+      font-family: sans-serif;
+      padding: 10px;
+    }
+    input, a, button {
+      background-color: #333333;
+      color: white;
+      border: none;
+      padding: 10px;
+      display: inline-block;
+      margin: 0 10px 10px 0;
+      font-family: inherit;
+      font-size: inherit;
+      cursor: pointer;
+    }
+    a {
+      text-decoration: none;
+    }
+    canvas {
+      max-width: 100%;
+      display: block;
+    }
+    #error {
+      color: #ff8888;
+    }
+  </style>
+</head>
+<body>
+  <p>Sube una foto (o usa la cámara) y se devuelve el negativo.</p>
+  <input type="file" id="file" accept="image/*">
+  <button id="camera">Cámara</button>
+  <button id="capture" hidden>Capturar</button>
+  <a id="download" href="#" download="negativo.png" hidden>Descargar</a>
+  <p id="error"></p>
+  <canvas id="canvas"></canvas>
+  <script>
+var input = document.getElementById('file');
+var cameraButton = document.getElementById('camera');
+var captureButton = document.getElementById('capture');
+var canvas = document.getElementById('canvas');
+var download = document.getElementById('download');
+var error = document.getElementById('error');
+var ctx = canvas.getContext('2d');
+
+var video = document.createElement('video');
+video.playsInline = true;
+video.muted = true;
+var stream = null;
+
+// Invert every pixel currently on the canvas, leaving the alpha channel alone
+function invertCanvas() {
+  var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  var p = data.data;
+  for (var i = 0; i < p.length; i += 4) {
+    p[i] = 255 - p[i];
+    p[i + 1] = 255 - p[i + 1];
+    p[i + 2] = 255 - p[i + 2];
+  }
+  ctx.putImageData(data, 0, 0);
+}
+
+function stopCamera() {
+  if (!stream) return;
+  stream.getTracks().forEach(function(track) { track.stop(); });
+  stream = null;
+  captureButton.hidden = true;
+  cameraButton.textContent = 'Cámara';
+}
+
+function drawFrame() {
+  if (!stream) return;
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  invertCanvas();
+  requestAnimationFrame(drawFrame);
+}
+
+input.addEventListener('change', function() {
+  var file = input.files[0];
+  if (!file) return;
+  stopCamera();
+  error.textContent = '';
+  var url = URL.createObjectURL(file);
+  var img = new Image();
+  img.onload = function() {
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    invertCanvas();
+    download.href = canvas.toDataURL('image/png');
+    download.hidden = false;
+  };
+  img.src = url;
+});
+
+cameraButton.addEventListener('click', function() {
+  if (stream) {
+    stopCamera();
+    return;
+  }
+  error.textContent = '';
+  download.hidden = true;
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+    .then(function(s) {
+      stream = s;
+      video.srcObject = s;
+      return video.play();
+    })
+    .then(function() {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      captureButton.hidden = false;
+      cameraButton.textContent = 'Apagar cámara';
+      drawFrame();
+    })
+    .catch(function(e) {
+      stopCamera();
+      error.textContent = 'No se pudo acceder a la cámara: ' + e.message;
+    });
+});
+
+// Freeze the current inverted frame and offer it as a download
+captureButton.addEventListener('click', function() {
+  stopCamera();
+  download.href = canvas.toDataURL('image/png');
+  download.hidden = false;
+});
+  </script>
+</body>
+</html>
