@@ -19,6 +19,18 @@
     ></script>
     <title>AVV | Musgo</title>
     <style>
+      /* Silencios musicales (U+1D13B..U+1D13F). iOS y Android no traen fuente
+         para el bloque Musical Symbols, asi que va incrustada: subconjunto de
+         Noto Music (SIL OFL 1.1) con solo los cinco glifos usados. */
+      @font-face {
+        font-family: "AVV Music";
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAMgAA4AAAAABiQAAALNAAIAxQAAAAAAAAAAAAAAAAAAAAAAAAAAGigbIBxCBmAAMBEICoJogjMBNgIkAxgLDgAEIAWDZgcgG+wEIJ4FTpk9GnEUEclJyTZq1AztKP5L8VDsZ77dDwmrAy6wJFZAklAoksA256pOdjw70h1fdgTGXPPz+3vPNwfd0fjyfUNpixATgLQQ3cg/uOv9BQBRQLUlHThd/nMe/vzl9I6Ozj/IAzrEI1hTYOIcZVlhGiW2NJE9OPB47Q001BabRnNLTymkPmACWQiVEBJddAUCbTNckfbuL6oCphKGAAi07ZGGHjLKZ/dZ9RB2FN0Rgq5VoUOvHRvRR9g6WxXAzS5zA6kfKnJAPgUckfnFBRFlgOxUWVZlZgmJAByYpblwPNSlVob/VlBfygsgICfIt8BSTCRKjKBoA5ULZoAd4m3iFlPNDYshAlCDLipcBQaAEhC802ZzqTygkSTQ1o2TwYmejpvr+YN7H8vtd9mDFfeer5t4een+E2c+Pmo+x/2axsaFc/bgkWNHnfkD9ybu0YBaTt1JR3fqSTIWRoKnN61/s1+2f2jUGSH8P97MhD3WRuP4qWN0dZB3aFny3+vVMzuOSxc0p3vD08vDAmt9XP9z8L6rrjg5tQyGuhePZpQ6Bo4GznS7uWS5yfvp3a3h1eLeTS/xgFQic11x5EGGzzXalV21dZx+fxYIpDfX8qvsWwVJf01B8Q/wZcftF3x7kXuy2GJiZagNQC1B8IdadT8Ae+2DRNN1ntIyBDasD0ohMq2I1mADEmo/LZOKmpouBBrOGIWyhQUQwogBSH2PoLDNLpRW+obKseSvXlueViYTsz5WGipqGBIhTIQISBU1BaSECWaClLEy0VLohCHpCJiaiZUN4kcNw8xsEoQKpaKBqRE6hOhkYhDKWPTdSiZGmE0oA4KNRif/pkqxYxsVFFQIeu2sIoQIEyZSolylSuVKTGVmD8HQvngnhG4NBat72MQItRPQE12ldgR71TSM8PP/abdwIeKEiBIiVrBoXaJ18L+cQaF0w20AAAA=) format("woff2");
+        unicode-range: U+1D13B-1D13F;
+      }
+
       body {
         background-color: #fbfaf6;
         color: #24261f;
@@ -33,6 +45,7 @@
         font-size: 1.15rem;
         line-height: 1.75;
         text-align: justify;
+        -webkit-hyphens: auto;
         hyphens: auto;
       }
 
@@ -93,8 +106,8 @@
       .cuento .divisor::after {
         content: attr(data-glifo);
         display: block;
-        font-family: "Segoe UI Symbol", "Noto Music", "Noto Sans Symbols 2",
-          Bravura, serif;
+        font-family: "AVV Music", "Noto Music", "Segoe UI Symbol",
+          "Noto Sans Symbols 2", Bravura, serif;
         font-size: 1.6rem;
         line-height: 1;
         color: #7d9179;
