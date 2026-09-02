@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="scroll-arrow" id="flecha">↓</div>
+    <button type="button" class="scroll-arrow" id="flecha" aria-label="Bajar al contenido">↓</button>
 
     <div class="custom-ul-container" id="secondaryContent">
       <ul class="custom-ul">
@@ -56,10 +56,29 @@
     <script>
       document.getElementById("secondaryContent").style.opacity = 0;
 
+      document.getElementById("flecha").addEventListener("click", function () {
+        document.getElementById("secondaryContent").scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+
       window.onscroll = function () {
-        var opacity = 1 - Math.max(0, window.pageYOffset / 200);
+        // Fade over the shorter of 200px or whatever scroll the device
+        // actually has, so the links always reach full opacity on phones.
+        var maxScroll = Math.max(
+          1,
+          document.documentElement.scrollHeight - window.innerHeight
+        );
+        var fadeDistance = Math.min(200, maxScroll);
+        var opacity = Math.min(
+          1,
+          Math.max(0, 1 - window.pageYOffset / fadeDistance)
+        );
         document.getElementById("tituloTransparente").style.opacity = opacity;
-        document.getElementById("flecha").style.opacity = opacity;
+        var flecha = document.getElementById("flecha");
+        flecha.style.opacity = opacity;
+        flecha.classList.toggle("faded", opacity < 0.05);
         document.getElementById("secondaryContent").style.opacity = 1 - opacity;
       };
     </script>
