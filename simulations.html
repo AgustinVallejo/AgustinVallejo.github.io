@@ -1,4 +1,5 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,140 +8,450 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <title>AVV | Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <title>AVV | Simulaciones</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-2: #0d1020;
+            --card: rgba(22, 26, 48, 0.72);
+            --card-hover: rgba(34, 40, 72, 0.9);
+            --border: rgba(160, 175, 255, 0.14);
+            --text: #e6e8f2;
+            --muted: #9096b4;
+            --accent: #ffd27a;
+            --accent-2: #8fb4ff;
+        }
+
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", system-ui, sans-serif;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
+        #sky {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #navbar, main { position: relative; z-index: 1; }
+
+        /* Dark navbar override (shared component is light by default) */
+        #navbar .navbar {
+            background: rgba(7, 8, 15, 0.6) !important;
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        #navbar .navbar-brand, #navbar .nav-link { color: var(--text) !important; }
+        #navbar .nav-link:hover { color: var(--accent) !important; }
+        #navbar .navbar-toggler { border-color: var(--border); filter: invert(1); }
+        #navbar .dropdown-menu { background: var(--bg-2); border: 1px solid var(--border); }
+        #navbar .dropdown-item { color: var(--text); }
+        #navbar .dropdown-item:hover { background: rgba(255,255,255,0.06); color: var(--accent); }
+
+        h1, h2, h3 { font-family: "Roboto Slab", serif; }
+
+        .hero {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 16px 1.5rem;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .hero p { color: var(--muted); line-height: 1.6; margin-top: 1rem; }
+        .hero a { color: var(--accent-2); text-decoration: none; }
+        .hero a:hover { text-decoration: underline; }
+
+        .shelf {
+            margin: 2.5rem 0 1rem;
+        }
+        .shelf-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(16px, 4vw, 48px);
+        }
+        .shelf-head h2 {
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            margin: 0;
+            font-weight: 600;
+        }
+        .edge {
+            position: absolute;
+            top: calc(50% + 0.6rem);
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            font-size: 1.6rem;
+            line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            transition: background .2s, border-color .2s, opacity .25s, transform .2s;
+        }
+        .edge.prev { left: clamp(8px, 2vw, 24px); }
+        .edge.next { right: clamp(8px, 2vw, 24px); }
+        .edge:hover { background: rgba(30,34,60,0.95); border-color: rgba(255,255,255,0.6); transform: translateY(-50%) scale(1.08); }
+        .edge:disabled { opacity: 0; pointer-events: none; }
+
+        .track-wrap { position: relative; max-width: 1400px; margin: 0 auto; }
+        .track-wrap::before, .track-wrap::after {
+            content: ""; position: absolute; top: 0; bottom: 0; width: clamp(16px, 4vw, 48px);
+            z-index: 2; pointer-events: none;
+        }
+        .track-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+        .track-wrap::after { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+
+        .track {
+            display: flex;
+            gap: 1.75rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-padding: 0 clamp(16px, 4vw, 48px);
+            padding: 0.75rem clamp(16px, 4vw, 48px) 1.25rem;
+            scrollbar-width: none;
+            cursor: grab;
+        }
+        .track::-webkit-scrollbar { display: none; }
+        .track.dragging { cursor: grabbing; scroll-snap-type: none; }
+        .track.dragging a { pointer-events: none; }
+
+        .group { flex: 0 0 auto; display: flex; flex-direction: column; }
+        .group-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent-2);
+            margin: 0 0 0.6rem 0.25rem;
+            white-space: nowrap;
+        }
+        .group-items { display: flex; gap: 1rem; }
+
+        .sim {
+            scroll-snap-align: start;
+            flex: 0 0 auto;
+            width: 240px;
+            display: block;
+            text-decoration: none;
+            color: var(--text);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform .25s ease, border-color .25s, background .25s, box-shadow .25s;
+        }
+        .sim:hover, .sim:focus-visible {
+            transform: translateY(-5px);
+            border-color: rgba(255, 210, 122, 0.55);
+            background: var(--card-hover);
+            box-shadow: 0 10px 30px -10px rgba(255, 210, 122, 0.25);
+            color: var(--text);
+            outline: none;
+        }
+        .sim img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: #000;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+        .sim .meta { padding: 0.7rem 0.9rem 0.85rem; }
+        .sim .name { font-weight: 500; font-size: 0.98rem; }
+        .sim .tag {
+            display: inline-block;
+            margin-top: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.05rem 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            padding: 3rem 16px 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 600px) {
+            .sim { width: 200px; }
+            .edge { width: 44px; height: 44px; font-size: 1.25rem; }
+        }
+    </style>
 </head>
 <body>
-    <style>
-        img {
-    border-radius: 10px;
-    }
-    </style>
-  <div id="navbar"></div>
-  <div class="container">
-      <div class="row mt-5">
-        <h1 class="Title">AVLabs: Simulaciones Interactivas de Ciencia </h1>
-        <p> Las siguientes simulaciones fueron realizadas en el marco investigativo del trabajo: <br>
-            <a href="tesis.html"><i>'Creación e implementación didáctica de Simulaciones Interactivas para la enseñanza de fenómenos astrofísicos'</i></a> <br>
-            Realizado en 2022 por Agustín Vallejo Villegas, para optar al título de Astrónomo, en la Universidad de Antioquia. <br>
-        </p>
-      <div class="col">
-        <h1>Astronomía</h1>
-        <h5>Astrofísica Estelar</h5>
-        <div class="list-group">
-        <a class="list-group-item list-group-item-action text-center" href="simulations/laboratorio_estelar/main.html">
-            <b>Evolución Estelar</b><br>
-            <img src="/assets/imgs/gallery/hr.png" alt="" width="250">
-        </a>
-        </div>
-        <p></p>
-        <h5>La Luna</h5>
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action text-center" href="simulations/moon/main.html">
-                <b>Sistema Tierra-Luna</b><br>
-                <img src="/assets/imgs/gallery/moon.png" alt="" width="250">
-            </a>
-        </div>
-        <p></p>
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div id="navbar"></div>
 
-        <h5>Sistema Solar</h5>
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action text-center" href="https://phet.colorado.edu/en/simulations/my-solar-system">
-                <b>PhET - My Solar System</b><br>
-                <img src="/assets/imgs/gallery/mySolarSystem.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="https://phet.colorado.edu/en/simulations/keplers-laws">
-                <b>PhET - Keplers Laws</b><br>
-                <img src="/assets/imgs/gallery/keplersLaws.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/planets/sandbox/sandbox.html">
-                <b>Sandbox Planetario</b><br>
-                <img src="/assets/imgs/gallery/orbits.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/heliophysics/index.html">
-                <b>Física Solar</b><br>
-                <img src="/assets/imgs/gallery/solar.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations\astroposition\meteor\index.html">
-                <b>Tipos de Rocas Espaciales</b><br>
-                <img src="/assets/imgs/gallery/meteoro.png" alt="" width="250">
-            </a>
+    <main>
+        <section class="hero">
+            <h1>AVLabs: Simulaciones Interactivas de Ciencia</h1>
+            <p>
+                Las siguientes simulaciones fueron realizadas en el marco investigativo del trabajo
+                <a href="tesis.html"><i>'Creación e implementación didáctica de Simulaciones Interactivas para la enseñanza de fenómenos astrofísicos'</i></a>,
+                realizado en 2022 por Agustín Vallejo Villegas para optar al título de Astrónomo en la Universidad de Antioquia.
+            </p>
+        </section>
 
-        </div>
-        <p></p>
-        
-        <h5>Astronomía de Posición</h5>
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action text-center" href="simulations/observation/main.html">
-                <b>Monturas de Telescopios</b><br>
-                <img src="/assets/imgs/gallery/telescopes.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/analema/index.html">
-                <b>Movimientos del Sol</b><br>
-                <img src="/assets/imgs/gallery/analema.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/astroposition/BovedaCeleste/index.html">
-                <b>Esfera Celeste</b><br>
-                <img src="/assets/imgs/gallery/spheres.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/astroposition/heliocentric.html">
-                <b>Heliocentrismo vs Geocentrismo</b><br>
-                <img src="/assets/imgs/gallery/heliocentric.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/astroposition/twinkle.html">
-                <b>Centelleo Estelar</b><br>
-                <img src="/assets/imgs/gallery/twinkle.png" alt="" width="250">
-            </a>
-        </div>
-        <p></p>
+        <div id="shelves"></div>
+    </main>
 
-    </div>
-    <div class="col">
-        <h1>Física</h1>
-        <h5>Radiación</h5>
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action text-center" href="simulations/physics/spectrum/index.html">
-                <b>Líneas de Absorción</b><br>
-                <img src="/assets/imgs/gallery/lines.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/physics/planck/planck.html">
-                <b>Radiación de Cuerpo Negro</b><br>
-                <img src="/assets/imgs/gallery/planck.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="/shaders/sunset/index.html">
-                <b>Simulador de Atardeceres</b><br>
-                <img src="/assets/imgs/gallery/sunsetSimulator.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="https://phet.colorado.edu/es/simulations/quantum-measurement">
-                <b>PhET - Medición Cuántica</b><br>
-                <img src="/assets/imgs/gallery/quantumMeasurement.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="https://phet.colorado.edu/es/simulations/buoyancy">
-                <b>PhET - Flotabilidad</b><br>
-                <img src="/assets/imgs/gallery/flotabilidad.png" alt="" width="250">
-            </a>
-        </div>
-    </div>
-    <div class="col">
-        <h1>Otros</h1>
-        <h5>Matemática y Geometría</h5>
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action text-center" href="simulations/math/trigonometry.html">
-                <b>Trigonometría Interactiva</b><br>
-                <img src="/assets/imgs/gallery/trigo.png" alt="" width="250">
-            </a>
-            <a class="list-group-item list-group-item-action text-center" href="simulations/math/elipses.html">
-                <b>Creador de Elipses</b><br>
-                <img src="/assets/imgs/gallery/elipses.png" alt="" width="250">
-            </a>
-        </div>
+    <footer>Arrastra o usa las flechas para explorar cada sección.</footer>
 
-    </div>
-</div>
-  </div>
-  <script>
-      $("#navbar").load("components/navbar.html");
-      $("#card").load("components/card.html");
-      // $("#accordion").load("components/accordion.html");
-  </script>
+    <script>
+        $("#navbar").load("components/navbar.html");
+
+        const G = "/assets/imgs/gallery/";
+        const SECTIONS = [
+            { title: "Astronomía", groups: [
+                { label: "Astrofísica Estelar", sims: [
+                    ["Evolución Estelar", "simulations/laboratorio_estelar/main.html", "hr.png"],
+                ]},
+                { label: "La Luna", sims: [
+                    ["Sistema Tierra-Luna", "simulations/moon/main.html", "moon.png"],
+                ]},
+                { label: "Sistema Solar", sims: [
+                    ["Sandbox Planetario", "simulations/planets/sandbox/sandbox.html", "orbits.png"],
+                    ["Física Solar", "simulations/heliophysics/index.html", "solar.png"],
+                    ["Tipos de Rocas Espaciales", "simulations/astroposition/meteor/index.html", "meteoro.png"],
+                    ["My Solar System", "https://phet.colorado.edu/en/simulations/my-solar-system", "mySolarSystem.png", "PhET"],
+                    ["Kepler's Laws", "https://phet.colorado.edu/en/simulations/keplers-laws", "keplersLaws.png", "PhET"],
+                ]},
+                { label: "Astronomía de Posición", sims: [
+                    ["Monturas de Telescopios", "simulations/observation/main.html", "telescopes.png"],
+                    ["Movimientos del Sol", "simulations/analema/index.html", "analema.png"],
+                    ["Esfera Celeste", "simulations/astroposition/BovedaCeleste/index.html", "spheres.png"],
+                    ["Heliocentrismo vs Geocentrismo", "simulations/astroposition/heliocentric.html", "heliocentric.png"],
+                    ["Centelleo Estelar", "simulations/astroposition/twinkle.html", "twinkle.png"],
+                ]},
+            ]},
+            { title: "Física", groups: [
+                { label: "Radiación", sims: [
+                    ["Líneas de Absorción", "simulations/physics/spectrum/index.html", "lines.png"],
+                    ["Radiación de Cuerpo Negro", "simulations/physics/planck/planck.html", "planck.png"],
+                    ["Simulador de Atardeceres", "/shaders/sunset/index.html", "sunsetSimulator.png"],
+                    ["Medición Cuántica", "https://phet.colorado.edu/es/simulations/quantum-measurement", "quantumMeasurement.png", "PhET"],
+                    ["Flotabilidad", "https://phet.colorado.edu/es/simulations/buoyancy", "flotabilidad.png", "PhET"],
+                ]},
+            ]},
+            { title: "Otros", groups: [
+                { label: "Matemática y Geometría", sims: [
+                    ["Trigonometría Interactiva", "simulations/math/trigonometry.html", "trigo.png"],
+                    ["Creador de Elipses", "simulations/math/elipses.html", "elipses.png"],
+                ]},
+            ]},
+        ];
+
+        // ---------- Build carousels ----------
+        const shelves = document.getElementById("shelves");
+        SECTIONS.forEach((sec, si) => {
+            const el = document.createElement("section");
+            el.className = "shelf";
+            el.innerHTML = `
+                <div class="shelf-head"><h2>${sec.title}</h2></div>
+                <div class="track-wrap">
+                    <button class="edge prev" aria-label="Anterior">&#8249;</button>
+                    <div class="track"></div>
+                    <button class="edge next" aria-label="Siguiente">&#8250;</button>
+                </div>`;
+            const track = el.querySelector(".track");
+            sec.groups.forEach(g => {
+                const group = document.createElement("div");
+                group.className = "group";
+                group.innerHTML = `<div class="group-label">${g.label}</div><div class="group-items"></div>`;
+                const items = group.querySelector(".group-items");
+                g.sims.forEach(([name, href, img, tag]) => {
+                    const ext = /^https?:/.test(href);
+                    const a = document.createElement("a");
+                    a.className = "sim";
+                    a.href = href;
+                    a.draggable = false;
+                    if (ext) { a.target = "_blank"; a.rel = "noopener"; }
+                    a.innerHTML = `<img src="${G + img}" alt="${name}" loading="lazy" draggable="false">
+                        <div class="meta"><div class="name">${name}</div>${tag ? `<span class="tag">${tag} ↗</span>` : ""}</div>`;
+                    items.appendChild(a);
+                });
+                track.appendChild(group);
+            });
+            shelves.appendChild(el);
+
+            const prev = el.querySelector(".prev"), next = el.querySelector(".next");
+            const step = () => Math.max(260, track.clientWidth * 0.8);
+            prev.onclick = () => track.scrollBy({ left: -step(), behavior: "smooth" });
+            next.onclick = () => track.scrollBy({ left: step(), behavior: "smooth" });
+            const update = () => {
+                prev.disabled = track.scrollLeft <= 2;
+                next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+            };
+            track.addEventListener("scroll", update, { passive: true });
+            window.addEventListener("resize", update);
+            setTimeout(update, 50);
+
+            // Mouse drag-to-scroll (touch already scrolls natively)
+            let down = false, startX = 0, startScroll = 0, moved = false;
+            track.addEventListener("pointerdown", e => {
+                if (e.pointerType !== "mouse") return;
+                down = true; moved = false; startX = e.clientX; startScroll = track.scrollLeft;
+            });
+            window.addEventListener("pointermove", e => {
+                if (!down) return;
+                const dx = e.clientX - startX;
+                if (Math.abs(dx) > 5) { moved = true; track.classList.add("dragging"); }
+                if (moved) track.scrollLeft = startScroll - dx;
+            });
+            window.addEventListener("pointerup", () => {
+                if (!down) return;
+                down = false;
+                setTimeout(() => track.classList.remove("dragging"), 0);
+            });
+            // Stop the browser's native link/image drag so dragging scrolls instead
+            track.addEventListener("dragstart", e => e.preventDefault());
+            track.addEventListener("click", e => { if (moved) { e.preventDefault(); moved = false; } }, true);
+            // Vertical wheel → horizontal scroll when hovering a track
+            track.addEventListener("wheel", e => {
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && track.scrollWidth > track.clientWidth) {
+                    const atStart = track.scrollLeft <= 0 && e.deltaY < 0;
+                    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1 && e.deltaY > 0;
+                    if (!atStart && !atEnd) { e.preventDefault(); track.scrollLeft += e.deltaY; }
+                }
+            }, { passive: false });
+        });
+
+        // ---------- Starry sky (8-point stars, after observation/stars.js) ----------
+        const cv = document.getElementById("sky");
+        const ctx = cv.getContext("2d");
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let W, H, DPR, stars = [], sparks = [];
+
+        // Same construction as star() in observation/stars.js: alternate outer (r1)
+        // and inner (r2) vertices, rotated by PI/4 — but with 8 points instead of 4.
+        // Even rays are long, odd rays shorter, which reads nicely as an 8-point star.
+        function star8(x, y, r1, r2, rot = 0, n = 8) {
+            const angle = Math.PI * 2 / n, half = angle / 2, da = Math.PI / 4 + rot;
+            ctx.beginPath();
+            for (let i = 0; i < n; i++) {
+                const a = i * angle;
+                ctx.lineTo(x + Math.cos(a + da) * r2, y + Math.sin(a + da) * r2);
+                const ro = i % 2 === 0 ? r1 : r1 * 0.55;
+                ctx.lineTo(x + Math.cos(a + half + da) * ro, y + Math.sin(a + half + da) * ro);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        const PALETTE = ["255,255,255", "255,236,196", "200,215,255", "255,210,122"];
+        function resize() {
+            DPR = Math.min(window.devicePixelRatio || 1, 2);
+            W = window.innerWidth; H = window.innerHeight;
+            cv.width = W * DPR; cv.height = H * DPR;
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            const n = Math.round((W * H) / 9000);
+            stars = Array.from({ length: n }, () => {
+                const big = Math.random() < 0.12;
+                return {
+                    x: Math.random() * W, y: Math.random() * H,
+                    r: big ? 6 + Math.random() * 7 : 1.5 + Math.random() * 3,
+                    big,
+                    c: PALETTE[Math.random() < 0.7 ? 0 : 1 + Math.floor(Math.random() * 3)],
+                    ph: Math.random() * Math.PI * 2,
+                    sp: 0.5 + Math.random() * 1.5,
+                    rot: big ? Math.random() * 0.4 - 0.2 : 0,
+                };
+            });
+        }
+        window.addEventListener("resize", resize);
+        resize();
+
+        // Mouse sparkles: spawn tiny stars only when the pointer moves fast
+        let last = null;
+        window.addEventListener("pointermove", e => {
+            const now = performance.now();
+            if (last) {
+                const dx = e.clientX - last.x, dy = e.clientY - last.y;
+                const dt = Math.max(1, now - last.t);
+                const speed = Math.hypot(dx, dy) / dt; // px per ms
+                if (speed > 0.9 && !reduceMotion) {
+                    const count = Math.min(6, Math.floor(speed * 1.5));
+                    for (let i = 0; i < count; i++) {
+                        const k = Math.random();
+                        sparks.push({
+                            x: last.x + dx * k, y: last.y + dy * k,
+                            vx: -dx / dt * 0.15 + (Math.random() - 0.5) * 1.2,
+                            vy: -dy / dt * 0.15 + (Math.random() - 0.5) * 1.2 - 0.3,
+                            r: 2 + Math.random() * 4,
+                            rot: Math.random() * Math.PI,
+                            vr: (Math.random() - 0.5) * 0.2,
+                            life: 1,
+                            decay: 0.012 + Math.random() * 0.02,
+                            c: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                        });
+                    }
+                    if (sparks.length > 300) sparks.splice(0, sparks.length - 300);
+                }
+            }
+            last = { x: e.clientX, y: e.clientY, t: now };
+        });
+
+        let scrollY = window.scrollY;
+        window.addEventListener("scroll", () => { scrollY = window.scrollY; }, { passive: true });
+
+        function frame(t) {
+            const s = t / 1000;
+            ctx.clearRect(0, 0, W, H);
+
+            for (const st of stars) {
+                const tw = reduceMotion ? 0.8 : 0.55 + 0.45 * Math.sin(s * st.sp + st.ph);
+                // light parallax with page scroll
+                let y = (st.y - scrollY * (st.big ? 0.15 : 0.05)) % H;
+                if (y < 0) y += H;
+                ctx.fillStyle = `rgba(${st.c},${(st.big ? 0.75 : 0.5) * tw + 0.15})`;
+                if (st.big) {
+                    ctx.shadowColor = `rgba(${st.c},0.6)`;
+                    ctx.shadowBlur = 8 * tw;
+                    star8(st.x, y, st.r * (0.8 + 0.3 * tw), st.r * 0.18, st.rot);
+                    ctx.shadowBlur = 0;
+                } else {
+                    star8(st.x, y, st.r * (0.7 + 0.3 * tw), st.r * 0.25);
+                }
+            }
+
+            for (let i = sparks.length - 1; i >= 0; i--) {
+                const p = sparks[i];
+                p.x += p.vx; p.y += p.vy; p.vy += 0.02; p.vx *= 0.98;
+                p.rot += p.vr; p.life -= p.decay;
+                if (p.life <= 0) { sparks.splice(i, 1); continue; }
+                ctx.fillStyle = `rgba(${p.c},${p.life})`;
+                star8(p.x, p.y, p.r * (0.5 + 0.5 * p.life), p.r * 0.2, p.rot);
+            }
+
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    </script>
 </body>
 </html>
