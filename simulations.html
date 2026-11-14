@@ -14,15 +14,15 @@
     <title>AVV | Simulaciones</title>
     <style>
         :root {
-            --bg: #000;
-            --bg-2: #0d1020;
-            --card: rgba(22, 26, 48, 0.72);
-            --card-hover: rgba(34, 40, 72, 0.9);
-            --border: rgba(160, 175, 255, 0.14);
-            --text: #e6e8f2;
-            --muted: #9096b4;
-            --accent: #ffd27a;
-            --accent-2: #8fb4ff;
+            --bg: #fff;
+            --bg-2: #fff;
+            --card: rgba(255, 255, 255, 0.92);
+            --card-hover: #fff;
+            --border: rgba(30, 36, 70, 0.14);
+            --text: #1b1e2e;
+            --muted: #5a5f76;
+            --accent: #b26b00;
+            --accent-2: #2f55b5;
         }
 
         html, body {
@@ -44,18 +44,18 @@
 
         #navbar, main { position: relative; z-index: 1; }
 
-        /* Dark navbar override (shared component is light by default) */
+        /* Translucent navbar over the star field */
         #navbar .navbar {
-            background: rgba(7, 8, 15, 0.6) !important;
+            background: rgba(255, 255, 255, 0.75) !important;
             backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border);
         }
         #navbar .navbar-brand, #navbar .nav-link { color: var(--text) !important; }
         #navbar .nav-link:hover { color: var(--accent) !important; }
-        #navbar .navbar-toggler { border-color: var(--border); filter: invert(1); }
+        #navbar .navbar-toggler { border-color: var(--border); }
         #navbar .dropdown-menu { background: var(--bg-2); border: 1px solid var(--border); }
         #navbar .dropdown-item { color: var(--text); }
-        #navbar .dropdown-item:hover { background: rgba(255,255,255,0.06); color: var(--accent); }
+        #navbar .dropdown-item:hover { background: rgba(30,36,70,0.06); color: var(--accent); }
 
         h1, h2, h3 { font-family: "Roboto Slab", serif; }
 
@@ -99,14 +99,14 @@
             width: 56px; height: 56px;
             border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.25);
-            background: rgba(0,0,0,0.75);
+            background: rgba(27,30,46,0.85);
             backdrop-filter: blur(6px);
             color: #fff;
             font-size: 1.6rem;
             line-height: 1;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 20px rgba(27,30,46,0.3);
             transition: background .2s, border-color .2s, opacity .25s, transform .2s;
         }
         .edge.prev { left: clamp(8px, 2vw, 24px); }
@@ -158,13 +158,14 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             overflow: hidden;
+            box-shadow: 0 2px 10px -4px rgba(27, 30, 46, 0.18);
             transition: transform .25s ease, border-color .25s, background .25s, box-shadow .25s;
         }
         .sim:hover, .sim:focus-visible {
             transform: translateY(-5px);
-            border-color: rgba(255, 210, 122, 0.55);
+            border-color: rgba(178, 107, 0, 0.5);
             background: var(--card-hover);
-            box-shadow: 0 10px 30px -10px rgba(255, 210, 122, 0.25);
+            box-shadow: 0 14px 30px -12px rgba(27, 30, 46, 0.35);
             color: var(--text);
             outline: none;
         }
@@ -364,7 +365,7 @@
             ctx.fill();
         }
 
-        const PALETTE = ["255,255,255", "255,236,196", "200,215,255", "255,210,122"];
+        const PALETTE = ["27,30,58", "62,72,140", "120,78,20", "47,85,181"];
         function resize() {
             DPR = Math.min(window.devicePixelRatio || 1, 2);
             W = window.innerWidth; H = window.innerHeight;
@@ -429,9 +430,9 @@
                 // light parallax with page scroll
                 let y = (st.y - scrollY * (st.big ? 0.15 : 0.05)) % H;
                 if (y < 0) y += H;
-                ctx.fillStyle = `rgba(${st.c},${(st.big ? 0.75 : 0.5) * tw + 0.15})`;
+                ctx.fillStyle = `rgba(${st.c},${(st.big ? 0.55 : 0.35) * tw + 0.1})`;
                 if (st.big) {
-                    ctx.shadowColor = `rgba(${st.c},0.6)`;
+                    ctx.shadowColor = `rgba(${st.c},0.25)`;
                     ctx.shadowBlur = 8 * tw;
                     star8(st.x, y, st.r * (0.8 + 0.3 * tw), st.r * 0.18, st.rot);
                     ctx.shadowBlur = 0;
@@ -445,7 +446,7 @@
                 p.x += p.vx; p.y += p.vy; p.vy += 0.02; p.vx *= 0.98;
                 p.rot += p.vr; p.life -= p.decay;
                 if (p.life <= 0) { sparks.splice(i, 1); continue; }
-                ctx.fillStyle = `rgba(${p.c},${p.life})`;
+                ctx.fillStyle = `rgba(${p.c},${p.life * 0.8})`;
                 star8(p.x, p.y, p.r * (0.5 + 0.5 * p.life), p.r * 0.2, p.rot);
             }
 
